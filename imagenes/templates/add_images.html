@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+      <tr>
+        <td>Imágenes seleccionadas: </td><td><input name="files" type="file" size="50" accept="image/*" multiple>  </td>
+        <td><button type="submit"> Añadir</button> </td>
+       </tr>
+    </table>
+</form>
+
+
+{% endblock %}

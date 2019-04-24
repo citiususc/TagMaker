@@ -1,0 +1,55 @@
+{% load staticfiles %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <title>TagMaker</title>
+  <meta charset="utf-8">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/freelancer.min.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+</head>
+<style>
+    body{
+        background-image: url('../../static/images/fondo.jpg');
+        background-size:cover;
+    }
+</style>
+<body id="page-top">
+<!-- Portfolio Grid Section -->
+  <section class="portfolio" id="portfolio">
+    <div class="container">
+        {% block content %}
+          <h1>TagMaker</h1>
+          {% if form.errors %}
+            <p style="color: red">El nombre de usuario y contraseña no coinciden. Por favor, inténtelo de nuevo.</p>
+          {% endif %}
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% for field in form %}
+                {{ field }}
+                {% for error in field.errors %}
+                  <p style="color: red">{{ error }}</p>
+                {% endfor %}
+                {% if field.help_text %}
+                  <p><small style="color: grey">{{ field.help_text }}</small></p>
+                {% endif %}
+              </p>
+            {% endfor %}
+            <button type="submit">Entrar</button>
+            <a href="{% url 'signup' %}">¿Nuevo en la aplicación? Regístrate aquí</a> / <a href="{% url 'admin:index' %}">Soy administrador</a>
+          </form>
+    {% endblock %}
+    </div>
+  </section>
+
+</body>
+</html>
+
+
+
+
+

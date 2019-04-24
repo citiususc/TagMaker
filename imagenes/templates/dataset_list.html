@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <a href="{% url 'home' %}">Volver al INICIO</a>
+  <h2>Datasets</h2>
+    {% if datasets %}
+        <p>Estos son los datasets creados</p>
+        <ul>
+            {% for dataset in datasets %}
+                <li><a href="{% url 'dataset' id=dataset.id %}">{{ dataset.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay datasets definidos</p>
+    {% endif %}
+    <a href="{% url 'create_dataset' %}">Nuevo Dataset</a>
+
+
+{% endblock %}

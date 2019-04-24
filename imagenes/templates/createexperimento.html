@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <a href="{% url 'experimento_list' %}">ATRÁS</a>
+  <h2>Nuevo experimento</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ expForm.as_p }}
+        {{ anotForm }}
+    <button type="submit" name="crear_experimento">Crear</button>
+    </form>
+
+
+{% endblock %}

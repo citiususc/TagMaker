@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Mi cuenta: {{ user.username }}</h2>
+    <p>{{ user.first_name}} {{ user.last_name}}</p>
+    <p>{{ user.email }}</p>
+    <a href="{% url 'edit' %}">Editar información</a>
+{% endblock %}

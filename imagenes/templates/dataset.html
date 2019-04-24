@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{{ data.name }}</h2>
+    <p>Creado el {{ data.date }}</p>
+    <p>{{ data.description }}</p>
+    <div class="imagenes">
+    </div>
+    <a href="{% url 'delete_dataset' id=data.id %}">Borrar dataset</a>
+    <a href="{% url 'modify_dataset' id=data.id %}">Modificar dataset</a>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <a href="{% url 'experimento_list' %}">ATRÁS</a>
+  <h2>{{ exp.name }}</h2>
+    <p>Creado el {{ exp.date }}</p>
+    <p>{{ exp.description }}</p>
+    <p>{{ exp.dataset.name }}</p>
+    <p>Asociado a {{ exp.equipo.name }}</p>
+{% endblock %}
