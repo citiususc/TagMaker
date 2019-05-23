@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^createexperimento/$', imagenes_views.new_experimento, name='create_experimento'),
     url(r'^experimentos/$', imagenes_views.experimento_list, name='experimento_list'),
     url(r'^experimentos/(?P<id>[0-9]+)$', imagenes_views.experimento, name='experimento'),
+    url(r'^anotarimagen/(?P<id>[0-9]+)$', imagenes_views.open_image, name='open_image'),
 ]

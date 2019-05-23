@@ -4,8 +4,11 @@
   <h2>{{ data.name }}</h2>
     <p>Creado el {{ data.date }}</p>
     <p>{{ data.description }}</p>
-    <div class="imagenes">
-    </div>
+    <ul>
+        {% for image in data.images.all %}
+            <li><a href="{% url 'open_image' id=image.id %}">{{ image.name }}</a></li>
+        {% endfor %}
+    </ul>
     <a href="{% url 'delete_dataset' id=data.id %}">Borrar dataset</a>
     <a href="{% url 'modify_dataset' id=data.id %}">Modificar dataset</a>
 {% endblock %}

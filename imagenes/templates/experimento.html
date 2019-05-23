@@ -5,6 +5,6 @@
   <h2>{{ exp.name }}</h2>
     <p>Creado el {{ exp.date }}</p>
     <p>{{ exp.description }}</p>
-    <p>{{ exp.dataset.name }}</p>
     <p>Asociado a {{ exp.equipo.name }}</p>
+    <a href="{% url 'dataset' id=exp.dataset.id %}">{{ exp.dataset.name }}</a>
 {% endblock %}

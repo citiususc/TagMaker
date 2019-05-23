@@ -3,12 +3,50 @@
 {% block content %}
     <a href="{% url 'experimento_list' %}">ATRÁS</a>
   <h2>Nuevo experimento</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ expForm.as_p }}
-        {{ anotForm }}
-    <button type="submit" name="crear_experimento">Crear</button>
-    </form>
 
+    <!--
+        <form onsubmit="add_tag()" action="#">
+            Nombre: <input type="text" id="tag_name" required>
+            <select id="tag_type">
+              <option value="punto">Punto</option>
+              <option value="caja">Caja</option>
+            </select>
+            <button type="submit">+</button>
+        </form>
 
+     -->
+
+        <form method="post">
+             <ul id="aqui" name="tags"></ul>
+            {% csrf_token %}
+            {{ expForm.name }} <br>
+            {{ expForm.description }} <br>
+            {{ expForm.dataset }} <br>
+            {{ expForm.equipo }} <br>
+            <form method="post">
+            {% for tag in expForm.tagsForm %}
+                    {{ tag }}
+                    <button type="submit" onclick="add_tag('{{ tag.name.value }}','{{ tag.type.value }}')">+</button>
+            {% endfor %}
+            </form>
+            <br>
+            <button type="submit">Crear</button>
+        </form>
+
+    <script type="text/javascript">
+        function add_tag(tag_name, tag_type) {
+            var node = document.createElement("LI");
+            var textnode = document.createTextNode(tag_name+" - "+tag_type);
+            var button = document.createElement("BUTTON");
+            button.innerHTML = "-";
+            button.onclick = function(){
+                document.getElementById("aqui").removeChild(node);
+            }
+            node.appendChild(textnode);
+            node.appendChild(button);
+            document.getElementById("aqui").appendChild(node);
+            //document.getElementById("tag_name").value="";
+        }
+
+    </script>
 {% endblock %}

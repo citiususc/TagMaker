@@ -1,5 +1,5 @@
 """
-WSGI config for anotacion_imagenes project.
+WSGI config for TagMaker project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'anotacion_imagenes.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'TagMaker.settings')
 
 application = get_wsgi_application()

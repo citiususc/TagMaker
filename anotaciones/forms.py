@@ -1,9 +1,9 @@
 from django import forms
-from anotaciones.models import Anotacion
 
-class FormAnotacion(forms.ModelForm):
+
+class FormAnotacion(forms.Form):
     CHOICES = (('Punto', 'Punto'), ('Caja', 'Caja'),)
-    tipo = forms.ChoiceField(choices=CHOICES)
+    nombre = forms.CharField(max_length=30, required=True)
+    tipo = forms.ChoiceField(choices=CHOICES, required=True)
     class Meta:
-        model = Anotacion
-        fields=('anotaciones', 'tipo')
+        fields=('nombre', 'tipo')
