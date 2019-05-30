@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <a href="{% url 'dataset_list' %}">Volver ATRÁS</a>
   <h2>{{ data.name }}</h2>
     <p>Creado el {{ data.date }}</p>
     <p>{{ data.description }}</p>
@@ -9,6 +10,16 @@
             <li><a href="{% url 'open_image' id=image.id %}">{{ image.name }}</a></li>
         {% endfor %}
     </ul>
-    <a href="{% url 'delete_dataset' id=data.id %}">Borrar dataset</a>
+    <a href="#" onclick="confirm_delete()">Borrar dataset</a>
     <a href="{% url 'modify_dataset' id=data.id %}">Modificar dataset</a>
+    <a href="#">Descargar dataset</a>
+
+    <script>
+    function confirm_delete(){
+      var c = confirm("¿Estás seguro que quieres borrar el dataset?");
+      if (c == true) {
+         window.location = '{% url 'delete_dataset' id=data.id %}'
+      }
+    }
+    </script>
 {% endblock %}

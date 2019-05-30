@@ -20,13 +20,14 @@ class FormTag(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Anotación', 'required': 'True'}))
     type = forms.ChoiceField(choices=CHOICES, required=True)
 
-class FormExperimento(forms.Form):
+TagFormset = formset_factory(FormTag, extra=1)
+
+class FormExperimento(forms.ModelForm):
     name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Nombre'}))
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Descripción. Máximo 1024 caracteres'}))
     dataset=NewModelChoiceField(queryset=Dataset.objects.all())
     equipo=NewModelChoiceField(queryset=Equipo.objects.all())
-    tagsForm=formset_factory(FormTag)
-
     class Meta:
+        model = Experimento
         fields=('name', 'description','dataset','equipo')
 

@@ -6,6 +6,7 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in postForm %}
+            {{ field.errors }}
             {{ field }}<br>
         {% endfor %}
     <table>
