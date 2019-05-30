@@ -7,7 +7,7 @@
     <p>{{ data.description }}</p>
     <ul>
         {% for image in data.images.all %}
-            <li><a href="{% url 'open_image' id=image.id %}">{{ image.name }}</a></li>
+            <li><a href="#">{{ image.name }}</a></li>
         {% endfor %}
     </ul>
     <a href="#" onclick="confirm_delete()">Borrar dataset</a>

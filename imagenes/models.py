@@ -7,17 +7,6 @@ class Coordinates(models.Field):
     class Meta:
         abstract = True
 
-"""
-class TagImage(models.Model):
-    image = models.ForeignKey('Image', on_delete=models.CASCADE)
-    user = models.ForeignKey('User')
-    #experiment=models.ManyToOneRel(Experimento, on_delete=models.CASCADE)
-    check_by = models.ForeignKey('User')
-    tags_points = models.ManyToManyField(TagPoint)
-    tags_rectangles=models.ManyToManyField(TagBox)
-
-"""
-
 class TagPoint(models.Model):
     name = models.CharField(max_length=64)
     coordinates = Coordinates()
@@ -47,3 +36,13 @@ class Experimento(models.Model):
     equipo = models.OneToOneField(Equipo, on_delete=models.CASCADE)
     tagsPoint = models.ManyToManyField(TagPoint, blank=True)
     tagsBox = models.ManyToManyField(TagBox, blank=True)
+
+"""
+class TagImage(models.Model):
+    image = models.ForeignKey('Image', on_delete=models.CASCADE)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    experiment = models.ForeignKey(Experimento, on_delete=models.CASCADE)
+    check_by = models.ForeignKey('User', on_delete=models.CASCADE)
+    tags_points = models.ManyToManyField(TagPoint)
+    tags_rectangles=models.ManyToManyField(TagBox)
+"""

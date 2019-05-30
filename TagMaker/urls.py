@@ -24,6 +24,8 @@ urlpatterns = [
     path('datasets/<id>/borrar/', imagenes_views.delete_dataset, name='delete_dataset'),
     path('experimentos/', imagenes_views.experimento_list, name='experimento_list'),
     path('experimentos/nuevo/',imagenes_views.new_experimento, name='create_experimento'),
-    path('experimentos/<int:id>', imagenes_views.experimento, name='experimento'),
-    path('anotarimagen/<int:id>', imagenes_views.open_image, name='open_image'),
+    path('experimentos/<id>/', imagenes_views.experimento, name='experimento'),
+    path('experimentos/<id>/images/', imagenes_views.images_experiment, name='images_experiment'),
+    path('anotarimagen/<id_exp>/<id_image>/', imagenes_views.annotate_image, name='annotate_image'),
+    path('anotarimagen/<id_exp>/<id_image>/save/', imagenes_views.save_tags, name='save_tags'),
 ]

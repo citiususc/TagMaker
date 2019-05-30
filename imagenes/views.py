@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 import os, uuid, shutil, hashlib
 from django.contrib import messages
-from django.forms import formset_factory
+from django.views.decorators.csrf import csrf_exempt
 
 
 path = "static/images"
@@ -59,7 +59,7 @@ def new_dataset(request):
                     imagen = Image(name=file.name,
                                checksum=checksum,
                                path=path_name,
-                               name_unique=random_name)
+                               name_unique=random_name+'.jpg')
                     imagen.save()
                     dataset.images.add(imagen)
                 #en caso de que sí exista debemos borrarla de la carpeta puesto que anteriormente la guardamos para poder hacer el checksum
@@ -113,7 +113,7 @@ def modify_dataset(request, id):
                     imagen = Image(name=file.name,
                                    checksum=checksum,
                                    path="static/images/" + dataForm.cleaned_data['name'],
-                                   name_unique=random_name)
+                                   name_unique=random_name+'.jpg')
                     imagen.save()
                     dataset.images.add(imagen)
                     # en caso de que sí exista debemos borrarla de la carpeta puesto que anteriormente la guardamos para poder hacer el checksum
@@ -145,14 +145,15 @@ def delete_image_dataset(request, id_data, id):
 
 def experimento(request, id):
     exp=Experimento.objects.get(id=id)
-    return render(request, 'experimento.html', {'exp': exp})
+    tagsbox=exp.tagsBox.all()
+    tagspoint=exp.tagsPoint.all()
+    return render(request, 'experimento.html', {'exp': exp, 'tagsbox': tagsbox, 'tagspoint': tagspoint})
 
 
 
 
 def new_experimento(request):
     if request.method == 'POST':
-
         expForm = FormExperimento(request.POST)
         formset = TagFormset(request.POST)
 
@@ -168,14 +169,14 @@ def new_experimento(request):
                         box = TagBox(
                             name=form.cleaned_data.get('name')
                         )
-                       # box.save()
-                       # experimento.tags_box.add(box)
+                        box.save()
+                        experimento.tagsBox.add(box)
                     elif form.cleaned_data.get('type') == 'Punto':
                         point = TagPoint(
                             name=form.cleaned_data.get('name')
                         )
-                       # point.save()
-                      #  experimento.tags_box.add(box)
+                        point.save()
+                        experimento.tagsPoint.add(point)
 
 
         return redirect('home')
@@ -184,7 +185,19 @@ def new_experimento(request):
         expForm = FormExperimento()
     return render(request, 'createexperimento.html', {'expForm': expForm, 'formset': formset})
 
-def open_image(request, id):
-    img=Image.objects.get(id=id)
-    return render(request, 'image_page.html', {'img': img})
+def images_experiment(request, id):
+    exp = Experimento.objects.get(id=id)
+    return render(request, 'images_experiment.html', {'exp': exp})
 
+
+def annotate_image(request, id_exp, id_image):
+    image = Image.objects.get(id=id_image)
+    exp = Experimento.objects.get(id=id_exp)
+    return render(request, 'annotate.html', {'exp': exp, 'image': image})
+
+@csrf_exempt
+def save_tags(request, id_exp, id_image):
+    if request.method == 'POST':
+        if 'info' in request.POST:
+            info = request.POST['info']
+            print (info)

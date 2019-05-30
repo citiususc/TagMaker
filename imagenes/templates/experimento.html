@@ -6,5 +6,24 @@
     <p>Creado el {{ exp.date }}</p>
     <p>{{ exp.description }}</p>
     <p>Asociado a {{ exp.equipo.name }}</p>
-    <a href="{% url 'dataset' id=exp.dataset.id %}">{{ exp.dataset.name }}</a>
+    <p>Imágenes: <a href="{% url 'dataset' id=exp.dataset.id %}">{{ exp.dataset.name }}</a></p>
+    <div>
+    {% if exp.tagsPoint or exp.tagsBox %}
+        <p>Anotaciones</p>
+        <ul>
+            {% for tag in exp.tagsPoint.all %}
+                <li>{{ tag.name }} - Punto</li>
+            {% endfor %}
+            {% for tag in exp.tagsBox.all %}
+                <li>{{ tag.name }} - Caja</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay anotaciones definidas para el experimento</p>
+        <a href="#">Definir anotaciones</a>
+    {% endif %}
+    </div>
+    <a href="#">Modificar experimento</a>
+    <a href="#">Borrar experimento</a><br>
+    <a href="{% url 'images_experiment' id=exp.id %}"><button>ANOTAR</button></a>
 {% endblock %}
