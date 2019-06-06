@@ -25,7 +25,7 @@ SECRET_KEY = '=&z!ga9qsljyf8m#!f_$-=y5v1nl(1vub34$94idpww2ibe5$&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS =[]
+ALLOWED_HOSTS =['192.168.43.232', '127.0.0.1']
 
 
 # Application definition
@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'usuarios',
-    'imagenes',
+    'users',
+    'images',
 ]
 
 MIDDLEWARE = [
@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'usuarios.middleware.RestrictStaffToAdminMiddleware'
+    'users.middleware.RestrictStaffToAdminMiddleware'
 ]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -1,8 +1,9 @@
-from imagenes.forms import FormDataset, FormExperimento, TagFormset
-from imagenes.models import Dataset, Experimento, Image, TagBox, TagPoint
+from images.forms import FormDataset, FormExperiment, TagFormset
+from images.models import Dataset, Experiment, Image, TagBox, TagPoint, TagImage
+from users.models import Team
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-import os, uuid, shutil, hashlib
+import os, uuid, shutil, hashlib, json
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 
@@ -15,9 +16,9 @@ def dataset_list(request):
     datasets = Dataset.objects.all()
     return render(request, 'dataset_list.html', {'datasets': datasets})
 
-def experimento_list(request):
-    experimentos = Experimento.objects.all()
-    return render(request, 'experimento_list.html', {'experimentos': experimentos})
+def experiment_list(request):
+    experiments = Experiment.objects.all()
+    return render(request, 'experiment_list.html', {'experiments': experiments})
 
 def md5(file):
     hash_md5 = hashlib.md5()
@@ -52,7 +53,7 @@ def new_dataset(request):
                     for chunk in file.chunks():
                         image.write(chunk)
 
-                # comprobación de imagenes repetidas
+                # comprobación de images repetidas
                 checksum = md5(image_path)  # generamos el checksum de la imagen a partir de la ruta que antes generamos y comprobamos si existe en la BD.
                 #En caso negativo almacenamos una instancia de Image en la BD y guardamos la imagen en la carpeta del dataset correspondiente.
                 if not Image.objects.filter(checksum=checksum):
@@ -70,7 +71,7 @@ def new_dataset(request):
             return redirect('dataset_list')
     else:
         postForm = FormDataset()
-    return render(request, 'createdataset.html', {'postForm': postForm})
+    return render(request, 'create_dataset.html', {'postForm': postForm})
 
 def dataset(request, id):
     data=Dataset.objects.get(id=id)
@@ -106,7 +107,7 @@ def modify_dataset(request, id):
                     for chunk in file.chunks():
                         image.write(chunk)
 
-                    # comprobación de imagenes repetidas
+                    # comprobación de images repetidas
                 checksum = md5(image_path)  # generamos el checksum de la imagen a partir de la ruta que antes generamos y comprobamos si existe en la BD.
                     # En caso negativo almacenamos una instancia de Image en la BD y guardamos la imagen en la carpeta del dataset correspondiente.
                 if not Image.objects.filter(checksum=checksum):
@@ -122,16 +123,15 @@ def modify_dataset(request, id):
         return redirect('dataset', id=id)
     else:
         dataForm = FormDataset(instance=dataset)
-    return render(request, 'modifydataset.html', {'dataForm':dataForm, 'data_images':data_images, 'id_data':id})
+    return render(request, 'modify_dataset.html', {'dataForm':dataForm, 'data_images':data_images, 'id_data':id})
 
 def delete_dataset(request, id):
     query = Dataset.objects.get(id=id)
     query.images.all().delete()
     query.delete()
-    nombre = query.name
-    shutil.rmtree("static/images/"+nombre)
-    datasets = Dataset.objects.all()
-    return render(request, 'dataset_list.html', {'datasets': datasets})
+    name = query.name
+    shutil.rmtree("static/images/"+name)
+    return redirect('dataset_list')
 
 def delete_image_dataset(request, id_data, id):
     query = Image.objects.get(id=id)
@@ -140,64 +140,136 @@ def delete_image_dataset(request, id_data, id):
     os.remove(path)
     return redirect('modify_dataset', id=id_data)
 
+def delete_tag_experiment(request, id_exp, id_tag, type):
+    if type == 'punto':
+        for point in TagPoint.objects.filter(id=id_tag).filter(experiment_id=id_exp):
+            point.delete()
+        if TagImage.objects.filter(experiment_id=id_exp).exists():
+            TagImage.objects.get(experiment_id=id_exp).tags_points.all().delete()
+    elif type =='caja':
+        for box in TagBox.objects.filter(id=id_tag).filter(experiment_id=id_exp):
+            box.delete()
+        if TagImage.objects.filter(experiment_id=id_exp).exists():
+            TagImage.objects.get(experiment_id=id_exp).tags_rectangles.all().delete()
+    return redirect('modify_experiment', id_exp)
 
-
-
-def experimento(request, id):
-    exp=Experimento.objects.get(id=id)
-    tagsbox=exp.tagsBox.all()
-    tagspoint=exp.tagsPoint.all()
-    return render(request, 'experimento.html', {'exp': exp, 'tagsbox': tagsbox, 'tagspoint': tagspoint})
-
-
-
-
-def new_experimento(request):
+def new_experiment(request):
     if request.method == 'POST':
-        expForm = FormExperimento(request.POST)
+        expForm = FormExperiment(request.POST)
         formset = TagFormset(request.POST)
 
         if expForm.is_valid():
-            experimento = Experimento(name=expForm.cleaned_data['name'],
+            experiment = Experiment(name=expForm.cleaned_data['name'],
                                       description=expForm.cleaned_data['description'],
                                       dataset=expForm.cleaned_data['dataset'],
-                                      equipo=expForm.cleaned_data['equipo'],)
-            experimento.save()
+                                      team=expForm.cleaned_data['team'],)
+            experiment.save()
             if formset.is_valid():
                 for form in formset:
                     if form.cleaned_data.get('type') == 'Caja':
                         box = TagBox(
-                            name=form.cleaned_data.get('name')
+                            name=form.cleaned_data.get('name'),
+                            experiment=experiment
                         )
                         box.save()
-                        experimento.tagsBox.add(box)
                     elif form.cleaned_data.get('type') == 'Punto':
                         point = TagPoint(
-                            name=form.cleaned_data.get('name')
+                            name=form.cleaned_data.get('name'),
+                            experiment=experiment
                         )
                         point.save()
-                        experimento.tagsPoint.add(point)
-
-
-        return redirect('home')
+            return redirect('experiment_list')
     else:
         formset = TagFormset()
-        expForm = FormExperimento()
-    return render(request, 'createexperimento.html', {'expForm': expForm, 'formset': formset})
+        expForm = FormExperiment()
+    return render(request, 'create_experiment.html', {'expForm': expForm, 'formset': formset})
+
+def experiment(request, id):
+    exp=Experiment.objects.get(id=id)
+    points = TagPoint.objects.all().filter(experiment_id=id).filter(x=None).filter(y=None)
+    boxes = TagBox.objects.all().filter(experiment_id=id).filter(x_top_left=None).filter(y_top_left=None).filter(x_bottom_right=None).filter(y_bottom_right=None)
+    return render(request, 'experiment.html', {'exp': exp, 'points':points, 'boxes': boxes})
+
+def delete_experiment(request, id):
+    query = Experiment.objects.get(id=id)
+    query.delete()
+    messages.success(request, 'Experimento eliminado!')
+    return redirect ('experiment_list')
+
+def modify_experiment(request, id):
+    experiment = Experiment.objects.get(id=id)
+    points = TagPoint.objects.all().filter(experiment_id=id).filter(x=None).filter(y=None)
+    boxes = TagBox.objects.all().filter(experiment_id=id).filter(x_top_left=None).filter(y_top_left=None).filter(x_bottom_right=None).filter(y_bottom_right=None)
+
+    if request.method == 'POST':
+        print("si")
+    else:
+        formset = TagFormset()
+        expForm = FormExperiment(instance=experiment)
+    return render(request, 'modify_experiment.html', {'expForm': expForm, 'id_exp':id, 'formset':formset, 'points':points, 'boxes': boxes})
+
+
+
 
 def images_experiment(request, id):
-    exp = Experimento.objects.get(id=id)
-    return render(request, 'images_experiment.html', {'exp': exp})
+    exp = Experiment.objects.get(id=id)
+    tag_images = None
+    if TagImage.objects.filter(experiment_id=id).exists():
+        tag_images = TagImage.objects.get(experiment_id=id)
+    return render(request, 'images_experiment.html', {'exp': exp, 'tag_images': tag_images})
 
 
 def annotate_image(request, id_exp, id_image):
     image = Image.objects.get(id=id_image)
-    exp = Experimento.objects.get(id=id_exp)
-    return render(request, 'annotate.html', {'exp': exp, 'image': image})
+    exp = Experiment.objects.get(id=id_exp)
+    points = TagPoint.objects.all().filter(experiment_id=id_exp).filter(x=None).filter(y=None)
+    boxes = TagBox.objects.all().filter(experiment_id=id_exp).filter(x_top_left=None).filter(y_top_left=None).filter(x_bottom_right=None).filter(y_bottom_right=None)
+    tag_images = None
+
+    if TagImage.objects.filter(image_id=id_image).exists():
+        tag_images = TagImage.objects.get(image_id=id_image)
+    return render(request, 'annotate.html', {'exp': exp, 'image': image, 'points': points, 'boxes': boxes, 'tag_images': tag_images})
 
 @csrf_exempt
 def save_tags(request, id_exp, id_image):
     if request.method == 'POST':
-        if 'info' in request.POST:
-            info = request.POST['info']
-            print (info)
+        tag_image = None
+        #comprobamos si ya hay un objeto de la clase TagImage para esta imagen
+        if TagImage.objects.filter(image_id=id_image).exists(): #en este caso ya existe y vamos a modificar el existente en caso de que el canvas haya sido modificado
+            print("ya existe")
+
+        else:  #el objeto no existe y por lo tanto creamos uno nuevo
+            if (request.user.is_staff):  # si el usuario que está realizando la anotación es staff, entendemos que ya está validada
+                check_by = request.user
+                tag_image = TagImage(image_id=id_image,
+                                     user_id=request.user.id,
+                                     experiment_id=id_exp,
+                                     check_by=check_by)
+                tag_image.save()
+            else:
+                tag_image = TagImage(image_id=id_image,
+                                     user_id=request.user.id,
+                                     experiment_id=id_exp)
+                tag_image.save()
+        if 'canvas_data' in request.POST:
+            data = request.POST['canvas_data']
+            decoded = json.loads(data)
+            tag_image = TagImage.objects.get(image_id=id_image)  # este es el objeto que ya existía
+            for obj in decoded['objects']:
+                if (obj['type'] == 'circle'):
+                    point = TagPoint(name=obj['name'],
+                                     experiment_id=id_exp,
+                                     x=obj['left'],
+                                     y=obj['top'])
+                    point.save()
+                    tag_image.tags_points.add(point)
+                elif (obj['type'] == 'rect'):
+                    box = TagBox(name=obj['name'],
+                                 experiment_id=id_exp,
+                                 x_top_left=obj['left'],
+                                 y_top_left=obj['top'],
+                                 x_bottom_right=obj['end_x'],
+                                 y_bottom_right=obj['end_y'])
+                    box.save()
+                    tag_image.tags_rectangles.add(box)
+    return redirect('experiment_list')

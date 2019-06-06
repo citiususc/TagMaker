@@ -3,15 +3,15 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from usuarios.forms import SignUpForm
-from usuarios.forms import EditPerfil
+from users.forms import SignUpForm
+from users.forms import EditProfile
 
 @login_required
 def home(request):
     return render(request, 'home.html')
 
 
-def signup(request):
+def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -24,24 +24,24 @@ def signup(request):
 
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'sign_up.html', {'form': form})
 
 
-def editprofile(request):
+def edit_profile(request):
     if request.method == 'POST':
-        form = EditPerfil(request.POST, instance=request.user)
+        form = EditProfile(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect('profile')
     else:
-        form = EditPerfil(instance=request.user)
-        return render(request, 'editprofile.html', {'form': form})
+        form = EditProfile(instance=request.user)
+        return render(request, 'edit_profile.html', {'form': form})
 
 
 def profile(request):
-    return render(request, 'myprofile.html')
+    return render(request, 'my_profile.html')
 
-def changepassword(request):
+def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(data=request.POST, user=request.user)
         if form.is_valid():
@@ -49,7 +49,7 @@ def changepassword(request):
             update_session_auth_hash(request, form.user)
             return redirect('profile')
         else:
-            return redirect('changepassword.html')
+            return redirect('change_password.html')
     else:
         form = PasswordChangeForm(user=request.user)
-        return render(request, 'changepassword.html', {'form': form})
+        return render(request, 'change_password.html', {'form': form})

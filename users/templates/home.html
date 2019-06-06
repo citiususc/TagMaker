@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    {% if user.is_authenticated and user.is_staff %}
+        <div class="row">
+            <div class="col-md-6 col-lg-4">
+              <a class="portfolio-item d-block mx-auto" href="{% url 'dataset_list' %}">
+                <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                </div>
+                <img class="img-fluid" src="{% static 'images/cabin.png' %}" alt="">
+              </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <a class="portfolio-item d-block mx-auto" href="{% url 'experiment_list' %}">
+                <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                </div>
+                <img class="img-fluid" src="{% static 'images/cake.png' %}" alt="">
+              </a>
+            </div>
+    {% elif user.is_authenticated and not user.is_staff %}
+            <div class="col-md-6 col-lg-4">
+              <a class="portfolio-item d-block mx-auto" href="{% url 'experiment_list' %}">
+                <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                </div>
+                <img class="img-fluid" src="{% static 'images/cake.png' %}" alt="">
+              </a>
+            </div>
+    {% endif %}
+
+{% endblock %}

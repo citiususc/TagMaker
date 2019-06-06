@@ -1,31 +1,34 @@
 from django.conf.urls import url
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
-from usuarios import views as usuarios_views
-from imagenes import views as imagenes_views
+from users import views as users_view
+from images import views as images_views
 from django.contrib import admin
 from django.urls import path
 
 
 urlpatterns = [
-    path('', usuarios_views.home, name='home'),
+    path('', users_view.home, name='home'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('signup/', usuarios_views.signup, name='signup'),
-    path('micuenta/', usuarios_views.profile, name='profile'),
-    path('micuenta/editar/', usuarios_views.editprofile, name='edit'),
-    path('micuenta/editar/password/', usuarios_views.changepassword, name='changepassword'),
+    path('signup/', users_view.sign_up, name='sign_up'),
+    path('micuenta/', users_view.profile, name='profile'),
+    path('micuenta/editar/', users_view.edit_profile, name='edit'),
+    path('micuenta/editar/password/', users_view.change_password, name='change_password'),
     path('admin/', admin.site.urls),
-    path('dataset/nuevo/', imagenes_views.new_dataset, name='create_dataset'),
-    path('datasets/', imagenes_views.dataset_list, name='dataset_list'),
-    path('datasets/<id>/', imagenes_views.dataset, name='dataset'),
-    path('datasets/<id>/modificar/', imagenes_views.modify_dataset, name='modify_dataset'),
-    path('datasets/<id_data>/borrarimagen/<id>/', imagenes_views.delete_image_dataset, name='delete_image_dataset'),
-    path('datasets/<id>/borrar/', imagenes_views.delete_dataset, name='delete_dataset'),
-    path('experimentos/', imagenes_views.experimento_list, name='experimento_list'),
-    path('experimentos/nuevo/',imagenes_views.new_experimento, name='create_experimento'),
-    path('experimentos/<id>/', imagenes_views.experimento, name='experimento'),
-    path('experimentos/<id>/images/', imagenes_views.images_experiment, name='images_experiment'),
-    path('anotarimagen/<id_exp>/<id_image>/', imagenes_views.annotate_image, name='annotate_image'),
-    path('anotarimagen/<id_exp>/<id_image>/save/', imagenes_views.save_tags, name='save_tags'),
+    path('dataset/nuevo/', images_views.new_dataset, name='create_dataset'),
+    path('datasets/', images_views.dataset_list, name='dataset_list'),
+    path('datasets/<id>/', images_views.dataset, name='dataset'),
+    path('datasets/<id>/modificar/', images_views.modify_dataset, name='modify_dataset'),
+    path('datasets/<id_data>/borrarimagen/<id>/', images_views.delete_image_dataset, name='delete_image_dataset'),
+    path('datasets/<id>/borrar/', images_views.delete_dataset, name='delete_dataset'),
+    path('experimentos/', images_views.experiment_list, name='experiment_list'),
+    path('experimentos/nuevo/',images_views.new_experiment, name='create_experiment'),
+    path('datasets/<id_exp>/borraretiqueta/<id_tag>/<type>/', images_views.delete_tag_experiment, name='delete_tag_experiment'),
+    path('experimento/<id>/borrar/',images_views.delete_experiment, name='delete_experiment'),
+    path('experimentos/<id>/', images_views.experiment, name='experiment'),
+    path('experimentos/<id>/modificar/', images_views.modify_experiment, name='modify_experiment'),
+    path('experimentos/<id>/images/', images_views.images_experiment, name='images_experiment'),
+    path('anotarimagen/<id_exp>/<id_image>/', images_views.annotate_image, name='annotate_image'),
+    path('anotarimagen/<id_exp>/<id_image>/save/', images_views.save_tags, name='save_tags'),
 ]

@@ -10,16 +10,8 @@
             <li><a href="#">{{ image.name }}</a></li>
         {% endfor %}
     </ul>
-    <a href="#" onclick="confirm_delete()">Borrar dataset</a>
+    <a href="{% url 'delete_dataset' id=data.id %}" onclick="return confirm('¿Deseas eliminar esta imagen?')">Borrar dataset</a>
     <a href="{% url 'modify_dataset' id=data.id %}">Modificar dataset</a>
     <a href="#">Descargar dataset</a>
 
-    <script>
-    function confirm_delete(){
-      var c = confirm("¿Estás seguro que quieres borrar el dataset?");
-      if (c == true) {
-         window.location = '{% url 'delete_dataset' id=data.id %}'
-      }
-    }
-    </script>
 {% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <a href="{% url 'home' %}">Volver al INICIO</a>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+  <h2>Mis Experimentos</h2>
+    {% if experiments %}
+        <p>Estos son los experimentos en los que participas</p>
+        <ul>
+            {% for experiment in experiments %}
+                <li><a href="{% url 'experiment' id=experiment.id %}">{{ experiment.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay experimentos definidos</p>
+    {% endif %}
+    <a href="{% url 'create_experiment' %}">Nuevo Experimento</a>
+
+
+{% endblock %}

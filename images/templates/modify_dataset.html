@@ -9,7 +9,6 @@
         {% endfor %}
         <ul>
             {% for image in data_images %}
-
                 <li>{{ image.name }} <a href='{% url 'delete_image_dataset' id_data=id_data id=image.id %}' onclick="return confirm('¿Deseas eliminar esta imagen?')">Eliminar</a></li>
             {% endfor %}
         </ul>
