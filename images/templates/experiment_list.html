@@ -20,7 +20,9 @@
     {% else %}
         <p>No hay experimentos definidos</p>
     {% endif %}
-    <a href="{% url 'create_experiment' %}">Nuevo Experimento</a>
+    {% if user.is_authenticated and user.is_staff %}
+        <a href="{% url 'create_experiment' %}">Nuevo Experimento</a>
+    {% endif %}
 
 
 {% endblock %}

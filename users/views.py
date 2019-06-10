@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
 from users.forms import SignUpForm
 from users.forms import EditProfile
@@ -53,3 +54,8 @@ def change_password(request):
     else:
         form = PasswordChangeForm(user=request.user)
         return render(request, 'change_password.html', {'form': form})
+
+def delete_profile(request):
+    u = User.objects.get(username=request.user.username)
+    u.delete()
+    return redirect('home')

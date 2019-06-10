@@ -5,7 +5,7 @@
   <h2>{{ exp.name }}</h2>
     <p>Creado el {{ exp.date }}</p>
     <p>{{ exp.description }}</p>
-    <p>Asociado a {{ exp.equipo.name }}</p>
+    <p>Asociado a {{ exp.team.name }}</p>
     <p>Imágenes: <a href="{% url 'dataset' id=exp.dataset.id %}">{{ exp.dataset.name }}</a></p>
     <div>
     {% if points or boxes %}
@@ -18,12 +18,16 @@
                 <li>{{ tag.name }} - Caja</li>
             {% endfor %}
         </ul>
+        <a href="{% url 'images_experiment' id=exp.id %}">ANOTAR</a>
     {% else %}
         <p>No hay anotaciones definidas para el experimento</p>
-        <a href="#">Definir anotaciones</a>
+        {% if user.is_authenticated and user.is_staff %}
+            <a href="{% url 'modify_experiment' id=exp.id %}">Definir anotaciones</a>
+        {% endif %}
     {% endif %}
-    <a href="{% url 'images_experiment' id=exp.id %}">ANOTAR</a>
     </div>
-    <a href="{% url 'modify_experiment' id=exp.id %}">Modificar experimento</a>
-    <a href="{% url 'delete_experiment' id=exp.id %}"  onclick="return confirm('¿Deseas eliminar esta imagen?')">Borrar experimento</a>
+    {% if user.is_authenticated and user.is_staff %}
+        <a href="{% url 'modify_experiment' id=exp.id %}">Modificar experimento</a>
+        <a href="{% url 'delete_experiment' id=exp.id %}"  onclick="return confirm('¿Deseas eliminar el experimento? Se perderá todo el trabajo realizado!')">Borrar experimento</a>
+    {% endif %}
 {% endblock %}

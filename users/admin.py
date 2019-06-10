@@ -4,7 +4,7 @@ from .models import Team
 
 class TeamAdmin(admin.ModelAdmin):
     model = Team
-    filter_horizontal = ('users',)  # If you don't specify this, you will get a multiple select widget.
+    filter_horizontal = ('users',)
 
 
 admin.site.register(Team, TeamAdmin)

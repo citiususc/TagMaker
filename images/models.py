@@ -2,10 +2,6 @@ from djongo import models
 from users.models import Team
 from django.contrib.auth.models import User
 
-class Coordinates(models.Model):
-    x = models.FloatField()
-    y = models.FloatField()
-
 class Image(models.Model):
     name_unique = models.CharField(max_length=64, unique=True)
     name = models.CharField(max_length=64)
@@ -22,8 +18,8 @@ class Experiment(models.Model):
     name = models.CharField(max_length=30, unique=True)
     description = models.CharField(max_length=1024)
     date = models.DateField(auto_now_add=True, blank=True)
-    dataset = models.OneToOneField(Dataset, on_delete=models.CASCADE)
-    team = models.OneToOneField(Team, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
 
 class TagPoint(models.Model):
     name = models.CharField(max_length=64)

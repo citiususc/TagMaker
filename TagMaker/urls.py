@@ -15,6 +15,7 @@ urlpatterns = [
     path('micuenta/', users_view.profile, name='profile'),
     path('micuenta/editar/', users_view.edit_profile, name='edit'),
     path('micuenta/editar/password/', users_view.change_password, name='change_password'),
+    path('micuenta/borrar/', users_view.delete_profile, name='delete_profile'),
     path('admin/', admin.site.urls),
     path('dataset/nuevo/', images_views.new_dataset, name='create_dataset'),
     path('datasets/', images_views.dataset_list, name='dataset_list'),
@@ -29,6 +30,7 @@ urlpatterns = [
     path('experimentos/<id>/', images_views.experiment, name='experiment'),
     path('experimentos/<id>/modificar/', images_views.modify_experiment, name='modify_experiment'),
     path('experimentos/<id>/images/', images_views.images_experiment, name='images_experiment'),
-    path('anotarimagen/<id_exp>/<id_image>/', images_views.annotate_image, name='annotate_image'),
-    path('anotarimagen/<id_exp>/<id_image>/save/', images_views.save_tags, name='save_tags'),
+    path('anotarimagen/<id_exp>/<id_image>/<id_user>/', images_views.annotate_image, name='annotate_image'),
+    path('anotarimagen/<id_exp>/<id_image>/save/', images_views.save_tags, name='save_tags')
+ #   path('anotarimagen/<id_exp>/<id_image>/<id_user>/validate/', images_views.validate, name='validate')
 ]

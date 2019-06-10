@@ -5,4 +5,5 @@
     <p>{{ user.first_name}} {{ user.last_name}}</p>
     <p>{{ user.email }}</p>
     <a href="{% url 'edit' %}">Editar información</a>
+    <a href="{% url 'delete_profile' %}" onclick="return confirm('¿Estás seguro que quieres darte de baja en la aplicación? Todo tu trabajo se perderá!')">Borrar cuenta</a>
 {% endblock %}
