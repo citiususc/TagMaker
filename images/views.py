@@ -307,3 +307,38 @@ def save_tags(request, id_exp, id_image):
 
 
     return redirect('experiment_list')
+
+@csrf_exempt
+def validate(request, id_exp, id_image, id_user):
+    #igual que en la función save_tags repetimos el mismo proceso
+    if request.method == 'POST':
+        tag_image = TagImage.objects.get(image_id=id_image, experiment_id=id_exp, user_id=id_user)
+        tag_image.tags_points.all().delete()
+        tag_image.tags_rectangles.all().delete()
+
+        if 'canvas_data' in request.POST:
+            data = request.POST['canvas_data']
+            decoded = json.loads(data)
+            for obj in decoded['objects']:
+                if (obj['type'] == 'circle'):
+                    point = TagPoint(name=obj['name'],
+                                     experiment_id=id_exp,
+                                     x=obj['left'],
+                                     y=obj['top'])
+                    point.save()
+                    tag_image.tags_points.add(point)
+                elif (obj['type'] == 'rect'):
+                    box = TagBox(name=obj['name'],
+                                 experiment_id=id_exp,
+                                 x_top_left=obj['left'],
+                                 y_top_left=obj['top'],
+                                 x_bottom_right=obj['end_x'],
+                                 y_bottom_right=obj['end_y'])
+                    box.save()
+                    tag_image.tags_rectangles.add(box)
+
+        #ponemos en check_by al usuario staff que valida la anotación
+        if(request.user.is_staff):
+            tag_image.update(check_by=request.user)
+
+    return redirect('experiment_list')
