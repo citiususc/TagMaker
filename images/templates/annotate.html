@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <a href="{% url 'images_experiment' id=exp.id %}">ATRÁS</a><br>
+<div id="tags" style="float:left; border: 2px solid black">
+
+    <h5>Anotaciones definidas</h5>
+    {% if tag_image is not None %}
+        <p>Anotado por {{ tag_image.user }}</p>
+    {% else %}
+        <p>Todavía no hay anotaciones</p>
+    {% endif %}
+
+    <ul>
+        {% for point in points %}
+            <li>{{ point.name }} - Punto <button onclick="point('{{ point.name }}');">Anotar</button></li>
+        {% endfor %}
+        {% for box in boxes %}
+            <li>{{ box.name }} - Caja <button onclick="box('{{ box.name }}');">Anotar</button></li>
+        {% endfor %}
+    </ul>
+        <button onclick="select_tag();">Seleccionar</button>
+        <button onclick="delete_tag();">Borrar</button>
+        <button onclick="save();">Guardar</button><br>
+        {% if user.is_authenticated and user.is_staff and tag_image and not tag_image.user.is_staff%}
+            <button onclick="validate();">Validar</button>
+        {% endif %}
+
+</div>
+    <div id="container_canvas" style="float:right;">
+        <canvas id="canvas" width="800" height="600" style="background-size: 800px 600px;">
+            Tu navegador no soporta el elemento canvas
+        </canvas>
+    </div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+<script src="{% static "js/fabric.js" %}" type="text/javascript"></script>
+<script type="text/javascript">
+
+    var container = document.getElementById("container_canvas");
+    var canvas = new fabric.Canvas('canvas');
+    canvas.setBackgroundImage('/{{ image.path }}/{{ image.name_unique }}', canvas.renderAll.bind(canvas));
+
+    //con esto desactivamos la rotación, la ampliación y la movilidad de un grupo seleccionado
+    fabric.Group.prototype.hasControls = false;
+    fabric.Group.prototype.lockMovementX = true;
+    fabric.Group.prototype.lockMovementY = true;
+
+    var name_tag;
+
+    load();
+
+    function load(){
+            //si para esta imagen había anotaciones hechas por el usuario logeado las cargamos
+    {% if tag_image is not None %}
+        {% for point in tag_image.tags_points.all %}
+            pos_x = {{ point.x }}
+            pos_y = {{ point.y }}
+            name_point = '{{ point.name }}'
+            var point = new fabric.Circle({
+                radius: 4,
+                fill: '#ff2626',
+                top: pos_y,
+                left: pos_x,
+                name: name_point,
+                selectable: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                hasRotatingPoint: false
+            });
+            canvas.add(point);
+        {% endfor %}
+        {% for box in tag_image.tags_rectangles.all %}
+            pos_x = {{ box.x_top_left }}
+            pos_y = {{ box.y_top_left }}
+            end_x = {{ box.x_bottom_right }}
+            end_y={{ box.y_bottom_right }}
+            name_box = '{{ box.name }}'
+            rect = new fabric.Rect({
+                left: pos_x,
+                top: pos_y,
+                name: name_box,
+                width: end_x - pos_x,
+                height: end_y - pos_y,
+                selectable: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                hasRotatingPoint: false,
+                fill: false,
+                stroke: '#ff2626',
+                strokeWidth: 2,
+                });
+            canvas.add(rect);
+        {% endfor %}
+    {% endif %}
+    }
+
+
+function removeEvents() {
+  canvas.isDrawingMode = false;
+  canvas.selection = false;
+     //EVENTOS TÁCTILES
+  container.removeEventListener('touchstart', touchStartPoint);
+  container.removeEventListener('touchstart', touchStartBox);
+  container.removeEventListener('touchend', touchEnd);
+  container.removeEventListener('touchmove', touchMoveBox);
+
+  //EVENTOS MOUSE
+ container.removeEventListener('mousedown', touchStartPoint);
+  container.removeEventListener('mousedown', touchStartBox);
+  container.removeEventListener('mouseup', touchEnd);
+  container.removeEventListener('mousemove', touchMoveBox);
+}
+
+function touchStartPoint(evt){
+    if( event.type=='mousedown' || window.TouchEvent && evt.touches[0].touchType == "stylus") {
+        pointerdown = true;
+        var pointer = canvas.getPointer(evt.e);
+        pos_x = pointer.x;
+        pos_y = pointer.y;
+        var point = new fabric.Circle({
+            radius: 4,
+            fill: '#ff2626',
+            top: pos_y,
+            left: pos_x,
+            name: name_tag,
+            selectable: false,
+            lockMovementX: false,
+            lockMovementY: false,
+            lockScalingX: true,
+            lockScalingY: true,
+            hasRotatingPoint: false
+        });
+        canvas.add(point);
+    }
+}
+
+function point(name_point) {
+    pointerdown = false;
+    name_tag = name_point;
+	removeEvents();
+    container.addEventListener('touchstart', touchStartPoint);
+    container.addEventListener('touchend', touchEnd);
+
+    //EVENTOS MOUSE
+    container.addEventListener('mousedown', touchStartPoint);
+    container.addEventListener('mouseup', touchEnd);
+}
+
+function touchStartBox(evt) {
+    if (evt.touches[0].touchType == "stylus") {
+        pointerdown = true;
+        var pointer = canvas.getPointer(evt.e);
+        pos_x = pointer.x; //posicion inicial
+        pos_y = pointer.y;
+        var pointer = canvas.getPointer(evt.e);
+        rect = new fabric.Rect({
+            left: pos_x,
+            top: pos_y,
+            name: name_tag,
+            width: pointer.x - pos_x,
+            height: pointer.y - pos_y,
+            selectable: false,
+            lockMovementX: false,
+            lockMovementY: false,
+            lockScalingX: false,
+            lockScalingY: false,
+            hasRotatingPoint: false,
+            fill: false,
+            stroke: '#ff2626',
+            strokeWidth: 2,
+
+        });
+        canvas.add(rect)
+    }
+}
+function touchMoveBox(evt) {
+    if (evt.touches[0].touchType == "stylus") {
+        if (!pointerdown) return;
+
+        var pointer = canvas.getPointer(evt.e);
+
+        if (pos_x > pointer.x) {
+            rect.set({
+                left: Math.abs(pointer.x)
+            });
+        }
+        if (pos_y > pointer.y) {
+            rect.set({
+                top: Math.abs(pointer.y)
+            });
+        }
+        rect.set({
+            width: Math.abs(pos_x - pointer.x)
+        });
+        rect.set({
+            height: Math.abs(pos_y - pointer.y)
+        });
+
+        rect.set({
+            end_x: pointer.x
+        });
+        rect.set({
+            end_y: pointer.y
+        });
+
+        canvas.renderAll();
+    }
+}
+function touchEnd() {
+    pointerdown = false;
+}
+
+function box(name_box){
+    pointerdown = false;
+    name_tag=name_box
+    removeEvents();
+
+         //EVENTOS TÁCTILES
+        container.addEventListener('touchstart', touchStartBox);
+        container.addEventListener('touchmove', touchMoveBox);
+        container.addEventListener('touchend', touchEnd);
+
+        //EVENTOS MOUSE
+        container.addEventListener('mousedown', touchStartBox);
+        container.addEventListener('mousemove', touchMoveBox);
+        container.addEventListener('mouseup', touchEnd);
+}
+
+function select_tag() {
+  removeEvents();
+  canvas.forEachObject(function (obj) {
+    obj.selectable = true;
+  });
+  canvas.renderAll();
+  canvas.selection = true;
+}
+
+function delete_tag(){
+    canvas.getActiveObjects().forEach((obj) => {
+    canvas.remove(obj)
+});
+canvas.discardActiveObject().renderAll()
+}
+
+function save() {
+    var data = JSON.stringify(canvas.toDatalessJSON(['end_x','end_y', 'name']));
+     $.ajax({
+        type:'POST',
+        url: '{% url 'save_tags' id_exp=exp.id id_image=image.id %}',
+        data : {
+            canvas_data: data,
+            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+        },
+        cache: false,
+        success: function(response){
+            console.log('Success');
+        },
+    });
+}
+
+function validate(){
+    {% if tag_image is not None %}
+        var URL = "{% url 'validate' id_exp=exp.id id_image=image.id id_user=tag_image.user.id %}";
+        var data = JSON.stringify(canvas.toDatalessJSON(['end_x','end_y', 'name']));
+        $.post(URL, {'canvas_data': data});
+    {% endif %}
+}
+
+
+</script>
+
+{% endblock %}
+
+
+

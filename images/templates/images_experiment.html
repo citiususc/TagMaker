@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <a href="{% url 'experiment' id=exp.id %}">ATRÁS</a>
+    <p>Estas son las imágenes del experimento. Pulsa sobre cada una de ellas para anotar.</p>
+    <ul>
+        {% for image in exp.dataset.images.all %}
+            <li><a href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=request.user.id %}">{{ image.name }}</a>
+            {% if user.is_authenticated and user.is_staff %}
+                {% for t in tag_images %}
+                    {% if t.image_id == image.id %}
+                        <ul style="list-style-type: none;">
+                        {% if not t.user.is_staff %}
+                            {% if not t.check_by %}
+                                <li><a style="color:red" href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a></li>
+                            {% else%}
+                                <li><a style="color:green" href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
