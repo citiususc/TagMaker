@@ -30,5 +30,6 @@ urlpatterns = [
     path('experiments/<id>/edit/', images_views.modify_experiment, name='modify_experiment'),
     path('experiments/<id>/images/', images_views.images_experiment, name='images_experiment'),
     path('annotate/<id_exp>/<id_image>/<id_user>/', images_views.annotate_image, name='annotate_image'),
-    path('annotate/<id_exp>/<id_image>/save/', images_views.save_tags, name='save_tags'),
+    path('annotate/<id_exp>/<id_image>/', images_views.save_tags, name='save_tags'),
+    path('annotate/validate/<id_exp>/<id_image>/<id_user>', images_views.validate, name='validate'),
 ]

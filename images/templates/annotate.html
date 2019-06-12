@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% csrf_token %}
 {% load static %}
 
 {% block content %}
@@ -64,8 +65,8 @@
                 left: pos_x,
                 name: name_point,
                 selectable: false,
-                lockMovementX: true,
-                lockMovementY: true,
+                lockMovementX: false,
+                lockMovementY: false,
                 lockScalingX: true,
                 lockScalingY: true,
                 hasRotatingPoint: false
@@ -85,10 +86,10 @@
                 width: end_x - pos_x,
                 height: end_y - pos_y,
                 selectable: false,
-                lockMovementX: true,
-                lockMovementY: true,
-                lockScalingX: true,
-                lockScalingY: true,
+                lockMovementX: false,
+                lockMovementY: false,
+                lockScalingX: false,
+                lockScalingY: false,
                 hasRotatingPoint: false,
                 fill: false,
                 stroke: '#ff2626',
@@ -152,7 +153,7 @@ function point(name_point) {
 }
 
 function touchStartBox(evt) {
-    if (evt.touches[0].touchType == "stylus") {
+    if( event.type=='mousedown' || window.TouchEvent && evt.touches[0].touchType == "stylus") {
         pointerdown = true;
         var pointer = canvas.getPointer(evt.e);
         pos_x = pointer.x; //posicion inicial
@@ -179,7 +180,7 @@ function touchStartBox(evt) {
     }
 }
 function touchMoveBox(evt) {
-    if (evt.touches[0].touchType == "stylus") {
+    if( event.type=='mousemove' || window.TouchEvent && evt.touches[0].touchType == "stylus") {
         if (!pointerdown) return;
 
         var pointer = canvas.getPointer(evt.e);

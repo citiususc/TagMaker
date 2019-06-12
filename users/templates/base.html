@@ -24,7 +24,7 @@
         <ul class="navbar-nav ml-auto">
             {% if user.is_authenticated  %}
           <li class="nav-item mx-0 mx-lg-1">
-            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#">Hola, {{ user }} <i class="fa fa-caret-down"></i></a>
+            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'logout' %}">Hola, {{ user }} <i class="fa fa-caret-down"></i></a>
           </li>
             {% endif %}
         </ul>

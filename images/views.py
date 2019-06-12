@@ -338,6 +338,7 @@ def save_tags(request, id_exp, id_image):
 def validate(request, id_exp, id_image, id_user):
     #igual que en la función save_tags repetimos el mismo proceso
     if request.method == 'POST':
+        #tag_image = TagImage.objects.filter(image_id=id_image).filter(experiment_id=id_exp).filter(user_id=id_user)
         tag_image = TagImage.objects.get(image_id=id_image, experiment_id=id_exp, user_id=id_user)
         tag_image.tags_points.all().delete()
         tag_image.tags_boxes.all().delete()
@@ -365,6 +366,7 @@ def validate(request, id_exp, id_image, id_user):
 
         #ponemos en check_by al usuario staff que valida la anotación
         if(request.user.is_staff):
-            tag_image.update(check_by=request.user)
+            tag_image.check_by=request.user
+            tag_image.save()
 
     return redirect('experiment_list')
