@@ -72,7 +72,7 @@
             });
             canvas.add(point);
         {% endfor %}
-        {% for box in tag_image.tags_rectangles.all %}
+        {% for box in tag_image.tags_boxes.all %}
             pos_x = {{ box.x_top_left }}
             pos_y = {{ box.y_top_left }}
             end_x = {{ box.x_bottom_right }}

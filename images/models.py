@@ -42,4 +42,4 @@ class TagImage(models.Model):
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     check_by = models.ForeignKey(User, related_name='check_by', on_delete=models.CASCADE, blank=True)
     tags_points = models.ManyToManyField(TagPoint)
-    tags_rectangles=models.ManyToManyField(TagBox)
+    tags_boxes = models.ManyToManyField(TagBox)

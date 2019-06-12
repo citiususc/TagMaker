@@ -170,7 +170,7 @@ def delete_tag_experiment(request, id_exp, id_tag, type):
         for box in TagBox.objects.filter(id=id_tag).filter(experiment_id=id_exp):
             box.delete()
         if TagImage.objects.filter(experiment_id=id_exp).exists():
-            TagImage.objects.get(experiment_id=id_exp).tags_rectangles.all().delete()
+            TagImage.objects.get(experiment_id=id_exp).tags_boxes.all().delete()
     return redirect('modify_experiment', id_exp)
 
 @staff_member_required
@@ -290,7 +290,7 @@ def save_tags(request, id_exp, id_image):
                 # Sobreescribimos las anotaciones
 
                 tag_image = TagImage.objects.get(image_id=id_image, user_id=request.user.id)
-                tag_image.tags_rectangles.all().delete()
+                tag_image.tags_boxes.all().delete()
                 tag_image.tags_points.all().delete()
 
 
@@ -324,7 +324,7 @@ def save_tags(request, id_exp, id_image):
                                  x_bottom_right=obj['end_x'],
                                  y_bottom_right=obj['end_y'])
                     box.save()
-                    tag_image.tags_rectangles.add(box)
+                    tag_image.tags_boxes.add(box)
 
 
     return redirect('experiment_list')
@@ -336,7 +336,7 @@ def validate(request, id_exp, id_image, id_user):
     if request.method == 'POST':
         tag_image = TagImage.objects.get(image_id=id_image, experiment_id=id_exp, user_id=id_user)
         tag_image.tags_points.all().delete()
-        tag_image.tags_rectangles.all().delete()
+        tag_image.tags_boxes.all().delete()
 
         if 'canvas_data' in request.POST:
             data = request.POST['canvas_data']
@@ -357,7 +357,7 @@ def validate(request, id_exp, id_image, id_user):
                                  x_bottom_right=obj['end_x'],
                                  y_bottom_right=obj['end_y'])
                     box.save()
-                    tag_image.tags_rectangles.add(box)
+                    tag_image.tags_boxes.add(box)
 
         #ponemos en check_by al usuario staff que valida la anotación
         if(request.user.is_staff):
