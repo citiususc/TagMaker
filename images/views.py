@@ -56,6 +56,10 @@ def new_dataset(request):
 
             #para cada una de las imágenes seleccionadas realizamos lo siguiente:
             for file in request.FILES.getlist('files'):
+
+                #Extraemos la extensión de la imagen
+
+
                 #generamos un nombre ÚNICO para la imagen y generamos su ruta dentro del proyecto
                 random_name=str(uuid.uuid4())
                 image_path=path_name+"/"+random_name+".jpg"
