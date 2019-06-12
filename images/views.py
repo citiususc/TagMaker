@@ -368,5 +368,6 @@ def validate(request, id_exp, id_image, id_user):
         if(request.user.is_staff):
             tag_image.check_by=request.user
             tag_image.save()
+            messages.success(request, 'Anotaciones validadas')
 
     return redirect('experiment_list')
