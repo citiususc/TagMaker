@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <a href="{% url 'home' %}">Volver al INICIO</a>
   <h2>Mi cuenta: {{ user.username }}</h2>
     <p>{{ user.first_name}} {{ user.last_name}}</p>
     <p>{{ user.email }}</p>

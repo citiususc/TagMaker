@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <a href="{% url 'profile' %}">ATRÁS</a>
   <h2>Editar perfil</h2>
     <form method="post">
         {% csrf_token %}

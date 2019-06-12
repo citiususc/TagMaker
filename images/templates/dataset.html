@@ -1,16 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <a href="{% url 'dataset_list' %}">Volver ATRÁS</a>
+    <style>
+    img {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+      width: 150px;
+    }
+
+    img:hover {
+      box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+    }
+    </style>
+
+    <a href="{% url 'dataset_list' %}">ATRÁS</a>
   <h2>{{ data.name }}</h2>
     <p>Creado el {{ data.date }}</p>
     <p>{{ data.description }}</p>
-    <ul>
+    <div>
         {% for image in data.images.all %}
-            <li><a href="#">{{ image.name }}</a></li>
+            <a target="_blank" href="/{{ image.path }}/{{ image.name_unique }}">
+                <img src="/{{ image.path }}/{{ image.name_unique }}" alt="Forest" style="width:150px">
+            </a>
         {% endfor %}
-    </ul>
-    <a href="{% url 'delete_dataset' id=data.id %}" onclick="return confirm('¿Deseas eliminar esta imagen?')">Borrar dataset</a>
+    </div>
+    <a href="{% url 'delete_dataset' id=data.id %}" onclick="return confirm('¿Deseas eliminar el dataset?')">Borrar dataset</a>
     <a href="{% url 'modify_dataset' id=data.id %}">Modificar dataset</a>
+
+
+
+
 
 {% endblock %}

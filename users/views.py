@@ -28,6 +28,7 @@ def sign_up(request):
     return render(request, 'sign_up.html', {'form': form})
 
 
+@login_required
 def edit_profile(request):
     if request.method == 'POST':
         form = EditProfile(request.POST, instance=request.user)
@@ -38,10 +39,11 @@ def edit_profile(request):
         form = EditProfile(instance=request.user)
         return render(request, 'edit_profile.html', {'form': form})
 
-
+@login_required
 def profile(request):
     return render(request, 'my_profile.html')
 
+@login_required
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(data=request.POST, user=request.user)
@@ -55,6 +57,7 @@ def change_password(request):
         form = PasswordChangeForm(user=request.user)
         return render(request, 'change_password.html', {'form': form})
 
+@login_required
 def delete_profile(request):
     u = User.objects.get(username=request.user.username)
     u.delete()

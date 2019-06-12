@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <a href="{% url 'home' %}">Volver al INICIO</a>
     {% if messages %}
-    <ul class="messages">
         {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
         {% endfor %}
-    </ul>
     {% endif %}
+    <a href="{% url 'home' %}">Volver al INICIO</a>
   <h2>Mis Experimentos</h2>
     {% if experiments %}
         <p>Estos son los experimentos en los que participas</p>

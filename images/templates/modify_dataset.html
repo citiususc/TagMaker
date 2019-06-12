@@ -1,17 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <a href="{% url 'dataset' id=id_data %}">ATRÁS</a>
      <h2>Modificar dataset</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in dataForm %}
             {{ field }}<br>
         {% endfor %}
-        <ul>
             {% for image in data_images %}
-                <li>{{ image.name }} <a href='{% url 'delete_image_dataset' id_data=id_data id=image.id %}' onclick="return confirm('¿Deseas eliminar esta imagen?')">Eliminar</a></li>
+                    <img src="/{{ image.path }}/{{ image.name_unique }}" alt="Forest" style="width:150px">
+                    <a target="_blank" href='{% url 'delete_image_dataset' id_data=id_data id=image.id %}' onclick="return confirm('¿Deseas eliminar esta imagen?')">
+                    Eliminar
+                    </a>
+
             {% endfor %}
-        </ul>
+
+
     <table>
       <tr>
         <td>Añadir imágenes: </td><td><input name="files" type="file" size="50" accept="image/*" multiple>  </td>

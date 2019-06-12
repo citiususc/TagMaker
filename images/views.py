@@ -6,16 +6,19 @@ from django.contrib.auth.decorators import login_required
 import os, uuid, shutil, hashlib, json
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 path = "static/images"
 if not os.path.exists(path):
     os.makedirs(path)
 
+@login_required
 def dataset_list(request):
     datasets = Dataset.objects.all()
     return render(request, 'dataset_list.html', {'datasets': datasets})
 
+@login_required
 def experiment_list(request):
     experiments = []
 
@@ -34,11 +37,13 @@ def md5(file):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
-
+@staff_member_required
 @login_required
 def new_dataset(request):
     if request.method == 'POST':
+
         postForm = FormDataset(request.POST)
+
         if postForm.is_valid():
             path_name = "static/images/"+postForm.cleaned_data.get('name')
             if not os.path.exists(path_name):
@@ -74,17 +79,19 @@ def new_dataset(request):
                 else:
                     os.remove(image_path);
 
-            messages.success(request, 'El dataset ha sido creado con éxito')
+            messages.success(request, '¡Dataset creado con éxito!')
             return redirect('dataset_list')
     else:
         postForm = FormDataset()
     return render(request, 'create_dataset.html', {'postForm': postForm})
 
+@login_required
 def dataset(request, id):
     data=Dataset.objects.get(id=id)
     return render(request, 'dataset.html', {'data': data})
 
-
+@staff_member_required
+@login_required
 def modify_dataset(request, id):
     dataset = Dataset.objects.get(id=id)
     name_old = dataset.name
@@ -132,6 +139,8 @@ def modify_dataset(request, id):
         dataForm = FormDataset(instance=dataset)
     return render(request, 'modify_dataset.html', {'dataForm':dataForm, 'data_images':data_images, 'id_data':id})
 
+@staff_member_required
+@login_required
 def delete_dataset(request, id):
     query = Dataset.objects.get(id=id)
     query.images.all().delete()
@@ -140,6 +149,8 @@ def delete_dataset(request, id):
     shutil.rmtree("static/images/"+name)
     return redirect('dataset_list')
 
+@staff_member_required
+@login_required
 def delete_image_dataset(request, id_data, id):
     query = Image.objects.get(id=id)
     query.delete()
@@ -147,6 +158,8 @@ def delete_image_dataset(request, id_data, id):
     os.remove(path)
     return redirect('modify_dataset', id=id_data)
 
+@staff_member_required
+@login_required
 def delete_tag_experiment(request, id_exp, id_tag, type):
     if type == 'punto':
         for point in TagPoint.objects.filter(id=id_tag).filter(experiment_id=id_exp):
@@ -160,6 +173,8 @@ def delete_tag_experiment(request, id_exp, id_tag, type):
             TagImage.objects.get(experiment_id=id_exp).tags_rectangles.all().delete()
     return redirect('modify_experiment', id_exp)
 
+@staff_member_required
+@login_required
 def new_experiment(request):
     if request.method == 'POST':
         expForm = FormExperiment(request.POST)
@@ -191,18 +206,23 @@ def new_experiment(request):
         expForm = FormExperiment()
     return render(request, 'create_experiment.html', {'expForm': expForm, 'formset': formset})
 
+@login_required
 def experiment(request, id):
     exp=Experiment.objects.get(id=id)
     points = TagPoint.objects.all().filter(experiment_id=id).filter(x=None).filter(y=None)
     boxes = TagBox.objects.all().filter(experiment_id=id).filter(x_top_left=None).filter(y_top_left=None).filter(x_bottom_right=None).filter(y_bottom_right=None)
     return render(request, 'experiment.html', {'exp': exp, 'points':points, 'boxes': boxes})
 
+@staff_member_required
+@login_required
 def delete_experiment(request, id):
     query = Experiment.objects.get(id=id)
     query.delete()
     messages.success(request, 'Experimento eliminado!')
     return redirect ('experiment_list')
 
+@staff_member_required
+@login_required
 def modify_experiment(request, id):
     experiment = Experiment.objects.get(id=id)
     points = TagPoint.objects.all().filter(experiment_id=id).filter(x=None).filter(y=None)
@@ -234,7 +254,7 @@ def modify_experiment(request, id):
         expForm = FormExperiment(instance=experiment)
     return render(request, 'modify_experiment.html', {'expForm': expForm, 'id_exp':id, 'formset':formset, 'points':points, 'boxes': boxes})
 
-
+@login_required
 def images_experiment(request, id):
     exp = Experiment.objects.get(id=id)
     tag_images = None
@@ -242,7 +262,7 @@ def images_experiment(request, id):
         tag_images = TagImage.objects.all().filter(experiment_id=id)
     return render(request, 'images_experiment.html', {'exp': exp, 'tag_images': tag_images})
 
-
+@login_required
 def annotate_image(request, id_exp, id_image, id_user):
     image = Image.objects.get(id=id_image)
     exp = Experiment.objects.get(id=id_exp)
@@ -255,6 +275,7 @@ def annotate_image(request, id_exp, id_image, id_user):
         tag_image = TagImage.objects.get(image_id=id_image, user_id=id_user)
     return render(request, 'annotate.html', {'exp': exp, 'image': image, 'points': points, 'boxes': boxes, 'tag_image': tag_image})
 
+@login_required
 @csrf_exempt
 def save_tags(request, id_exp, id_image):
     if request.method == 'POST':
@@ -308,6 +329,7 @@ def save_tags(request, id_exp, id_image):
 
     return redirect('experiment_list')
 
+@login_required
 @csrf_exempt
 def validate(request, id_exp, id_image, id_user):
     #igual que en la función save_tags repetimos el mismo proceso

@@ -18,7 +18,8 @@
                 <li>{{ tag.name }} - Caja</li>
             {% endfor %}
         </ul>
-        <a href="{% url 'images_experiment' id=exp.id %}">ANOTAR</a>
+        <a href="{% url 'images_experiment' id=exp.id %}">ANOTAR</a><br>
+        <a href="#">Descargar anotaciones</a>
     {% else %}
         <p>No hay anotaciones definidas para el experimento</p>
         {% if user.is_authenticated and user.is_staff %}
