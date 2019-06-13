@@ -21,7 +21,7 @@
     <div>
         {% for image in data.images.all %}
             <a target="_blank" href="/{{ image.path }}/{{ image.name_unique }}">
-                <img src="/{{ image.path }}/{{ image.name_unique }}" alt="Forest" style="width:150px">
+                <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:150px">
             </a>
         {% endfor %}
     </div>

@@ -7,11 +7,8 @@ import os, uuid, shutil, hashlib, json
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
 
-
-path = "static/images"
-if not os.path.exists(path):
-    os.makedirs(path)
 
 @login_required
 def dataset_list(request):
@@ -45,7 +42,7 @@ def new_dataset(request):
         postForm = FormDataset(request.POST)
 
         if postForm.is_valid():
-            path_name = "static/images/"+postForm.cleaned_data.get('name')
+            path_name = settings.MEDIA_URL+postForm.cleaned_data.get('name')
             if not os.path.exists(path_name):
                 os.makedirs(path_name)
             #Creamos dataset solo con el nombre y la descripción
@@ -53,16 +50,17 @@ def new_dataset(request):
                               description=postForm.cleaned_data['description'])
             dataset.save()
 
-
             #para cada una de las imágenes seleccionadas realizamos lo siguiente:
             for file in request.FILES.getlist('files'):
 
                 #Extraemos la extensión de la imagen
-
+                file_name = file.name.split(".")
+                extension=(file_name[1])
 
                 #generamos un nombre ÚNICO para la imagen y generamos su ruta dentro del proyecto
                 random_name=str(uuid.uuid4())
-                image_path=path_name+"/"+random_name+".jpg"
+                image_path=path_name+"/"+random_name+"."+extension
+                print(image_path)
 
                 #guardamos la imagen en la ruta que proporcionamos
                 with open(image_path, 'wb+') as image:
@@ -76,7 +74,7 @@ def new_dataset(request):
                     imagen = Image(name=file.name,
                                checksum=checksum,
                                path=path_name,
-                               name_unique=random_name+'.jpg')
+                               name_unique=random_name+"."+extension)
                     imagen.save()
                     dataset.images.add(imagen)
                 #en caso de que sí exista debemos borrarla de la carpeta puesto que anteriormente la guardamos para poder hacer el checksum
@@ -108,17 +106,21 @@ def modify_dataset(request, id):
             #Si el nombre fue cambiado
             if(name_old!=dataForm.cleaned_data['name']):
                 #actualizamos la carpeta de imágenes
-                path_old = "static/images/" + name_old
-                path_new = "static/images/" + dataForm.cleaned_data['name']
+                path_old = settings.MEDIA_URL + name_old
+                path_new = settings.MEDIA_URL + dataForm.cleaned_data['name']
                 os.rename(path_old, path_new)
                 #y actualizamos la ruta de las imágenes de la BD
                 Image.objects.filter(path=path_old).update(path=path_new)
 
             # para cada una de las imágenes seleccionadas realizamos lo siguiente:
             for file in request.FILES.getlist('files'):
+                # Extraemos la extensión de la imagen
+                file_name = file.name.split(".")
+                extension = (file_name[1])
+
                 # generamos un nombre ÚNICO para la imagen y generamos su ruta dentro del proyecto
                 random_name=str(uuid.uuid4())
-                image_path = "static/images/" + dataForm.cleaned_data['name']+ "/" + random_name + ".jpg"
+                image_path = settings.MEDIA_URL + dataForm.cleaned_data['name']+ "/" + random_name +"."+extension
 
                 # guardamos la imagen en la ruta que proporcionamos
                 with open(image_path, 'wb+') as image:
@@ -131,8 +133,8 @@ def modify_dataset(request, id):
                 if not Image.objects.filter(checksum=checksum):
                     imagen = Image(name=file.name,
                                    checksum=checksum,
-                                   path="static/images/" + dataForm.cleaned_data['name'],
-                                   name_unique=random_name+'.jpg')
+                                   path=settings.MEDIA_URL + dataForm.cleaned_data['name'],
+                                   name_unique=random_name+"."+extension)
                     imagen.save()
                     dataset.images.add(imagen)
                     # en caso de que sí exista debemos borrarla de la carpeta puesto que anteriormente la guardamos para poder hacer el checksum
@@ -150,7 +152,7 @@ def delete_dataset(request, id):
     query.images.all().delete()
     query.delete()
     name = query.name
-    shutil.rmtree("static/images/"+name)
+    shutil.rmtree(settings.MEDIA_URL+name)
     return redirect('dataset_list')
 
 @staff_member_required
@@ -158,7 +160,7 @@ def delete_dataset(request, id):
 def delete_image_dataset(request, id_data, id):
     query = Image.objects.get(id=id)
     query.delete()
-    path=query.path+"/"+query.name_unique+".jpg"
+    path=query.path+"/"+query.name_unique
     os.remove(path)
     return redirect('modify_dataset', id=id_data)
 

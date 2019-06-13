@@ -1,11 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+    <style>
+        img {
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          padding: 5px;
+          width: 150px;
+        }
+
+        img:hover {
+          box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        }
+    </style>
     <a href="{% url 'experiment' id=exp.id %}">ATRÁS</a>
     <p>Estas son las imágenes del experimento. Pulsa sobre cada una de ellas para anotar.</p>
-    <ul>
         {% for image in exp.dataset.images.all %}
-            <li><a href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=request.user.id %}">{{ image.name }}</a>
+            <a href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=request.user.id %}">
+                <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:150px">
+            </a>
             {% if user.is_authenticated and user.is_staff %}
                 {% for t in tag_images %}
                     {% if t.image_id == image.id %}
@@ -21,8 +35,6 @@
                     {% endif %}
                 {% endfor %}
             {% endif %}
-            </li>
         {% endfor %}
-    </ul>
 
 {% endblock %}

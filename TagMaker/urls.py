@@ -4,6 +4,8 @@ from users import views as users_view
 from images import views as images_views
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -32,4 +34,4 @@ urlpatterns = [
     path('annotate/<id_exp>/<id_image>/<id_user>/', images_views.annotate_image, name='annotate_image'),
     path('annotate/<id_exp>/<id_image>/', images_views.save_tags, name='save_tags'),
     path('annotate/validate/<id_exp>/<id_image>/<id_user>', images_views.validate, name='validate'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
