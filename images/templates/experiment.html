@@ -19,7 +19,7 @@
             {% endfor %}
         </ul>
         <a href="{% url 'images_experiment' id=exp.id %}">ANOTAR</a><br>
-        <a href="#">Descargar anotaciones</a>
+        <a href="{% url 'download' id_exp=exp.id %}">Descargar anotaciones</a>
     {% else %}
         <p>No hay anotaciones definidas para el experimento</p>
         {% if user.is_authenticated and user.is_staff %}
@@ -31,4 +31,5 @@
         <a href="{% url 'modify_experiment' id=exp.id %}">Modificar experimento</a>
         <a href="{% url 'delete_experiment' id=exp.id %}"  onclick="return confirm('¿Deseas eliminar el experimento? Se perderá todo el trabajo realizado!')">Borrar experimento</a>
     {% endif %}
+
 {% endblock %}

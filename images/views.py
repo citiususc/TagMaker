@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
-
+from django.http import HttpResponse, Http404
 
 @login_required
 def dataset_list(request):
@@ -373,3 +373,53 @@ def validate(request, id_exp, id_image, id_user):
             messages.success(request, 'Anotaciones validadas')
 
     return redirect('experiment_list')
+
+
+@login_required
+def download_tags(request, id_exp):
+
+    experiment = Experiment.objects.get(id=id_exp)
+
+    experiment_data = [{
+        'name': experiment.name,
+        'description': experiment.description,
+       # 'date': experiment.date,
+        'dataset': experiment.dataset.name,
+        'team': experiment.team.name,
+    }]
+
+    if TagImage.objects.all().filter(experiment_id=experiment.id):
+        tag_images=TagImage.objects.all().filter(experiment_id=experiment.id)
+        for tag in tag_images:
+            tag_image =[{
+                'image': tag.image.name,
+                'user': tag.user.username,
+                'check_by': tag.check_by.username,
+            }]
+
+            tag_points = tag.tags_points
+            for point in tag_points.all():
+                tag_point = {
+                    'name': point.name,
+                    'coordinate_x': point.x,
+                    'coordinate_y': point.y,
+                }
+                tag_image.append({'point': tag_point})
+
+            tag_boxes = tag.tags_boxes
+            for box in tag_boxes.all():
+                tag_box = {
+                    'name': box.name,
+                    'coordinate_x_top_left': box.x_top_left,
+                    'coordinate_y_top_left': box.y_top_left,
+                    'coordinate_x_bottom_right': box.x_bottom_right,
+                    'coordinate_y_bottom_right': box.y_bottom_right,
+                }
+                tag_image.append([{'box': tag_box}])
+
+                experiment_data.append({'tag_image': tag_image})
+
+    data = json.dumps(experiment_data)
+    response = HttpResponse(data, content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename='+experiment.name+'.json'
+    return response
