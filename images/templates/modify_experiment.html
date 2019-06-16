@@ -1,40 +1,63 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-    <a href="{% url 'experiment' id=id_exp %}">ATRÁS</a>
-     <h2>Modificar experimento</h2>
+
+    <a href="{% url 'experiment' id=id_exp %}">
+        <i class="fas fa-chevron-left"></i> ATRÁS
+    </a>
+
+    <div class="main">
+     <h3>Modificar experimento</h3>
     <form method="post">
         {% csrf_token %}
-        {% for field in expForm %}
-            {{ field }}<br>
-        {% endfor %}
+        {{ expForm|crispy }}
         {% if points or boxes %}
-            <p>Anotaciones definidas</p>
-            <ul>
-                {% for tag in points %}
-                    <li>{{ tag.name }} - Punto <a href='{% url 'delete_tag_experiment' id_exp=id_exp id_tag=tag.id type='punto' %}' onclick="return confirm('¿Deseas eliminar esta etiqueta?')">Eliminar</a></li>
-                {% endfor %}
-                {% for tag in boxes %}
-                    <li>{{ tag.name }} - Caja <a href='{% url 'delete_tag_experiment' id_exp=id_exp id_tag=tag.id type='caja' %}' onclick="return confirm('¿Deseas eliminar esta etiqueta?')">Eliminar</a></li>
-                {% endfor %}
-            </ul>
+
+        <table class="table tags">
+        <caption>Anotaciones definidas</caption>
+          <thead>
+            <tr>
+              <th scope="col">Nombre</th>
+              <th scope="col">Tipo</th>
+                <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for tag in points %}
+              <tr>
+                <td>{{ tag.name }}</td>
+                <td>Punto</td>
+                <td><a href='{% url 'delete_tag_experiment' id_exp=id_exp id_tag=tag.id type='punto' %}'>Borrar</a></td>
+              </tr>
+          {% endfor %}
+          {% for tag in boxes %}
+              <tr>
+                <td>{{ tag.name }}</td>
+                <td>Caja</td>
+                  <td><a href='{% url 'delete_tag_experiment' id_exp=id_exp id_tag=tag.id type='caja' %}'>Borrar</a></td>
+              </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
         {% else %}
             <p>No hay anotaciones definidas para este experimento</p>
         {% endif %}
-        <p>Definir nuevas anotaciones</p>
+        <p>DEFINIR NUEVAS ANOTACIONES</p>
         {{ formset.management_form }}
-        {% for form in formset %}
+       {% for form in formset %}
             <div class="row form-row spacer">
                 <div class="input-group">
-                    {{ form.name }}
-                    {{ form.type }}
+                    {{ form|crispy }}
                     <div class="input-group-append">
-                        <button class="btn btn-success add-form-row">+</button>
+                        <button class="btn btn-success add-form-row"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
             </div>
         {% endfor %}
-    <button type="submit"> Guardar cambios </button>
+    </div>
+    <button class="btn btn-primary" type="submit"> Guardar cambios </button>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script type="text/javascript">

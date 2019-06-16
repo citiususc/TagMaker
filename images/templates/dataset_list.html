@@ -2,28 +2,32 @@
 
 
 {% block content %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-            </div>
-        {% endfor %}
-    {% endif %}
+        <a href="{% url 'home' %}">
+            <i class="fas fa-chevron-left"></i> ATRÁS
+        </a>
+    <div class="main">
 
-    <a href="{% url 'home' %}">Volver al INICIO</a>
-  <h2>Datasets</h2>
-    {% if datasets %}
-        <p>Estos son los datasets creados</p>
-        <ul>
-            {% for dataset in datasets %}
-                <li><a href="{% url 'dataset' id=dataset.id %}">{{ dataset.name }}</a></li>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
             {% endfor %}
-        </ul>
-    {% else %}
-        <p>No hay datasets definidos</p>
-    {% endif %}
-    <a href="{% url 'create_dataset' %}">Nuevo Dataset</a>
+        {% endif %}
 
+      <h3>Datasets</h3>
+        {% if datasets %}
+            <p>Estos son los datasets existentes</p>
+            <ul class="fa-ul">
+                {% for dataset in datasets %}
+                    <li><a  href="{% url 'dataset' id=dataset.id %}">{{ dataset.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay datasets definidos</p>
+        {% endif %}
+    </div>
+    <a href="{% url 'create_dataset' %}"><i class="fas fa-plus"></i> Nuevo Dataset</a>
 
 {% endblock %}

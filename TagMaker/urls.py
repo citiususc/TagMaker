@@ -15,7 +15,7 @@ urlpatterns = [
     path('signup/', users_view.sign_up, name='sign_up'),
     path('myprofile/', users_view.profile, name='profile'),
     path('myprofile/edit/', users_view.edit_profile, name='edit'),
-    path('myprofile/edit/password/', users_view.change_password, name='change_password'),
+    path('myprofile/password/', users_view.change_password, name='change_password'),
     path('myprofile/delete/', users_view.delete_profile, name='delete_profile'),
     path('admin/', admin.site.urls),
     path('datasets/new/', images_views.new_dataset, name='create_dataset'),

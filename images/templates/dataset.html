@@ -1,33 +1,60 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <style>
-    img {
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 5px;
-      width: 150px;
-    }
 
-    img:hover {
-      box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
-    }
-    </style>
-
-    <a href="{% url 'dataset_list' %}">ATRÁS</a>
-  <h2>{{ data.name }}</h2>
-    <p>Creado el {{ data.date }}</p>
-    <p>{{ data.description }}</p>
-    <div>
-        {% for image in data.images.all %}
-            <a target="_blank" href="/{{ image.path }}/{{ image.name_unique }}">
-                <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:150px">
-            </a>
-        {% endfor %}
+    <a href="{% url 'dataset_list' %}">
+        <i class="fas fa-chevron-left"></i> ATRÁS
+    </a>
+    <div class="main">
+        <h3>{{ data.name }}</h3>
+        <p><small>Creado el {{ data.date }}</small></p>
+        <p>{{ data.description }}</p>
+        <div>
+        {% if data.images.all %}
+            {% for image in data.images.all %}
+                <a target="_blank" href="/{{ image.path }}/{{ image.name_unique }}">
+                    <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:150px">
+                </a>
+            {% endfor %}
+        {% else %}
+            <p>Dataset vacío</p>
+        {% endif %}
+        </div>
     </div>
-    <a href="{% url 'delete_dataset' id=data.id %}" onclick="return confirm('¿Deseas eliminar el dataset?')">Borrar dataset</a>
-    <a href="{% url 'modify_dataset' id=data.id %}">Modificar dataset</a>
+    <div>
+    <a href="{% url 'modify_dataset' id=data.id %}"><i class="fas fa-cog"></i> Modificar dataset</a><br>
+    <a href="#"  data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-trash-alt"></i> Borrar dataset</a>
+    </div>
 
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Borrar Dataset</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          ¿Seguro que quieres borrar este dataset?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cancelar
+        </button>
+          <a href="{% url 'delete_dataset' id=data.id %}">
+        <button type="button" class="btn btn-danger">
+            Aceptar
+        </button>
+          </a>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

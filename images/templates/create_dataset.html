@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-    <a href="{% url 'dataset_list' %}">ATRÁS</a>
-  <h2>Nuevo dataset</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in postForm %}
-            {{ field.errors }}
-            {{ field }}<br>
-        {% endfor %}
-    <table>
-      <tr>
-        <td>Imágenes seleccionadas: </td><td><input name="files" type="file" size="50" accept="image/*" multiple>  </td>
-        <td><button type="submit"> Crear </button> </td>
-       </tr>
-    </table>
-</form>
+    <a href="{% url 'dataset_list' %}">
+        <i class="fas fa-chevron-left"></i> ATRÁS
+    </a>
+    <div class="main">
+
+      <h3>Nuevo dataset</h3>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ postForm|crispy }}
+
+            <p>Imágenes seleccionadas: <input name="files" type="file" size="50" accept="image/*" multiple></p>
+            <button type="submit" class="btn btn-primary"> Crear </button>
+        </form>
+    </div>
 
 
 {% endblock %}

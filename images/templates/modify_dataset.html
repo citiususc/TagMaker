@@ -1,27 +1,24 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-    <a href="{% url 'dataset' id=id_data %}">ATRÁS</a>
-     <h2>Modificar dataset</h2>
+
+    <a href="{% url 'dataset' id=id_data %}">
+        <i class="fas fa-chevron-left"></i> ATRÁS
+    </a>
+    <div class="main">
+     <h3>Modificar dataset</h3>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {% for field in dataForm %}
-            {{ field }}<br>
-        {% endfor %}
+        {{ dataForm|crispy }}
             {% for image in data_images %}
-                    <img src="/{{ image.path }}/{{ image.name_unique }}" alt="Forest" style="width:150px">
-                    <a target="_blank" href='{% url 'delete_image_dataset' id_data=id_data id=image.id %}' onclick="return confirm('¿Deseas eliminar esta imagen?')">
-                    Eliminar
-                    </a>
-
+                <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:150px">
+                <a class="remove-image" href='{% url 'delete_image_dataset' id_data=id_data id=image.id %}'><i class="fas fa-times"></i></a>
             {% endfor %}
 
-
-    <table>
-      <tr>
-        <td>Añadir imágenes: </td><td><input name="files" type="file" size="50" accept="image/*" multiple>  </td>
-        <td><button type="submit"> Guardar cambios </button> </td>
-       </tr>
-    </table>
+        <p>Imágenes seleccionadas: <input name="files" type="file" size="50" accept="image/*" multiple></p>
+        <button type="submit" class="btn btn-primary"> Guardar cambios </button>
+    </form>
+    </div>
 
 {% endblock %}

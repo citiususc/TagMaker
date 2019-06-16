@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <a href="{% url 'home' %}">
+        <i class="fas fa-chevron-left"></i> ATRÁS
+    </a>
+
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-success alert-dismissible fade show">
@@ -9,20 +13,23 @@
             </div>
         {% endfor %}
     {% endif %}
-    <a href="{% url 'home' %}">Volver al INICIO</a>
-  <h2>Mis Experimentos</h2>
-    {% if experiments %}
-        <p>Estos son los experimentos en los que participas</p>
-        <ul>
-            {% for experiment in experiments %}
-                <li><a href="{% url 'experiment' id=experiment.id %}">{{ experiment.name }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No hay experimentos definidos</p>
-    {% endif %}
+
+    <div class="main">
+        <h3>Mis Experimentos</h3>
+        {% if experiments %}
+            <p>Estos son los experimentos en los que participas</p>
+            <ul class="fa-ul">
+                {% for experiment in experiments %}
+                    <li><a href="{% url 'experiment' id=experiment.id %}">{{ experiment.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay experimentos definidos</p>
+        {% endif %}
+    </div>
+
     {% if user.is_authenticated and user.is_staff %}
-        <a href="{% url 'create_experiment' %}">Nuevo Experimento</a>
+        <a href="{% url 'create_experiment' %}"><i class="fas fa-plus"></i> Nuevo Experimento</a>
     {% endif %}
 
 

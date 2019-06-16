@@ -377,48 +377,47 @@ def validate(request, id_exp, id_image, id_user):
 
 @login_required
 def download_tags(request, id_exp):
-
     experiment = Experiment.objects.get(id=id_exp)
 
     experiment_data = {
-        'name': experiment.name,
-        'description': experiment.description,
-        'date': experiment.date.isoformat(),
-        'dataset': experiment.dataset.name,
-        'team': experiment.team.name,
-        'tags_image': [],  #contiene todos los TagImage del experimento
-    }
+        "name": experiment.name,
+        "description": experiment.description,
+        "date": experiment.date.isoformat(),
+        "dataset": experiment.dataset.name,
+        "team": experiment.team.name,
+        "tags_image": [],  #contiene todos los TagImage del experimento
+    };
 
     if TagImage.objects.all().filter(experiment_id=experiment.id):
         tag_images=TagImage.objects.all().filter(experiment_id=experiment.id)
         for tag in tag_images:
             tag_image = {
-                'image': tag.image.name,
-                'user': tag.user.username,
-                'check_by': tag.check_by.username,
+                "image": tag.image.name,
+                "user": tag.user.username,
+                "check_by": tag.check_by.username,
                 "points": [],
                 "boxes": [],
-            }
+            };
 
             tag_points = tag.tags_points
             for point in tag_points.all():
-                tag_image.points.push({
-                    'name': point.name,
-                    'coordinate_x': point.x,
-                    'coordinate_y': point.y,
+                tag_image["points"].append({
+                    "name": point.name,
+                    "coordinate_x": point.x,
+                    "coordinate_y": point.y,
                 });
 
             tag_boxes = tag.tags_boxes
             for box in tag_boxes.all():
-                tag_image.boxes.push({
-                    'name': box.name,
-                    'coordinate_x_top_left': box.x_top_left,
-                    'coordinate_y_top_left': box.y_top_left,
-                    'coordinate_x_bottom_right': box.x_bottom_right,
-                    'coordinate_y_bottom_right': box.y_bottom_right,
+                tag_image["boxes"].append({
+                    "name": box.name,
+                    "coordinate_x_top_left": box.x_top_left,
+                    "coordinate_y_top_left": box.y_top_left,
+                    "coordinate_x_bottom_right": box.x_bottom_right,
+                    "coordinate_y_bottom_right": box.y_bottom_right,
                 });
 
-            experiment_data.tags_image.push(tag_image);
+            experiment_data["tags_image"].append(tag_image)
 
     data = json.dumps(experiment_data)
     response = HttpResponse(data, content_type='application/json')

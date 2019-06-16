@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}¡Adiós!{% endblock %}
-
 {% block content %}
-  <h2>Cerrar Sesión</h2>
-  <p>Ha cerrado sesión satisfactoriamente</p>
-  <p><a href="{% url 'login' %}">Entrar</a> de nuevo</p>
+    <div class="main">
+      <h3>Cerrar Sesión</h3>
+      <p>Has cerrado sesión satisfactoriamente</p>
+      <p><a href="{% url 'login' %}">Entrar de nuevo</a></p>
+    </div>
 {% endblock %}

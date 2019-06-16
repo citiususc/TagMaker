@@ -5,7 +5,11 @@
  */
 
 body {
-  font-family: 'Lato';
+    font-family: 'Lato';
+    background-image: url("https://i.stack.imgur.com/1Tzky.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
 }
 
 h1,
@@ -16,7 +20,7 @@ h5,
 h6 {
   font-weight: 700;
   font-family: 'Montserrat';
-  color: #2c3e50!important;
+    text-transform: uppercase!important;
 }
 
 hr.star-light,
@@ -115,6 +119,11 @@ section h2 {
   color: #fff;
 }
 
+#mainNav .navbar-brand a:hover {
+  color: #18BC9C;
+}
+
+
 #mainNav .navbar-nav {
   margin-top: 1rem;
   letter-spacing: 0.0625rem;
@@ -133,7 +142,7 @@ section h2 {
 }
 
 #mainNav .navbar-nav li.nav-item a.nav-link.active {
-  color: #18BC9C;
+  color: #fff;
 }
 
 #mainNav .navbar-toggler {
@@ -143,8 +152,6 @@ section h2 {
 
 @media (min-width: 992px) {
   #mainNav {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
     -webkit-transition: padding-top 0.3s, padding-bottom 0.3s;
     transition: padding-top 0.3s, padding-bottom 0.3s;
   }
@@ -326,14 +333,16 @@ form .row:first-child .floating-label-form-group {
 }
 
 .footer {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   background-color: #2C3E50;
   color: #fff;
 }
 
 .copyright {
   background-color: #1a252f;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
 }
 
 a {

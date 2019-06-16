@@ -1,32 +1,32 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 {% block content %}
 
-    <a href="{% url 'experiment_list' %}">ATRÁS</a>
-  <h2>Nuevo experimento</h2>
+    <a href="{% url 'experiment_list' %}">
+            <i class="fas fa-chevron-left"></i> ATRÁS
+        </a>
 
 
-<form method="post">
-    {% csrf_token %}
-    {% for field in expForm %}
-        {{ field.errors }}
-        {{ field }}<br>
-    {% endfor %}
+    <div class="main">
+        <h3>Nuevo experimento</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ expForm|crispy }}
 
-{{ formset.management_form }}
-{% for form in formset %}
-    <div class="row form-row spacer">
-        <div class="input-group">
-            {{ form.name }}
-            {{ form.type }}
-            <div class="input-group-append">
-                <button class="btn btn-success add-form-row">+</button>
+        {{ formset.management_form }}
+        {% for form in formset %}
+            <div class="row form-row spacer">
+                <div class="input-group">
+                    {{ form|crispy }}
+                    <div class="input-group-append">
+                        <button class="btn btn-success add-form-row"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
             </div>
+        {% endfor %}
         </div>
-    </div>
-{% endfor %}
-    <button type="submit">Crear</button>
-</form>
+            <button type="submit" class="btn btn-primary">Crear</button>
+        </form>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script type="text/javascript">
@@ -81,17 +81,12 @@ function deleteForm(prefix, btn) {
     return false;
 }
 
-function addform(evt) {
-    evt.preventDefault();
-    cloneMore('.form-row:last', 'form');
-    return false;
-}
-
 $(document).on('click', '.add-form-row', function(e){
     e.preventDefault();
     cloneMore('.form-row:last', 'form');
     return false;
 });
+
 $(document).on('click', '.remove-form-row', function(e){
     e.preventDefault();
     deleteForm('form', $(this));
