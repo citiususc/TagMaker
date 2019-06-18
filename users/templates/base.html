@@ -14,6 +14,11 @@
 </head>
 
 <style>
+    html,body{font-family:Lato;background-image: url("static/images/background.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
     .item{
         color:#1a252f;
     }
@@ -56,12 +61,24 @@
     .init-page{
         font-size: 30px;
     }
+    .footer-total{
+        position:relative;
+        bottom:0;
+        width: 100%;
+    }
+    .tags{
+        padding-bottom: 30px;
+    }
+
+    #mainNav .navbar-brand:hover{
+        color:#18BC9C;
+    }
 
 
 </style>
 
 <body>
-<!-- Navigation -->
+<div id="header">
   <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
     <div class="container">
       <a class="navbar-brand js-scroll-trigger" href="{% url 'home' %}">TagMaker</a>
@@ -81,7 +98,7 @@
         {% endif %}
     </div>
   </nav>
-
+</div>
 
   <section class="portfolio" id="portfolio">
 
@@ -94,21 +111,15 @@
   </section>
 
   <!-- Footer -->
-  <footer class="footer text-center">
-    <div class="container">
+<div class="footer-total">
+  <div class="footer text-center">
           <h5 class="text-uppercase">Sobre TagMaker</h5>
-          <p class="mb-0">TagMaker es una aplicación de etiquetado colaborativo de imágenes de uso libre y gratuito.
-      </div>
-    </div>
-  </footer>
-
-
-
-  <div class="copyright text-center text-white">
-    <div class="container">
+      <p class="mb-0">TagMaker es una aplicación de etiquetado colaborativo de imágenes de uso libre y gratuito.</p>
+  </div>
+    <div class="copyright text-center text-white">
       <small>Desarrollado por Isabel Rodríguez Iglesias <i class="fas fa-laptop-code"></i> TagMaker 2019</small>
     </div>
-  </div>
+</div>
 
 </body>
 </html>

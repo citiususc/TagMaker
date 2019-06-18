@@ -11,7 +11,7 @@
     <div class="container">
   <div class="row">
     <div class="col-md-auto">
-      <div id="tags">
+      <div class="tags">
 
     {% if tag_image is not None %}
         <p><i class="fas fa-edit"></i> Anotado por {{ tag_image.user }}</p>
@@ -46,7 +46,7 @@
           </tbody>
         </table>
         <a href="#" onclick="select_tag();">Seleccionar</a>
-        <a href="#" onclick="delete_tag();">Borrar</a><br>
+        <a href="#" onclick="delete_tag();">Borrar</a><br><br>
           <button class="btn btn-primary" onclick="save();">Guardar</button>
         {% if user.is_authenticated and user.is_staff and tag_image and not tag_image.user.is_staff%}
             <button onclick="validate();">Validar</button>
@@ -55,7 +55,7 @@
     </div>
     <div class="col-8">
       <div id="container_canvas">
-        <canvas id="canvas" width="800" height="600" style="background-size: 100% 100%; background-image: url('/{{ image.path }}/{{ image.name_unique }}')">
+        <canvas id="canvas" width="800" height="600">
             Tu navegador no soporta el elemento canvas
         </canvas>
     </div>
@@ -69,6 +69,12 @@
 
     var container = document.getElementById("container_canvas");
     var canvas = new fabric.Canvas('canvas');
+
+    fabric.Image.fromURL('/{{ image.path }}/{{ image.name_unique }}', function(img) {
+       img.scaleToWidth(canvas.width);
+       canvas.setBackgroundImage(img);
+       canvas.requestRenderAll();
+    });
 
 
     //con esto desactivamos la rotación, la ampliación y la movilidad de un grupo seleccionado

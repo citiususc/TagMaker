@@ -13,7 +13,7 @@
             {% csrf_token %}
             {{ postForm|crispy }}
 
-            <p>Imágenes seleccionadas: <input name="files" type="file" size="50" accept="image/*" multiple></p>
+            <p>Imágenes seleccionadas <input name="files" type="file" size="50" accept="image/*" multiple><br><br><p>
             <button type="submit" class="btn btn-primary"> Crear </button>
         </form>
     </div>

@@ -140,6 +140,7 @@ def modify_dataset(request, id):
                     # en caso de que sí exista debemos borrarla de la carpeta puesto que anteriormente la guardamos para poder hacer el checksum
                 else:
                     os.remove(image_path)
+        messages.success(request, 'El dataset ha sido modificado')
         return redirect('dataset', id=id)
     else:
         dataForm = FormDataset(instance=dataset)
@@ -207,6 +208,7 @@ def new_experiment(request):
                         )
                         point.save()
             return redirect('experiment_list')
+            messages.success(request, 'Experimento creado!')
     else:
         formset = TagFormset()
         expForm = FormExperiment()
@@ -253,7 +255,8 @@ def modify_experiment(request, id):
                             experiment=experiment
                         )
                         point.save()
-            return redirect('experiment_list')
+            messages.success(request, 'El experimento ha sido modificado')
+            return redirect('experiment', id=id)
 
     else:
         formset = TagFormset()

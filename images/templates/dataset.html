@@ -6,6 +6,16 @@
         <i class="fas fa-chevron-left"></i> ATRÁS
     </a>
     <div class="main">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
         <h3>{{ data.name }}</h3>
         <p><small>Creado el {{ data.date }}</small></p>
         <p>{{ data.description }}</p>

@@ -6,6 +6,15 @@
     </a>
 
     <div class="main">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <h3>{{ exp.name }}</h3>
     <p><small>Creado el {{ exp.date }}</small></p>
     <p>{{ exp.description }}</p>
