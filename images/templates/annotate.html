@@ -43,14 +43,14 @@
               <tr>
                 <td>{{ point.name }}</td>
                 <td>Punto</td>
-                  <td><a href="#"onclick="point('{{ point.name }}');">ANOTAR</a></td>
+                  <td><a href="#"onclick="point('{{ point.name }}','{{ point.color }}');">ANOTAR</a></td>
               </tr>
           {% endfor %}
           {% for box in boxes %}
               <tr>
                 <td>{{ box.name }}</td>
                 <td>Caja</td>
-              <td><a href="#" onclick="box('{{ box.name }}');">ANOTAR</a></td>
+              <td><a href="#" onclick="box('{{ box.name }}','{{ box.color }}');">ANOTAR</a></td>
               </tr>
           {% endfor %}
           </tbody>
@@ -94,6 +94,7 @@
     fabric.Group.prototype.lockMovementY = true;
 
     var name_tag;
+    var color_tag;
 
     load();
 
@@ -108,10 +109,11 @@
         {% for point in tag_image.tags_points.all %}
             pos_x = {{ point.x }}
             pos_y = {{ point.y }}
+            color = '{{ point.color }}'
             name_point = '{{ point.name }}'
             var point = new fabric.Circle({
                 radius: 4,
-                fill: '#ff2626',
+                fill: color,
                 top: pos_y,
                 left: pos_x,
                 name: name_point,
@@ -129,6 +131,7 @@
             pos_y = {{ box.y_top_left }}
             width_box = {{ box.width }}
             height_box = {{ box.height }}
+            color = '{{ box.color }}'
             name_box = '{{ box.name }}'
             rect = new fabric.Rect({
                 left: pos_x,
@@ -143,7 +146,7 @@
                 lockScalingY: false,
                 hasRotatingPoint: false,
                 fill: false,
-                stroke: '#ff2626',
+                stroke: color,
                 strokeWidth: 2,
                 });
             canvas.add(rect);
@@ -177,7 +180,7 @@ function touchStartPoint(evt){
         pos_y = pointer.y;
         var point = new fabric.Circle({
             radius: 4,
-            fill: '#ff2626',
+            fill: color_tag,
             top: pos_y,
             left: pos_x,
             name: name_tag,
@@ -192,9 +195,10 @@ function touchStartPoint(evt){
     }
 }
 
-function point(name_point) {
+function point(name_point, color_point) {
     pointerdown = false;
     name_tag = name_point;
+    color_tag = color_point;
 	removeEvents();
     container.addEventListener('touchstart', touchStartPoint);
     container.addEventListener('touchend', touchEnd);
@@ -224,7 +228,7 @@ function touchStartBox(evt) {
             lockScalingY: false,
             hasRotatingPoint: false,
             fill: false,
-            stroke: '#ff2626',
+            stroke: color_tag,
             strokeWidth: 2,
         });
         canvas.add(rect);
@@ -260,9 +264,10 @@ function touchEnd() {
     pointerdown = false;
 }
 
-function box(name_box){
+function box(name_box, color_box){
     pointerdown = false;
-    name_tag=name_box
+    name_tag=name_box;
+    color_tag=color_box;
     removeEvents();
 
          //EVENTOS TÁCTILES

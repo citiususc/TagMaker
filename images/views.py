@@ -188,6 +188,7 @@ def new_experiment(request):
         formset = TagFormset(request.POST)
 
         if expForm.is_valid():
+
             experiment = Experiment(name=expForm.cleaned_data['name'],
                                       description=expForm.cleaned_data['description'],
                                       dataset=expForm.cleaned_data['dataset'],
@@ -198,13 +199,15 @@ def new_experiment(request):
                     if form.cleaned_data.get('type') == 'Caja':
                         box = TagBox(
                             name=form.cleaned_data.get('name'),
-                            experiment=experiment
+                            experiment=experiment,
+                            color=form.cleaned_data.get('color')
                         )
                         box.save()
                     elif form.cleaned_data.get('type') == 'Punto':
                         point = TagPoint(
                             name=form.cleaned_data.get('name'),
-                            experiment=experiment
+                            experiment=experiment,
+                            color=form.cleaned_data.get('color')
                         )
                         point.save()
             messages.success(request, 'Experimento creado!')
@@ -247,13 +250,15 @@ def modify_experiment(request, id):
                     if form.cleaned_data.get('type') == 'Caja':
                         box = TagBox(
                             name=form.cleaned_data.get('name'),
-                            experiment=experiment
+                            experiment=experiment,
+                            color=form.cleaned_data.get('color')
                         )
                         box.save()
                     elif form.cleaned_data.get('type') == 'Punto':
                         point = TagPoint(
                             name=form.cleaned_data.get('name'),
-                            experiment=experiment
+                            experiment=experiment,
+                            color=form.cleaned_data.get('color')
                         )
                         point.save()
             messages.success(request, 'El experimento ha sido modificado')

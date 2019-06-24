@@ -2,6 +2,7 @@ from django import forms
 from django.forms import formset_factory
 from images.models import Dataset, Experiment
 from users.models import Team
+from django.forms.widgets import TextInput
 
 class FormDataset(forms.ModelForm):
     name = forms.CharField(widget=forms.TextInput(), label="Nombre")
@@ -18,6 +19,7 @@ class FormTag(forms.Form):
     CHOICES = (('Punto', 'Punto'), ('Caja', 'Caja'),)
     name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Anotación'}),label=False, required=True)
     type = forms.ChoiceField(choices=CHOICES, label=False, required=True)
+    color = forms.CharField(widget=forms.TextInput(attrs={'type': 'color'}),required=True, label=False)
 
 TagFormset = formset_factory(FormTag, extra=1)
 

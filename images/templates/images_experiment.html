@@ -7,34 +7,39 @@
 
     <div class="main">
     <h5>IMÁGENES DEL EXPERIMENTO</h5>
-        <p>Pulsa sobre cada una de ellas para anotar.</p>
-    {% if user.is_authenticated and user.is_staff %}
-        <p>Para ver o validar las imágenes de cada usuario, pulsa sobre su nombre.</p>
-    {% endif %}
 
-    {% if user.is_authenticated and user.is_staff %}
-        <div class="table-responsive">
-        <table class="table table-images">
-          <tbody>
-           {% for image in exp.dataset.images.all %}
-            <tr>
-              <td><a href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=request.user.id %}">
-                    <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:150px">
-                </a></td>
-                 {% for t in tag_images %}
-                        {% if t.image_id == image.id %}
-                                {% if not t.check_by %}
-                                    <td><a style="color:red" href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a></td>
-                                {% else%}
-                                    <td><a style="color:green" href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a></td>
-                                {% endif %}
-                        {% endif %}
-                 {% endfor %}
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-        </div>
+    {% if not exp.dataset.images.all %}
+        <p>El dataset del experimento está vacío</p>
+    {% else %}
+        <p>Pulsa sobre cada una de ellas para anotar.</p>
+        {% if user.is_authenticated and user.is_staff %}
+            <p>Para ver o validar las imágenes de cada usuario, pulsa sobre su nombre.</p>
+        {% endif %}
+
+        {% if user.is_authenticated and user.is_staff %}
+            <div class="table-responsive">
+            <table class="table table-images">
+              <tbody>
+               {% for image in exp.dataset.images.all %}
+                <tr>
+                  <td><a href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=request.user.id %}">
+                        <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:150px">
+                    </a></td>
+                     {% for t in tag_images %}
+                            {% if t.image_id == image.id %}
+                                    {% if not t.check_by %}
+                                        <td><a style="color:red" href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a></td>
+                                    {% else%}
+                                        <td><a style="color:green" href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a></td>
+                                    {% endif %}
+                            {% endif %}
+                     {% endfor %}
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            </div>
+        {% endif %}
     {% endif %}
     </div>
 
