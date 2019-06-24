@@ -21,6 +21,7 @@
     <p>Asociado a <b>{{ exp.team.name }}</b></p>
     <p><a href="{% url 'dataset' id=exp.dataset.id %}">{{ exp.dataset.name }}</a></p>
     <div>
+    <p>{{ tag_images.all.id }}</p>
     {% if points or boxes %}
         <table class="table tags">
         <caption>Anotaciones definidas</caption>
@@ -36,15 +37,20 @@
               <tr>
                 <td>{{ tag.name }}</td>
                 <td>Punto</td>
+              {% if tag_images.tags_points %}
+                  <td>hay alguna</td>
+                {% else %}
+                  <td>No hay</td>
+                {% endif %}
               </tr>
           {% endfor %}
           {% for tag in boxes %}
               <tr>
                 <td>{{ tag.name }}</td>
                 <td>Caja</td>
-              {% if tag_images %}
+              {% if tag_images.tags_boxes %}
+                  <td>hay alguna</td>
                 {% else %}
-                    <td>Sin hacer</td>
                 {% endif %}
               </tr>
           {% endfor %}

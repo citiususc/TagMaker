@@ -58,7 +58,6 @@
         <a href="#" onclick="select_tag();">Seleccionar</a>
         <a href="#" onclick="delete_tag();">Borrar</a><br><br>
           <button class="btn btn-primary" onclick="save();">Guardar</button>
-      <button onclick="prueba()">Ver</button>
         {% if user.is_authenticated and user.is_staff and tag_image and not tag_image.user.is_staff%}
             <button onclick="validate();">Validar</button>
         {% endif %}
@@ -117,7 +116,7 @@
                 top: pos_y,
                 left: pos_x,
                 name: name_point,
-                selectable: false,
+                selectable: true,
                 lockMovementX: false,
                 lockMovementY: false,
                 lockScalingX: true,
@@ -139,11 +138,11 @@
                 name: name_box,
                 width: width_box,
                 height: height_box,
-                selectable: false,
+                selectable: true,
                 lockMovementX: false,
                 lockMovementY: false,
-                lockScalingX: false,
-                lockScalingY: false,
+                lockScalingX: true,
+                lockScalingY: true,
                 hasRotatingPoint: false,
                 fill: false,
                 stroke: color,
@@ -224,8 +223,8 @@ function touchStartBox(evt) {
             selectable: false,
             lockMovementX: false,
             lockMovementY: false,
-            lockScalingX: false,
-            lockScalingY: false,
+            lockScalingX: true,
+            lockScalingY: true,
             hasRotatingPoint: false,
             fill: false,
             stroke: color_tag,
@@ -300,7 +299,7 @@ canvas.discardActiveObject().renderAll()
 function save() {
     canvas.renderAll()
     var URL = "{% url 'save_tags' id_exp=exp.id id_image=image.id %}";
-    var data = JSON.stringify(canvas.toDatalessJSON(['name']));
+    var data = JSON.stringify(canvas.toDatalessJSON(['name', 'fill', 'stroke']));
     $.post(URL, {'canvas_data': data});
     document.getElementById("text-alert").innerText="guardadas";
     $('.alert').show();
@@ -310,7 +309,7 @@ function save() {
 function validate(){
     {% if tag_image is not None %}
         var URL = "{% url 'validate' id_exp=exp.id id_image=image.id id_user=tag_image.user.id %}";
-        var data = JSON.stringify(canvas.toDatalessJSON(['name']));
+        var data = JSON.stringify(canvas.toDatalessJSON(['name', 'fill', 'stroke']));
         $.post(URL, {'canvas_data': data});
         document.getElementById("text-alert").innerText="validadas";
         $('.alert').show();

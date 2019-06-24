@@ -222,7 +222,7 @@ def experiment(request, id):
     exp=Experiment.objects.get(id=id)
     points = TagPoint.objects.all().filter(experiment_id=id).filter(x=None).filter(y=None)
     boxes = TagBox.objects.all().filter(experiment_id=id).filter(x_top_left=None).filter(y_top_left=None).filter(width=None).filter(height=None)
-    tag_images= TagImage.objects.all().filter(experiment_id=id)
+    tag_images = TagImage.objects.all().filter(experiment_id=id)
     return render(request, 'experiment.html', {'exp': exp, 'points':points, 'boxes': boxes, 'tag_images': tag_images})
 
 @staff_member_required
@@ -327,6 +327,7 @@ def save_tags(request, id_exp, id_image):
                 if (obj['type'] == 'circle'):
                     point = TagPoint(name=obj['name'],
                                      experiment_id=id_exp,
+                                     color=obj['fill'],
                                      x=obj['left'],
                                      y=obj['top'])
                     point.save()
@@ -334,6 +335,7 @@ def save_tags(request, id_exp, id_image):
                 elif (obj['type'] == 'rect'):
                     box = TagBox(name=obj['name'],
                                  experiment_id=id_exp,
+                                 color=obj['stroke'],
                                  x_top_left=obj['left'],
                                  y_top_left=obj['top'],
                                  width=obj['width'],
@@ -361,6 +363,7 @@ def validate(request, id_exp, id_image, id_user):
                 if (obj['type'] == 'circle'):
                     point = TagPoint(name=obj['name'],
                                      experiment_id=id_exp,
+                                     color=obj['fill'],
                                      x=obj['left'],
                                      y=obj['top'])
                     point.save()
@@ -368,6 +371,7 @@ def validate(request, id_exp, id_image, id_user):
                 elif (obj['type'] == 'rect'):
                     box = TagBox(name=obj['name'],
                                  experiment_id=id_exp,
+                                 color=obj['stroke'],
                                  x_top_left=obj['left'],
                                  y_top_left=obj['top'],
                                  width=obj['width'],
@@ -412,6 +416,7 @@ def download_tags(request, id_exp):
             for point in tag_points.all():
                 tag_image["points"].append({
                     "name": point.name,
+                    "color": point.color,
                     "coordinate_x": point.x,
                     "coordinate_y": point.y,
                 });
@@ -420,6 +425,7 @@ def download_tags(request, id_exp):
             for box in tag_boxes.all():
                 tag_image["boxes"].append({
                     "name": box.name,
+                    "color": box.color,
                     "coordinate_x_top_left": box.x_top_left,
                     "coordinate_y_top_left": box.y_top_left,
                     "width": box.width,
