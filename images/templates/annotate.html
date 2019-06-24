@@ -35,6 +35,7 @@
             <tr>
               <th scope="col">Nombre</th>
               <th scope="col">Tipo</th>
+                <th scope="col">Color</th>
                 <th scope="col"></th>
             </tr>
           </thead>
@@ -43,14 +44,16 @@
               <tr>
                 <td>{{ point.name }}</td>
                 <td>Punto</td>
-                  <td><a href="#"onclick="point('{{ point.name }}','{{ point.color }}');">ANOTAR</a></td>
+                  <td><i class="fas fa-paint-brush" style="color: {{ point.color }}"></i></td>
+                  <td><a href="#"onclick="point('{{ point.name }}','{{ point.color }}');"><i class="fas fa-edit"></i></a></td>
               </tr>
           {% endfor %}
           {% for box in boxes %}
               <tr>
                 <td>{{ box.name }}</td>
                 <td>Caja</td>
-              <td><a href="#" onclick="box('{{ box.name }}','{{ box.color }}');">ANOTAR</a></td>
+                  <td><i class="fas fa-paint-brush" style="color: {{ box.color }}"></i></td>
+              <td><a href="#" onclick="box('{{ box.name }}','{{ box.color }}');"><i class="fas fa-edit"></i></a></td>
               </tr>
           {% endfor %}
           </tbody>
@@ -59,7 +62,7 @@
         <a href="#" onclick="delete_tag();">Borrar</a><br><br>
           <button class="btn btn-primary" onclick="save();">Guardar</button>
         {% if user.is_authenticated and user.is_staff and tag_image and not tag_image.user.is_staff%}
-            <button onclick="validate();">Validar</button>
+            <button class="btn btn-primary" onclick="validate();">Validar</button>
         {% endif %}
     </div>
     </div>
@@ -97,11 +100,6 @@
 
     load();
 
-    function prueba(){
-        canvas.renderAll();
-        alert(JSON.stringify(canvas.toDatalessJSON(['name'])))
-    }
-
     function load(){
             //si para esta imagen había anotaciones hechas por el usuario logeado las cargamos
     {% if tag_image is not None %}
@@ -116,7 +114,7 @@
                 top: pos_y,
                 left: pos_x,
                 name: name_point,
-                selectable: true,
+                selectable: false,
                 lockMovementX: false,
                 lockMovementY: false,
                 lockScalingX: true,
@@ -138,7 +136,7 @@
                 name: name_box,
                 width: width_box,
                 height: height_box,
-                selectable: true,
+                selectable: false,
                 lockMovementX: false,
                 lockMovementY: false,
                 lockScalingX: true,

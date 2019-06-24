@@ -25,6 +25,7 @@ class TagPoint(models.Model):
     name = models.CharField(max_length=64)
     color = models.CharField(max_length=7)
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    state = models.BooleanField(default=False)
     x = models.FloatField(blank=True)
     y = models.FloatField(blank=True)
 
@@ -32,6 +33,7 @@ class TagBox(models.Model):
     name = models.CharField(max_length=64)
     color = models.CharField(max_length=7)
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    state = models.BooleanField(default=False)
     x_top_left = models.FloatField(blank=True)
     y_top_left = models.FloatField(blank=True)
     width = models.FloatField(blank=True)

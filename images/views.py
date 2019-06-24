@@ -308,8 +308,18 @@ def save_tags(request, id_exp, id_image):
                 tag_image.tags_boxes.all().delete()
                 tag_image.tags_points.all().delete()
 
+                TagPoint.objects.all().filter(experiment_id=id_exp).filter(x=None).filter(y=None).update(state=False)
+                TagBox.objects.all().filter(experiment_id=id_exp).filter(x_top_left=None).filter(
+                    y_top_left=None).filter(width=None).filter(height=None).update(state=False)
+
+                #si se borran todas las anotaciones tambien borramos el tagimage
+                if not decoded['objects']:
+                    tag_image.delete()
+
 
             else:  # de lo contrario creamos un tagImage nuevo para este usuario
+
+
                 if (request.user.is_staff):  # si el usuario que está realizando la anotación es staff, entendemos que ya está validada
                     check_by = request.user
                     tag_image = TagImage(image_id=id_image,
@@ -332,6 +342,10 @@ def save_tags(request, id_exp, id_image):
                                      y=obj['top'])
                     point.save()
                     tag_image.tags_points.add(point)
+                    point_def = TagPoint.objects.get(name=obj['name'], experiment_id=id_exp, x=None, y=None)
+                    point_def.state=True
+                    point_def.save()
+
                 elif (obj['type'] == 'rect'):
                     box = TagBox(name=obj['name'],
                                  experiment_id=id_exp,
@@ -342,7 +356,9 @@ def save_tags(request, id_exp, id_image):
                                  height=obj['height'])
                     box.save()
                     tag_image.tags_boxes.add(box)
-
+                    box_def = TagBox.objects.get(name=obj['name'], experiment_id=id_exp, x_top_left=None, y_top_left=None, width=None, height=None)
+                    box_def.state=True
+                    box_def.save()
 
     return redirect('experiment_list')
 
@@ -351,33 +367,48 @@ def save_tags(request, id_exp, id_image):
 def validate(request, id_exp, id_image, id_user):
     #igual que en la función save_tags repetimos el mismo proceso
     if request.method == 'POST':
-        #tag_image = TagImage.objects.filter(image_id=id_image).filter(experiment_id=id_exp).filter(user_id=id_user)
         tag_image = TagImage.objects.get(image_id=id_image, experiment_id=id_exp, user_id=id_user)
         tag_image.tags_points.all().delete()
         tag_image.tags_boxes.all().delete()
 
+        TagPoint.objects.all().filter(experiment_id=id_exp).filter(x=None).filter(y=None).update(state=False)
+        TagBox.objects.all().filter(experiment_id=id_exp).filter(x_top_left=None).filter(
+            y_top_left=None).filter(width=None).filter(height=None).update(state=False)
+
         if 'canvas_data' in request.POST:
             data = request.POST['canvas_data']
             decoded = json.loads(data)
-            for obj in decoded['objects']:
-                if (obj['type'] == 'circle'):
-                    point = TagPoint(name=obj['name'],
+
+            # si se borran todas las anotaciones tambien borramos el tagimage
+            if not decoded['objects']:
+                tag_image.delete()
+            else:
+                for obj in decoded['objects']:
+                    if (obj['type'] == 'circle'):
+                        point = TagPoint(name=obj['name'],
+                                         experiment_id=id_exp,
+                                         color=obj['fill'],
+                                         x=obj['left'],
+                                         y=obj['top'])
+                        point.save()
+                        tag_image.tags_points.add(point)
+                        point_def = TagPoint.objects.get(name=obj['name'], experiment_id=id_exp, x=None, y=None)
+                        point_def.state = True
+                        point_def.save()
+                    elif (obj['type'] == 'rect'):
+                        box = TagBox(name=obj['name'],
                                      experiment_id=id_exp,
-                                     color=obj['fill'],
-                                     x=obj['left'],
-                                     y=obj['top'])
-                    point.save()
-                    tag_image.tags_points.add(point)
-                elif (obj['type'] == 'rect'):
-                    box = TagBox(name=obj['name'],
-                                 experiment_id=id_exp,
-                                 color=obj['stroke'],
-                                 x_top_left=obj['left'],
-                                 y_top_left=obj['top'],
-                                 width=obj['width'],
-                                 height=obj['height'])
-                    box.save()
-                    tag_image.tags_boxes.add(box)
+                                     color=obj['stroke'],
+                                     x_top_left=obj['left'],
+                                     y_top_left=obj['top'],
+                                     width=obj['width'],
+                                     height=obj['height'])
+                        box.save()
+                        tag_image.tags_boxes.add(box)
+                        box_def = TagBox.objects.get(name=obj['name'], experiment_id=id_exp, x_top_left=None,
+                                                     y_top_left=None, width=None, height=None)
+                        box_def.state = True
+                        box_def.save()
 
         #ponemos en check_by al usuario staff que valida la anotación
         if(request.user.is_staff):

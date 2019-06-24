@@ -13,18 +13,19 @@
     {% else %}
         <p>Pulsa sobre cada una de ellas para anotar.</p>
         {% if user.is_authenticated and user.is_staff %}
-            <p>Para ver o validar las imágenes de cada usuario, pulsa sobre su nombre.</p>
+            <p>Si hay anotaciones hechas por otros usuarios, pulsa sobre sus nombres para ver o validarlas.</p>
         {% endif %}
 
-        {% if user.is_authenticated and user.is_staff %}
+
             <div class="table-responsive">
             <table class="table table-images">
               <tbody>
                {% for image in exp.dataset.images.all %}
                 <tr>
                   <td><a href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=request.user.id %}">
-                        <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:150px">
+                        <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:80px">
                     </a></td>
+                {% if user.is_authenticated and user.is_staff %}
                      {% for t in tag_images %}
                             {% if t.image_id == image.id %}
                                     {% if not t.check_by %}
@@ -34,12 +35,12 @@
                                     {% endif %}
                             {% endif %}
                      {% endfor %}
+                {% endif %}
                 </tr>
               {% endfor %}
               </tbody>
             </table>
             </div>
-        {% endif %}
     {% endif %}
     </div>
 

@@ -14,12 +14,15 @@
         {{ expForm|crispy }}
         {% if points or boxes %}
 
+          <small>*Solo puedes borrar las anotaciones para las cuales no haya ninguna anotación asociada</small>
         <table class="table tags">
         <caption>Anotaciones definidas</caption>
           <thead>
             <tr>
               <th scope="col">Nombre</th>
               <th scope="col">Tipo</th>
+                <th scope="col">Color</th>
+                <th scope="col">Estado</th>
                 <th></th>
             </tr>
           </thead>
@@ -28,14 +31,30 @@
               <tr>
                 <td>{{ tag.name }}</td>
                 <td>Punto</td>
-                <td><a href='{% url 'delete_tag_experiment' id_exp=id_exp id_tag=tag.id type='punto' %}'>Borrar</a></td>
+                  <td><i class="fas fa-paint-brush" style="color: {{ tag.color }}"></i></td>
+                  <td>
+                      {% if tag.state %}
+                        Hechas
+                    {% else %}
+                        Sin hacer
+                          <td><a href='{% url 'delete_tag_experiment' id_exp=id_exp id_tag=tag.id type='punto' %}'>Borrar</a></td>
+                    {% endif %}
+                  </td>
               </tr>
           {% endfor %}
           {% for tag in boxes %}
               <tr>
                 <td>{{ tag.name }}</td>
                 <td>Caja</td>
-                  <td><a href='{% url 'delete_tag_experiment' id_exp=id_exp id_tag=tag.id type='caja' %}'>Borrar</a></td>
+                  <td><i class="fas fa-paint-brush" style="color: {{ tag.color }}"></i></td>
+                  <td>
+                      {% if tag.state %}
+                        Hechas
+                    {% else %}
+                        Sin hacer
+                          <td><a href='{% url 'delete_tag_experiment' id_exp=id_exp id_tag=tag.id type='caja' %}'>Borrar</a></td>
+                    {% endif %}
+                  </td>
               </tr>
           {% endfor %}
           </tbody>
