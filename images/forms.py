@@ -16,8 +16,8 @@ class NewModelChoiceField(forms.ModelChoiceField):
 
 class FormTag(forms.Form):
     CHOICES = (('Punto', 'Punto'), ('Caja', 'Caja'),)
-    name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Anotación'}),label=False)
-    type = forms.ChoiceField(choices=CHOICES, label=False)
+    name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Anotación'}),label=False, required=True)
+    type = forms.ChoiceField(choices=CHOICES, label=False, required=True)
 
 TagFormset = formset_factory(FormTag, extra=1)
 

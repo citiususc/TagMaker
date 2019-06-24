@@ -19,7 +19,6 @@
         <h3>{{ data.name }}</h3>
         <p><small>Creado el {{ data.date }}</small></p>
         <p>{{ data.description }}</p>
-        <div>
         {% if data.images.all %}
             {% for image in data.images.all %}
                 <a target="_blank" href="/{{ image.path }}/{{ image.name_unique }}">
@@ -29,7 +28,7 @@
         {% else %}
             <p>Dataset vacío</p>
         {% endif %}
-        </div>
+
     </div>
     <div>
     <a href="{% url 'modify_dataset' id=data.id %}"><i class="fas fa-cog"></i> Modificar dataset</a><br>

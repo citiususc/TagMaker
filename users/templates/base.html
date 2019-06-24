@@ -14,21 +14,18 @@
 </head>
 
 <style>
-    html,body{font-family:Lato;background-image: url("static/images/background.png");
-        background-size: cover;
-        background-repeat: no-repeat;
+    html,body{font-family:Lato;
+        background-color: floralwhite;
+        height: 100%;
     }
 
     .item{
         color:#1a252f;
     }
     .main-section{
-        font-size: 1.25rem;
+        padding: 10rem 0;
+        min-height: calc(100% - 200px);
     }
-    .main-section button{
-        font-size: 1.25rem;
-    }
-
     .main-section .main{
         margin-bottom: 40px;
         margin-top: 40px;
@@ -74,6 +71,17 @@
         color:#18BC9C;
     }
 
+    .alert-annotate .alert{
+        display: none;
+    }
+
+    .table td, table th{
+        vertical-align: middle;
+    }
+
+    .table-images{
+        width: auto;
+    }
 
 </style>
 
@@ -100,21 +108,19 @@
   </nav>
 </div>
 
-  <section class="portfolio" id="portfolio">
-
+<div class="main-section">
     <div class="container">
-        <div class="main-section">
-            {% block content %}
-            {% endblock %}
-        </div>
+        {% block content %}
+        {% endblock %}
     </div>
-  </section>
+</div>
 
   <!-- Footer -->
 <div class="footer-total">
   <div class="footer text-center">
           <h5 class="text-uppercase">Sobre TagMaker</h5>
-      <p class="mb-0">TagMaker es una aplicación de etiquetado colaborativo de imágenes de uso libre y gratuito.</p>
+      <p class="mb-0">TagMaker es una aplicación de etiquetado colaborativo de imágenes de uso libre y gratuito. </p>
+      <p>COLABORADORES: <a href="https://citius.usc.es/"><img style="border:none; width: 100px;" src="{% static 'images/logo_citius_black.png' %}"></a> · Oral Sciences Research Group </p>
   </div>
     <div class="copyright text-center text-white">
       <small>Desarrollado por Isabel Rodríguez Iglesias <i class="fas fa-laptop-code"></i> TagMaker 2019</small>

@@ -6,10 +6,31 @@
     </a>
 
     <div class="main">
-        <h5><i class="fas fa-user"></i> {{ user.username }}</h5>
-        <p>{{ user.first_name}} {{ user.last_name}}</p>
-        <p>{{ user.email }}</p>
+
+    <table class="table table-striped">
+  <tr>
+    <tr><td><h5>{{ user.username }}</h5></td></tr>
+    <tr><td>Usuario Experto</td></tr>
+    <tr>
+      <td>{{ user.first_name }} {{ user.last_name }}</td>
+    </tr>
+            <tr><td>{{ user.email }}</td></tr>
+    <tr><td>
+        {% if teams %}
+            ·
+         {% for team in teams %}
+            {{ team.name }} ·
+        {% endfor  %}
+    {% else %}
+        No formas parte de ningún equipo
+    {% endif %}
+
+    </td></tr>
+        <tr><td>Miembro desde el {{ user.date_joined }}</td></tr>
+</table>
+    <p><b>Por motivos de seguridad no mostramos tu contraseña</b><p>
     </div>
+
 
     <a href="{% url 'edit' %}"><i class="fas fa-user-edit"></i> Editar información</a><br>
     <a href="#"  data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-trash-alt"></i> Borrar cuenta</a>

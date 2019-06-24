@@ -28,6 +28,7 @@
             <tr>
               <th scope="col">Nombre</th>
               <th scope="col">Tipo</th>
+              <th scope="col">Estado</th>
             </tr>
           </thead>
           <tbody>
@@ -41,6 +42,10 @@
               <tr>
                 <td>{{ tag.name }}</td>
                 <td>Caja</td>
+              {% if tag_images %}
+                {% else %}
+                    <td>Sin hacer</td>
+                {% endif %}
               </tr>
           {% endfor %}
           </tbody>

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
 from users.forms import SignUpForm
 from users.forms import EditProfile
+from users.models import Team
 
 @login_required
 def home(request):
@@ -41,7 +42,11 @@ def edit_profile(request):
 
 @login_required
 def profile(request):
-    return render(request, 'my_profile.html')
+    teams = []
+    for team in Team.objects.all():
+        if request.user in team.users.all():
+            teams.append(team)
+    return render(request, 'my_profile.html', {'teams': teams})
 
 @login_required
 def change_password(request):

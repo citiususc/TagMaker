@@ -6,27 +6,36 @@
     </a>
 
     <div class="main">
-        <p>Estas son las imágenes del experimento. Pulsa sobre cada una de ellas para anotar.</p>
-            {% for image in exp.dataset.images.all %}
-                <a href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=request.user.id %}">
+    <h5>IMÁGENES DEL EXPERIMENTO</h5>
+        <p>Pulsa sobre cada una de ellas para anotar.</p>
+    {% if user.is_authenticated and user.is_staff %}
+        <p>Para ver o validar las imágenes de cada usuario, pulsa sobre su nombre.</p>
+    {% endif %}
+
+    {% if user.is_authenticated and user.is_staff %}
+        <div class="table-responsive">
+        <table class="table table-images">
+          <tbody>
+           {% for image in exp.dataset.images.all %}
+            <tr>
+              <td><a href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=request.user.id %}">
                     <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:150px">
-                </a>
-                {% if user.is_authenticated and user.is_staff %}
-                    {% for t in tag_images %}
+                </a></td>
+                 {% for t in tag_images %}
                         {% if t.image_id == image.id %}
-                            <ul style="list-style-type: none;">
-                            {% if not t.user.is_staff %}
                                 {% if not t.check_by %}
-                                    <li><a style="color:red" href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a></li>
+                                    <td><a style="color:red" href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a></td>
                                 {% else%}
-                                    <li><a style="color:green" href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a></li>
+                                    <td><a style="color:green" href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a></td>
                                 {% endif %}
-                            {% endif %}
-                            </ul>
                         {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
+                 {% endfor %}
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        </div>
+    {% endif %}
     </div>
 
 {% endblock %}

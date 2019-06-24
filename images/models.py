@@ -32,8 +32,8 @@ class TagBox(models.Model):
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     x_top_left = models.FloatField(blank=True)
     y_top_left = models.FloatField(blank=True)
-    x_bottom_right = models.FloatField(blank=True)
-    y_bottom_right = models.FloatField(blank=True)
+    width = models.FloatField(blank=True)
+    height = models.FloatField(blank=True)
 
 
 class TagImage(models.Model):
@@ -41,5 +41,5 @@ class TagImage(models.Model):
     user = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     check_by = models.ForeignKey(User, related_name='check_by', on_delete=models.CASCADE, blank=True)
-    tags_points = models.ManyToManyField(TagPoint)
-    tags_boxes = models.ManyToManyField(TagBox)
+    tags_points = models.ManyToManyField(TagPoint, related_name='tags_points')
+    tags_boxes = models.ManyToManyField(TagBox, related_name='tag_boxes')

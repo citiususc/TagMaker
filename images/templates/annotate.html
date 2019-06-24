@@ -8,6 +8,16 @@
     </a>
 
 <div class="main">
+    <div class="alert-annotate">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          Etiquetas <strong id="text-alert"></strong>!
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+    </div>
+
+
     <div class="container">
   <div class="row">
     <div class="col-md-auto">
@@ -48,6 +58,7 @@
         <a href="#" onclick="select_tag();">Seleccionar</a>
         <a href="#" onclick="delete_tag();">Borrar</a><br><br>
           <button class="btn btn-primary" onclick="save();">Guardar</button>
+      <button onclick="prueba()">Ver</button>
         {% if user.is_authenticated and user.is_staff and tag_image and not tag_image.user.is_staff%}
             <button onclick="validate();">Validar</button>
         {% endif %}
@@ -73,7 +84,7 @@
     fabric.Image.fromURL('/{{ image.path }}/{{ image.name_unique }}', function(img) {
        img.scaleToWidth(canvas.width);
        canvas.setBackgroundImage(img);
-       canvas.requestRenderAll();
+       canvas.renderAll();
     });
 
 
@@ -85,6 +96,11 @@
     var name_tag;
 
     load();
+
+    function prueba(){
+        canvas.renderAll();
+        alert(JSON.stringify(canvas.toDatalessJSON(['name'])))
+    }
 
     function load(){
             //si para esta imagen había anotaciones hechas por el usuario logeado las cargamos
@@ -111,15 +127,15 @@
         {% for box in tag_image.tags_boxes.all %}
             pos_x = {{ box.x_top_left }}
             pos_y = {{ box.y_top_left }}
-            end_x = {{ box.x_bottom_right }}
-            end_y={{ box.y_bottom_right }}
+            width_box = {{ box.width }}
+            height_box = {{ box.height }}
             name_box = '{{ box.name }}'
             rect = new fabric.Rect({
                 left: pos_x,
                 top: pos_y,
                 name: name_box,
-                width: end_x - pos_x,
-                height: end_y - pos_y,
+                width: width_box,
+                height: height_box,
                 selectable: false,
                 lockMovementX: false,
                 lockMovementY: false,
@@ -133,6 +149,7 @@
             canvas.add(rect);
         {% endfor %}
     {% endif %}
+    canvas.renderAll();
     }
 
 
@@ -209,9 +226,8 @@ function touchStartBox(evt) {
             fill: false,
             stroke: '#ff2626',
             strokeWidth: 2,
-
         });
-        canvas.add(rect)
+        canvas.add(rect);
     }
 }
 function touchMoveBox(evt) {
@@ -235,13 +251,6 @@ function touchMoveBox(evt) {
         });
         rect.set({
             height: Math.abs(pos_y - pointer.y)
-        });
-
-        rect.set({
-            end_x: pointer.x
-        });
-        rect.set({
-            end_y: pointer.y
         });
 
         canvas.renderAll();
@@ -272,8 +281,8 @@ function select_tag() {
   canvas.forEachObject(function (obj) {
     obj.selectable = true;
   });
+    canvas.selection = true;
   canvas.renderAll();
-  canvas.selection = true;
 }
 
 function delete_tag(){
@@ -284,26 +293,22 @@ canvas.discardActiveObject().renderAll()
 }
 
 function save() {
-    var data = JSON.stringify(canvas.toDatalessJSON(['end_x','end_y', 'name']));
-     $.ajax({
-        type:'POST',
-        url: '{% url 'save_tags' id_exp=exp.id id_image=image.id %}',
-        data : {
-            canvas_data: data,
-            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
-        },
-        cache: false,
-        success: function(response){
-            console.log('Success');
-        },
-    });
+    canvas.renderAll()
+    var URL = "{% url 'save_tags' id_exp=exp.id id_image=image.id %}";
+    var data = JSON.stringify(canvas.toDatalessJSON(['name']));
+    $.post(URL, {'canvas_data': data});
+    document.getElementById("text-alert").innerText="guardadas";
+    $('.alert').show();
+
 }
 
 function validate(){
     {% if tag_image is not None %}
         var URL = "{% url 'validate' id_exp=exp.id id_image=image.id id_user=tag_image.user.id %}";
-        var data = JSON.stringify(canvas.toDatalessJSON(['end_x','end_y', 'name']));
+        var data = JSON.stringify(canvas.toDatalessJSON(['name']));
         $.post(URL, {'canvas_data': data});
+        document.getElementById("text-alert").innerText="validadas";
+        $('.alert').show();
     {% endif %}
 }
 

@@ -14,11 +14,14 @@
             {{ expForm|crispy }}
 
         {{ formset.management_form }}
+
+        <p>Anotaciones</p>
+
         {% for form in formset %}
-            <div class="row form-row spacer">
+            <div class="row form-row">
                 <div class="input-group">
                     {{ form|crispy }}
-                    <div class="input-group-append">
+                    <div>
                         <button class="btn btn-success add-form-row"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
@@ -63,7 +66,7 @@ function cloneMore(selector, prefix) {
     conditionRow.find('.btn.add-form-row')
     .removeClass('btn-success').addClass('btn-danger')
     .removeClass('add-form-row').addClass('remove-form-row')
-    .html('-');
+    .html('<i class="fas fa-minus"></i>');
     return false;
 }
 function deleteForm(prefix, btn) {

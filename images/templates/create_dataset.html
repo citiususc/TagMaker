@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+
     <a href="{% url 'dataset_list' %}">
         <i class="fas fa-chevron-left"></i> ATRÁS
     </a>
@@ -12,7 +13,6 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ postForm|crispy }}
-
             <p>Imágenes seleccionadas <input name="files" type="file" size="50" accept="image/*" multiple><br><br><p>
             <button type="submit" class="btn btn-primary"> Crear </button>
         </form>

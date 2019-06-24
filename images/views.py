@@ -60,7 +60,6 @@ def new_dataset(request):
                 #generamos un nombre ÚNICO para la imagen y generamos su ruta dentro del proyecto
                 random_name=str(uuid.uuid4())
                 image_path=path_name+"/"+random_name+"."+extension
-                print(image_path)
 
                 #guardamos la imagen en la ruta que proporcionamos
                 with open(image_path, 'wb+') as image:
@@ -81,7 +80,7 @@ def new_dataset(request):
                 else:
                     os.remove(image_path);
 
-            messages.success(request, '¡Dataset creado con éxito!')
+            messages.success(request, '¡Dataset creado!')
             return redirect('dataset_list')
     else:
         postForm = FormDataset()
@@ -154,6 +153,7 @@ def delete_dataset(request, id):
     query.delete()
     name = query.name
     shutil.rmtree(settings.MEDIA_URL+name)
+    messages.success(request, '¡Dataset eliminado!')
     return redirect('dataset_list')
 
 @staff_member_required
@@ -207,8 +207,8 @@ def new_experiment(request):
                             experiment=experiment
                         )
                         point.save()
-            return redirect('experiment_list')
             messages.success(request, 'Experimento creado!')
+            return redirect('experiment_list')
     else:
         formset = TagFormset()
         expForm = FormExperiment()
@@ -218,15 +218,16 @@ def new_experiment(request):
 def experiment(request, id):
     exp=Experiment.objects.get(id=id)
     points = TagPoint.objects.all().filter(experiment_id=id).filter(x=None).filter(y=None)
-    boxes = TagBox.objects.all().filter(experiment_id=id).filter(x_top_left=None).filter(y_top_left=None).filter(x_bottom_right=None).filter(y_bottom_right=None)
-    return render(request, 'experiment.html', {'exp': exp, 'points':points, 'boxes': boxes})
+    boxes = TagBox.objects.all().filter(experiment_id=id).filter(x_top_left=None).filter(y_top_left=None).filter(width=None).filter(height=None)
+    tag_images= TagImage.objects.all().filter(experiment_id=id)
+    return render(request, 'experiment.html', {'exp': exp, 'points':points, 'boxes': boxes, 'tag_images': tag_images})
 
 @staff_member_required
 @login_required
 def delete_experiment(request, id):
     query = Experiment.objects.get(id=id)
     query.delete()
-    messages.success(request, 'Experimento eliminado!')
+    messages.success(request, 'Experimento eliminado')
     return redirect ('experiment_list')
 
 @staff_member_required
@@ -234,7 +235,7 @@ def delete_experiment(request, id):
 def modify_experiment(request, id):
     experiment = Experiment.objects.get(id=id)
     points = TagPoint.objects.all().filter(experiment_id=id).filter(x=None).filter(y=None)
-    boxes = TagBox.objects.all().filter(experiment_id=id).filter(x_top_left=None).filter(y_top_left=None).filter(x_bottom_right=None).filter(y_bottom_right=None)
+    boxes = TagBox.objects.all().filter(experiment_id=id).filter(x_top_left=None).filter(y_top_left=None).filter(width=None).filter(height=None)
 
     if request.method == 'POST':
         expForm = FormExperiment(request.POST, instance=experiment)
@@ -276,7 +277,7 @@ def annotate_image(request, id_exp, id_image, id_user):
     image = Image.objects.get(id=id_image)
     exp = Experiment.objects.get(id=id_exp)
     points = TagPoint.objects.all().filter(experiment_id=id_exp).filter(x=None).filter(y=None)
-    boxes = TagBox.objects.all().filter(experiment_id=id_exp).filter(x_top_left=None).filter(y_top_left=None).filter(x_bottom_right=None).filter(y_bottom_right=None)
+    boxes = TagBox.objects.all().filter(experiment_id=id_exp).filter(x_top_left=None).filter(y_top_left=None).filter(width=None).filter(height=None)
     tag_image = None
 
     #solo enviamos las anotaciones hechas por el usuario
@@ -330,8 +331,8 @@ def save_tags(request, id_exp, id_image):
                                  experiment_id=id_exp,
                                  x_top_left=obj['left'],
                                  y_top_left=obj['top'],
-                                 x_bottom_right=obj['end_x'],
-                                 y_bottom_right=obj['end_y'])
+                                 width=obj['width'],
+                                 height=obj['height'])
                     box.save()
                     tag_image.tags_boxes.add(box)
 
@@ -364,8 +365,8 @@ def validate(request, id_exp, id_image, id_user):
                                  experiment_id=id_exp,
                                  x_top_left=obj['left'],
                                  y_top_left=obj['top'],
-                                 x_bottom_right=obj['end_x'],
-                                 y_bottom_right=obj['end_y'])
+                                 width=obj['width'],
+                                 height=obj['height'])
                     box.save()
                     tag_image.tags_boxes.add(box)
 
@@ -416,8 +417,8 @@ def download_tags(request, id_exp):
                     "name": box.name,
                     "coordinate_x_top_left": box.x_top_left,
                     "coordinate_y_top_left": box.y_top_left,
-                    "coordinate_x_bottom_right": box.x_bottom_right,
-                    "coordinate_y_bottom_right": box.y_bottom_right,
+                    "width": box.width,
+                    "height": box.height,
                 });
 
             experiment_data["tags_image"].append(tag_image)
