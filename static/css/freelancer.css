@@ -380,3 +380,80 @@ a:focus, a:hover, a:active {
   background-color: #1a252f;
   border-color: #1a252f;
 }
+
+  html,body{font-family:Lato;
+        background-color: floralwhite;
+        height: 100%;
+    }
+
+    .item{
+        color:#1a252f;
+    }
+    .main-section{
+        padding: 10rem 0;
+        min-height: calc(100% - 200px);
+    }
+    .main-section .main{
+        margin-bottom: 40px;
+        margin-top: 40px;
+    }
+
+    .remove-image{
+        padding-right: 10px;
+    }
+
+    img {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+      width: 150px;
+    }
+
+    img:hover {
+      box-shadow: 0 0 2px 1px #18BC9C;
+    }
+    .table{
+        width: 40%;
+        color:#1a252f;
+    }
+
+    .table caption{
+        caption-side: top;
+        color: #1a252f;
+        text-transform: uppercase;
+    }
+    .init-page{
+        font-size: 30px;
+    }
+    .footer-total{
+        position:relative;
+        bottom:0;
+        width: 100%;
+    }
+    .tags{
+        padding-bottom: 30px;
+    }
+
+    #mainNav .navbar-brand:hover{
+        color:#18BC9C;
+    }
+
+    .alert-annotate .alert{
+        display: none;
+    }
+
+    .table td, table th{
+        vertical-align: middle;
+    }
+
+    .table-images{
+        width: auto;
+    }
+    .table-images img{
+        width: 80px;
+    }
+
+    input[type=color]{
+        width:40px;
+        padding: 0;
+    }
