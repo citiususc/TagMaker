@@ -66,12 +66,10 @@
         {% endif %}
     </div>
     </div>
-    <div class="col-8">
       <div id="container_canvas">
         <canvas id="canvas" width="800" height="600">
             Tu navegador no soporta el elemento canvas
         </canvas>
-    </div>
     </div>
   </div>
 </div>
@@ -99,6 +97,10 @@
     var color_tag;
 
     load();
+
+    function ver(){
+        alert(JSON.stringify(canvas.toDatalessJSON()))
+    }
 
     function load(){
             //si para esta imagen había anotaciones hechas por el usuario logeado las cargamos
@@ -139,8 +141,8 @@
                 selectable: false,
                 lockMovementX: false,
                 lockMovementY: false,
-                lockScalingX: true,
-                lockScalingY: true,
+                lockScalingX: false,
+                lockScalingY: false,
                 hasRotatingPoint: false,
                 fill: false,
                 stroke: color,
@@ -170,7 +172,7 @@ function removeEvents() {
 }
 
 function touchStartPoint(evt){
-    if( event.type=='mousedown' || window.TouchEvent && evt.touches[0].touchType == "stylus") {
+    if(window.TouchEvent && evt.touches[0].touchType == "stylus" || event.type=='mousedown') {
         pointerdown = true;
         var pointer = canvas.getPointer(evt.e);
         pos_x = pointer.x;
@@ -221,8 +223,8 @@ function touchStartBox(evt) {
             selectable: false,
             lockMovementX: false,
             lockMovementY: false,
-            lockScalingX: true,
-            lockScalingY: true,
+            lockScalingX: false,
+            lockScalingY: false,
             hasRotatingPoint: false,
             fill: false,
             stroke: color_tag,
@@ -258,7 +260,10 @@ function touchMoveBox(evt) {
     }
 }
 function touchEnd() {
-    pointerdown = false;
+        if( event.type=='mouseup' || window.TouchEvent && evt.touches[0].touchType == "stylus") {
+            pointerdown = false;
+            canvas.renderAll();
+        }
 }
 
 function box(name_box, color_box){

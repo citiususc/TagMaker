@@ -457,3 +457,7 @@ a:focus, a:hover, a:active {
         width:40px;
         padding: 0;
     }
+
+    #div_id_password .form-control{
+    height: auto;
+}

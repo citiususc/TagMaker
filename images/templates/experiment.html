@@ -67,7 +67,7 @@
         <a href="{% url 'images_experiment' id=exp.id %}">
         <i class="fas fa-edit"></i><b>ANOTAR</b>
         </a><br>
-        <a href="{% url 'download' id_exp=exp.id %}"><i class="fas fa-download"></i> Descargar anotaciones</a>
+        <a download href="{% url 'download' id_exp=exp.id %}"><i class="fas fa-download"></i> Descargar anotaciones</a>
     {% else %}
         <p>No hay anotaciones definidas para el experimento</p>
     {% endif %}
@@ -102,10 +102,10 @@
         <button type="button" class="btn btn-danger">
             Aceptar
         </button>
+
           </a>
       </div>
     </div>
   </div>
 </div>
-
 {% endblock %}

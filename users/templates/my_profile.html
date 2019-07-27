@@ -10,7 +10,11 @@
     <table class="table table-striped">
   <tr>
     <tr><td><h5>{{ user.username }}</h5></td></tr>
-    <tr><td>Usuario Experto</td></tr>
+    {% if user.is_staff %}
+         <tr><td>Usuario Experto</td></tr>
+    {% else %}
+         <tr><td>Usuario Básico</td></tr>
+    {% endif %}
     <tr>
       <td>{{ user.first_name }} {{ user.last_name }}</td>
     </tr>
