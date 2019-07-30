@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% block content %}
      <a href="{% url 'experiment' id=exp.id %}">
-        <i class="fas fa-chevron-left"></i> ATRÁS
+         <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
     </a>
 
     <div class="main">
-    <h5>IMÁGENES DEL EXPERIMENTO</h5>
+        <h5>{% trans "EXPERIMENT IMAGES" %}</h5>
 
     {% if not exp.dataset.images.all %}
-        <p>El dataset del experimento está vacío</p>
+        <p>{% trans "The experiment dataset is empty" %}</p>
     {% else %}
-        <p>Pulsa sobre cada una de ellas para anotar.</p>
+        <p>{% trans "Click on an image to annotate it" %}.</p>
         {% if user.is_authenticated and user.is_staff %}
-            <p>Si hay anotaciones hechas por otros usuarios, pulsa sobre sus nombres para ver o validarlas.</p>
+            <p>{% trans "If there are annotations made by other users, click on their names to validate them" %}.</p>
         {% endif %}
 
 

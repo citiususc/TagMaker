@@ -1,58 +1,45 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-
+{% load i18n %}
 {% block content %}
 
     <a href="{% url 'experiment' id=id_exp %}">
-        <i class="fas fa-chevron-left"></i> ATRÁS
+        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
     </a>
 
     <div class="main">
-     <h3>Modificar experimento</h3>
+        <h3>{% trans "Modify experiment" %}</h3>
     <form method="post">
         {% csrf_token %}
         {{ expForm|crispy }}
-        {% if points or boxes %}
+        {% if annotation_types %}
 
-          <small>*Solo puedes borrar las anotaciones para las cuales no haya ninguna anotación asociada</small>
+            <small>*{% trans "You can only delete the annotation types which have not been used in this experiment" %}</small>
         <table class="table tags">
-        <caption>Anotaciones definidas</caption>
+            <caption>{% trans "Defined annotations" %}</caption>
           <thead>
             <tr>
-              <th scope="col">Nombre</th>
-              <th scope="col">Tipo</th>
-                <th scope="col">Color</th>
-                <th scope="col">Estado</th>
+                <th scope="col">{% trans "Name" %}</th>
+                <th scope="col">{% trans "Type" %}Tipo</th>
+                <th scope="col">{% trans "Type" %}</th>
+                <th scope="col">{% trans "State" %}</th>
                 <th></th>
             </tr>
           </thead>
           <tbody>
-          {% for tag in points %}
+          {% for at in annotation_types %}
               <tr>
-                <td>{{ tag.name }}</td>
-                <td>Punto</td>
-                  <td><i class="fas fa-paint-brush" style="color: {{ tag.color }}"></i></td>
+                  <td>{{ at.name }}</td>
+                  <td>{{ at.primitive }}</td>
+                  <td><i class="fas fa-paint-brush" style="color: {{ at.color }}"></i></td>
                   <td>
-                      {% if tag.state %}
-                        Hechas
+                      {% if annotation_type.state %}
+                          {% trans "Done" %}
                     {% else %}
-                        Sin hacer
-                          <td><a href='{% url 'delete_tag_experiment' id_exp=id_exp id_tag=tag.id type='punto' %}'>Borrar</a></td>
-                    {% endif %}
-                  </td>
-              </tr>
-          {% endfor %}
-          {% for tag in boxes %}
-              <tr>
-                <td>{{ tag.name }}</td>
-                <td>Caja</td>
-                  <td><i class="fas fa-paint-brush" style="color: {{ tag.color }}"></i></td>
-                  <td>
-                      {% if tag.state %}
-                        Hechas
-                    {% else %}
-                        Sin hacer
-                          <td><a href='{% url 'delete_tag_experiment' id_exp=id_exp id_tag=tag.id type='caja' %}'>Borrar</a></td>
+                          {% trans "Not done" %}
+                          <td>
+                              <a href='{% url 'delete_annotation_type_experiment' id_exp=id_exp id_annotation_type=at.id %}'>{% trans "Delete" %}</a>
+                          </td>
                     {% endif %}
                   </td>
               </tr>
@@ -61,9 +48,9 @@
         </table>
 
         {% else %}
-            <p>No hay anotaciones definidas para este experimento</p>
+            <p>{% trans "There is no defined annotation for this experiment" %}</p>
         {% endif %}
-        <p>DEFINIR NUEVAS ANOTACIONES</p>
+        <p>{% trans "DEFINE NEW ANNOTATIONS" %}</p>
         {{ formset.management_form }}
        {% for form in formset %}
             <div class="row form-row spacer">
@@ -76,7 +63,7 @@
             </div>
         {% endfor %}
     </div>
-    <button class="btn btn-primary" type="submit"> Guardar cambios </button>
+    <button class="btn btn-primary" type="submit"> {% trans "Save changes" %} </button>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script type="text/javascript">

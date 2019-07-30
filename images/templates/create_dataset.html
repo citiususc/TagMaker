@@ -1,20 +1,36 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-
+{% load i18n %}
 {% block content %}
 
     <a href="{% url 'dataset_list' %}">
-        <i class="fas fa-chevron-left"></i> ATRÁS
+        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
     </a>
     <div class="main">
 
-      <h3>Nuevo dataset</h3>
+        <h3>{% trans "New dataset" %}</h3>
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ postForm|crispy }}
-            <p>Imágenes seleccionadas <input name="files" type="file" size="50" accept="image/*" multiple><br><br><p>
-            <button type="submit" class="btn btn-primary"> Crear </button>
+            {#            <p>{% trans "Selected images" %} <input name="files" type="file" size="50" accept="image/*"#}
+            {#                                                    multiple><br><br>#}
+            {#            <p>#}
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 p-1">
+                        <div id="uploadBtnWrapper" class="btn w-100">
+                            <input name="files" type="file" id="uploadImagesInput" class="inputfile"
+                                   accept="image/*" multiple
+                                   data-multiple-caption="{count} {% trans "images selected" %}">
+                            <label for="file" id="uploadImagesLabel">{% trans "Add new images" %}</label>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 p-1">
+                        <button type="submit" class="btn btn-primary w-100"> Crear</button>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 

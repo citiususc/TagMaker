@@ -1,0 +1,74 @@
+{% load i18n %}
+{% load staticfiles %}
+<div id="header">
+    <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand js-scroll-trigger" href="{% url 'home' %}">TagMaker</a>
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item mx-0 mx-lg-1">
+                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger"
+                           href="{% url 'dataset_list' %}">{% trans "Datasets" %}</a>
+                    </li>
+                    <li class="nav-item mx-0 mx-lg-1">
+                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger"
+                           href="{% url 'experiment_list' %}">{% trans "Experiments" %}</a>
+                    </li>
+                {% endif %}
+
+                <li class="nav-item dropdown mx-0 mx-lg-1">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    <a class="nav-link dropdown-toggle  rounded js-scroll-trigger" href="#"
+                       data-toggle="dropdown"
+                    >
+                        {% with "images/"|add:LANGUAGE_CODE|add:".png" as icon %}
+                            <img style="border:none; width: 40px;"
+                                 src="{% static icon %}">
+                        {% endwith %}
+                    </a>
+                    <div class="dropdown-menu">
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}"/>
+                            {% for language in LANGUAGES %}
+                                <ul class="nav-link pl-0">
+                                    {% with "images/"|add:language.0|add:".png" as icon %}
+                                        <button type="submit"
+                                                name="language"
+                                                value="{{ language.0 }}"
+                                                class="{% if language.0 == LANGUAGE_CODE %}selected{% endif %} dropdown-item fake-btn">
+                                            <img style="border:none; width: 35px;"
+                                                 src="{% static icon %}"> {{ language.1 }}
+                                        </button>
+                                    {% endwith %}
+                                </ul>
+                            {% endfor %}
+                        </form>
+                    </div>
+
+
+                </li>
+
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown mx-0 mx-lg-1">
+                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#"
+                           id="navbarDropdownMenuLink" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user"></i> {{ request.user.username }}
+                        </a>
+                        <div class="dropdown-menu">
+                            {% if user.is_superuser %}
+                                <a class="dropdown-item item" href="/admin"><i class="fas fa-wrench"></i>
+                                    {% trans "Admin" %}</a>
+                            {% endif %}
+                            <a class="dropdown-item item" href="{% url 'profile' %}"><i class="fas fa-user-edit"></i>
+                                {% trans "Profile" %}</a>
+                            <a class="dropdown-item item" href="{% url 'logout' %}"><i class="fas fa-power-off"></i>
+                                {% trans "Logout" %}</a>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>

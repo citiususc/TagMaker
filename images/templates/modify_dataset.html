@@ -1,24 +1,122 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-
+{% load i18n %}
 {% block content %}
 
     <a href="{% url 'dataset' id=id_data %}">
-        <i class="fas fa-chevron-left"></i> ATRÁS
+        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
     </a>
     <div class="main">
-     <h3>Modificar dataset</h3>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ dataForm|crispy }}
-            {% for image in data_images %}
-                <img src="/{{ image.path }}/{{ image.name_unique }}" style="width:150px">
-                <a class="remove-image" href='{% url 'delete_image_dataset' id_data=id_data id=image.id %}'><i class="fas fa-times"></i></a>
-            {% endfor %}
 
-        <p>Imágenes seleccionadas: <input name="files" type="file" size="50" accept="image/*" multiple></p>
-        <button type="submit" class="btn btn-primary"> Guardar cambios </button>
-    </form>
+        <h3>{% trans "Modify dataset" %}</h3>
+
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 float-right">
+
+
+            </div>
+            {% csrf_token %}
+            {{ dataForm|crispy }}
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 p-1">
+                        {% if data_images.has_other_pages %}
+                            <ul class="pagination justify-content-center">
+                                {% if data_images.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="?page={{ data_images.previous_page_number }}">&laquo;</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+                                {% endif %}
+                                {% for i in data_images.paginator.page_range %}
+                                    {% if data_images.number == i %}
+                                        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if data_images.has_next %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page={{ data_images.next_page_number }}">&raquo;</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link">&raquo;</a></li>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 float-right p-1">
+                        <div id="uploadBtnWrapper" class="btn w-100">
+                            <input name="files" type="file" id="uploadImagesInput" class="inputfile"
+                                   accept="image/*" multiple
+                                   data-multiple-caption="{count} {% trans "images selected" %}">
+                            <label for="file" id="uploadImagesLabel">{% trans "Add new images" %}</label>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 float-right p-1">
+                        <button type="submit" class="btn btn-primary w-100"> {% trans "Save changes" %} </button>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    {% for image in data_images %}
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 float-left">
+                            <div class="img-wrap">
+                                <img class="w-100" src="/{{ image.path }}/{{ image.name_unique }}">
+                                <a class="remove-image float-right close"
+                                   href='{% url 'delete_image_dataset' id_data=id_data id=image.id %}'><i
+                                        class="fas fa-trash"></i></a>
+                            </div>
+
+                            <div>
+                                <p class="text-center">{{ image.name }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="col-12">
+                    {% if data_images.has_other_pages %}
+                        <ul class="pagination justify-content-center">
+                            {% if data_images.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="?page={{ data_images.previous_page_number }}">&laquo;</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+                            {% endif %}
+                            {% for i in data_images.paginator.page_range %}
+                                {% if data_images.number == i %}
+                                    <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if data_images.has_next %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ data_images.next_page_number }}">&raquo;</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><a class="page-link">&raquo;</a></li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+            </div>
+
+
+        </form>
     </div>
 
 {% endblock %}

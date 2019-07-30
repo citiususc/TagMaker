@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% block content %}
     <a href="{% url 'home' %}">
-        <i class="fas fa-chevron-left"></i> ATRÁS
+        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
     </a>
 
     {% if messages %}
@@ -15,21 +15,22 @@
     {% endif %}
 
     <div class="main">
-        <h3>Mis Experimentos</h3>
+        <h3>{% trans "My experiments" %}</h3>
         {% if experiments %}
-            <p>Estos son los experimentos en los que participas</p>
+            <p>{% trans "These are the experiments you participate in" %}</p>
             <ul class="fa-ul">
                 {% for experiment in experiments %}
                     <li><a href="{% url 'experiment' id=experiment.id %}">{{ experiment.name }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>No hay experimentos definidos</p>
+            <p>{% trans "There isn't any defined experiment" %}</p>
         {% endif %}
     </div>
 
     {% if user.is_authenticated and user.is_staff %}
-        <a href="{% url 'create_experiment' %}"><i class="fas fa-plus"></i> Nuevo Experimento</a>
+        <a class="btn btn-primary" href="{% url 'create_experiment' %}"><i
+                class="fas fa-plus"></i> {% trans "New experiment" %}</a>
     {% endif %}
 
 

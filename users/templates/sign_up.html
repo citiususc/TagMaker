@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 
 {% block content %}
      <a href="{% url 'login' %}">
-        <i class="fas fa-chevron-left"></i> SALIR
+         <i class="fas fa-chevron-left"></i> {% trans "EXIT" %}
     </a>
 
     <div class="main">
-  <h3>Formulario de registro</h3>
+        <h3>{% trans "Registration form" %}</h3>
   <form method="post">
     {% csrf_token %}
     {{ form|crispy }}
       <br>
-    <button class="btn btn-primary" type="submit">Registrarse</button>
+      <button class="btn btn-primary" type="submit">{% trans "Register" %}</button>
   </form>
     </div>
 {% endblock %}
