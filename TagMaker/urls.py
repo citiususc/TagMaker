@@ -18,7 +18,7 @@ urlpatterns = [
                   path('myprofile/edit/', users_view.edit_profile, name='edit'),
                   path('myprofile/password/', users_view.change_password, name='change_password'),
                   path('myprofile/delete/', users_view.delete_profile, name='delete_profile'),
-                  path('admin/', admin.site.urls),
+                  url('admin/', admin.site.urls, name='admin'),
                   path('datasets/new/', images_views.new_dataset, name='create_dataset'),
                   path('datasets/', images_views.dataset_list, name='dataset_list'),
                   path('datasets/<id>/', images_views.dataset, name='dataset'),

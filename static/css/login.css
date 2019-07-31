@@ -37,7 +37,7 @@ html, body {
 }
 
 input:focus {
-    outline: 0 0 0 0 !important;
+    outline: 0 !important;
     box-shadow: 0 0 0 0 !important;
 }
 

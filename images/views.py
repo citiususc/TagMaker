@@ -19,6 +19,7 @@ from images.models import Dataset, Experiment, Image, IndividualTagBox, Individu
     IndividualTag
 from users.models import Team
 from PIL import Image as PILImage
+from collections.abc import Iterable
 
 
 @login_required
@@ -33,9 +34,12 @@ def experiment_list(request):
 
     for team in Team.objects.all():
         if request.user in team.users.all():
-            if Experiment.objects.filter(team_id=team.id):
-                experiment = Experiment.objects.get(team_id=team.id)
-                experiments.append(experiment)
+            result = Experiment.objects.filter(team_id=team.id)
+            if isinstance(result, Iterable):
+                for exp in result:
+                    experiments.append(exp)
+            else:
+                experiments.append(result)
 
     return render(request, 'experiment_list.html', {'experiments': experiments})
 
@@ -345,6 +349,7 @@ def save_tags(request, id_exp, id_image):
         if 'canvas_data' in request.POST:
             data = request.POST['canvas_data']
             decoded = json.loads(data)
+            print(decoded)
 
             # Si existe un ImageTag para esta imagen donde el usuario corresponde con el actual
             if ImageTag.objects.filter(image_id=id_image).filter(user_id=request.user.id).all():

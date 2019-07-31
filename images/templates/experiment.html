@@ -57,7 +57,7 @@
                 <a href="{% url 'images_experiment' id=exp.id %}">
                     <i class="fas fa-edit"></i><b> {% trans "ANNOTATE" %}</b>
                 </a><br>
-                <a href="{% url 'download' id_exp=exp.id %}"><i
+                <a download href="{% url 'download' id_exp=exp.id %}"><i
                         class="fas fa-download"></i> {% trans "Download annotations" %}</a>
             {% else %}
                 <p>{% trans "There is no defined annotation for this experiment" %}</p>
@@ -85,9 +85,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {% blocktrans %}Are you sure you want to delete this experiment? You will loose all the work done!
-                        Make sure you have downloaded the annotations before confirming the
-                        operation.{% endblocktrans %}
+                    {% trans "delete_experiment_confirmation" %}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">

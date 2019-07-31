@@ -64,12 +64,10 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="col-8">
-                    <div id="container_canvas">
-                        <canvas id="canvas" width="800" height="600">
-                            {% trans "Your browser does not support the canvas element" %}
-                        </canvas>
-                    </div>
+                <div id="container_canvas">
+                    <canvas id="canvas" width="800" height="600">
+                        {% trans "Your browser does not support the canvas element" %}
+                    </canvas>
                 </div>
             </div>
         </div>
@@ -79,8 +77,9 @@
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
     <script type="text/javascript">
 
-        var container = document.getElementById("container_canvas");
-        var canvas = new fabric.Canvas('canvas');
+        let container = document.getElementById("container_canvas");
+        let canvas = new fabric.Canvas('canvas');
+        let pointerdown = false;
 
         fabric.Image.fromURL('/{{ image.path }}/{{ image.name_unique }}', function (img) {
             img.scaleToWidth(canvas.width);
@@ -94,17 +93,21 @@
         fabric.Group.prototype.lockMovementX = true;
         fabric.Group.prototype.lockMovementY = true;
 
-        var annotation_type_name;
-        var annotation_type_color;
+        let annotation_type_name;
+        let annotation_type_color;
 
         load();
+
+        function ver() {
+            alert(JSON.stringify(canvas.toDatalessJSON()));
+        }
 
         function load() {
             //si para esta imagen había anotaciones hechas por el usuario logueado las cargamos
             {% if tag_image is not None %}
                 {% for it in tag_image.individual_tags.all %}
-                    annotation_type_color = '{{ it.type.color }}';
-                    annotation_type_name = '{{ it.type.name }}';
+                    let annotation_type_color = '{{ it.type.color }}';
+                    let annotation_type_name = '{{ it.type.name }}';
                     {% if it.type.primitive == "Point" %}
                         pos_x = {{ it.individualtagpoint.x }};
                         pos_y = {{ it.individualtagpoint.y }};
@@ -127,7 +130,7 @@
                         pos_y = {{ it.individualtagbox.y_top_left }};
                         width_box = {{ it.individualtagbox.width }};
                         height_box = {{ it.individualtagbox.height }};
-                        rect = new fabric.Rect({
+                        let rect = new fabric.Rect({
                             left: pos_x,
                             top: pos_y,
                             name: annotation_type_name,
@@ -136,8 +139,8 @@
                             selectable: false,
                             lockMovementX: false,
                             lockMovementY: false,
-                            lockScalingX: true,
-                            lockScalingY: true,
+                            lockScalingX: false,
+                            lockScalingY: false,
                             hasRotatingPoint: false,
                             fill: false,
                             stroke: annotation_type_color,
@@ -168,7 +171,7 @@
         }
 
         function touchStartPoint(evt) {
-            if (event.type == 'mousedown' || window.TouchEvent && evt.touches[0].touchType == "stylus") {
+            if (window.TouchEvent && evt.touches[0].touchType === "stylus" || evt.type === 'mousedown') {
                 pointerdown = true;
                 var pointer = canvas.getPointer(evt.e);
                 pos_x = pointer.x;
@@ -182,8 +185,8 @@
                     selectable: false,
                     lockMovementX: false,
                     lockMovementY: false,
-                    lockScalingX: true,
-                    lockScalingY: true,
+                    lockScalingX: false,
+                    lockScalingY: false,
                     hasRotatingPoint: false
                 });
                 canvas.add(point);
@@ -204,7 +207,7 @@
         }
 
         function touchStartBox(evt) {
-            if (event.type === 'mousedown' || window.TouchEvent && evt.touches[0].touchType === "stylus") {
+            if (evt.type === 'mousedown' || window.TouchEvent && evt.touches[0].touchType === "stylus") {
                 pointerdown = true;
                 var pointer = canvas.getPointer(evt.e);
                 pos_x = pointer.x; //posicion inicial
@@ -231,7 +234,7 @@
         }
 
         function touchMoveBox(evt) {
-            if (event.type == 'mousemove' || window.TouchEvent && evt.touches[0].touchType == "stylus") {
+            if (evt.type === 'mousemove' || window.TouchEvent && evt.touches[0].touchType === "stylus") {
                 if (!pointerdown) return;
 
                 var pointer = canvas.getPointer(evt.e);
@@ -257,8 +260,11 @@
             }
         }
 
-        function touchEnd() {
-            pointerdown = false;
+        function touchEnd(evt) {
+            if (evt.type === 'mouseup' || window.TouchEvent && evt.touches[0].touchType === "stylus") {
+                pointerdown = false;
+                canvas.renderAll();
+            }
         }
 
         function box(name_box, color_box) {

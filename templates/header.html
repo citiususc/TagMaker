@@ -58,7 +58,7 @@
                         </a>
                         <div class="dropdown-menu">
                             {% if user.is_superuser %}
-                                <a class="dropdown-item item" href="/admin"><i class="fas fa-wrench"></i>
+                                <a class="dropdown-item item" href="admin"><i class="fas fa-wrench"></i>
                                     {% trans "Admin" %}</a>
                             {% endif %}
                             <a class="dropdown-item item" href="{% url 'profile' %}"><i class="fas fa-user-edit"></i>
