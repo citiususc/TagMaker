@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load staticfiles %}
 {% block content %}
+
+    <script src="{% static "js/createOrModifyDataset.js" %}"></script>
 
     <a href="{% url 'dataset_list' %}">
         <i class="fas fa-chevron-left"></i> {% trans "BACK" %}

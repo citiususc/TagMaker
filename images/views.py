@@ -91,7 +91,7 @@ def new_dataset(request):
                 # generamos el checksum de la imagen a partir de la ruta que antes generamos y comprobamos si existe en la BD.
                 checksum = md5(image_path)
                 # En caso negativo almacenamos una instancia de Image en la BD y guardamos la imagen en la carpeta del dataset correspondiente.
-                if not Image.objects.filter(checksum=checksum):
+                if not Image.objects.filter(dataset=dataset, checksum=checksum):
                     imagen = Image(name=file.name.replace(original_extension, new_extension),
                                    checksum=checksum,
                                    path=path_name,
@@ -184,7 +184,7 @@ def modify_dataset(request, id):
                 checksum = md5(
                     image_path)  # generamos el checksum de la imagen a partir de la ruta que antes generamos y comprobamos si existe en la BD.
                 # En caso negativo almacenamos una instancia de Image en la BD y guardamos la imagen en la carpeta del dataset correspondiente.
-                if not Image.objects.filter(checksum=checksum):
+                if not Image.objects.filter(dataset=dataset, checksum=checksum):
                     imagen = Image(name=file.name,
                                    checksum=checksum,
                                    path=settings.MEDIA_URL + dataForm.cleaned_data['name'],
