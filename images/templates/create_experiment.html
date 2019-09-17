@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 {% block content %}
 
     <a href="{% url 'experiment_list' %}">
-            <i class="fas fa-chevron-left"></i> ATRÁS
+        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
         </a>
 
 
     <div class="main">
-        <h3>Nuevo experimento</h3>
+        <h3>{% trans "New experiment" %}</h3>
         <form method="post">
             {% csrf_token %}
             {{ expForm|crispy }}
 
         {{ formset.management_form }}
 
-        <p>Anotaciones</p>
+            <p>{% trans "Annotations" %}</p>
 
         {% for form in formset %}
             <div class="row form-row">
@@ -27,9 +28,9 @@
                 </div>
             </div>
         {% endfor %}
-        </div>
-            <button type="submit" class="btn btn-primary">Crear</button>
+            <button type="submit" class="btn btn-primary">{% trans "Create" %}</button>
         </form>
+    </div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script type="text/javascript">
@@ -42,27 +43,29 @@ function updateElementIndex(el, prefix, ndx) {
     if (el.name) el.name = el.name.replace(id_regex, replacement);
 }
 function cloneMore(selector, prefix) {
-    var newElement = $(selector).clone(true);
-    var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+    let newElement = $(selector).clone(true);
+    let totalFormsElement = $('#id_' + prefix + '-TOTAL_FORMS');
+
+    let total = totalFormsElement.val();
     newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
-        var name = $(this).attr('name')
+        let name = $(this).attr('name');
         if(name) {
             name = name.replace('-' + (total-1) + '-', '-' + total + '-');
-            var id = 'id_' + name;
+            let id = 'id_' + name;
             $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
         }
     });
     newElement.find('label').each(function() {
-        var forValue = $(this).attr('for');
+        let forValue = $(this).attr('for');
         if (forValue) {
           forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
           $(this).attr({'for': forValue});
         }
     });
     total++;
-    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+    totalFormsElement.val(total);
     $(selector).after(newElement);
-    var conditionRow = $('.form-row:not(:last)');
+    let conditionRow = $('.form-row:not(:last)');
     conditionRow.find('.btn.add-form-row')
     .removeClass('btn-success').addClass('btn-danger')
     .removeClass('add-form-row').addClass('remove-form-row')
@@ -70,7 +73,9 @@ function cloneMore(selector, prefix) {
     return false;
 }
 function deleteForm(prefix, btn) {
-    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    let totalFormsElement = $('#id_' + prefix + '-TOTAL_FORMS');
+
+    let total = parseInt(totalFormsElement.val());
     if (total > 1){
         btn.closest('.form-row').remove();
         var forms = $('.form-row');
