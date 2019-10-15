@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
+
 {% block content %}
     <div class="main">
-      <h3>Cerrar Sesión</h3>
-      <p>Has cerrado sesión satisfactoriamente</p>
-      <p><a href="{% url 'login' %}">Entrar de nuevo</a></p>
+        <h3>{% trans "Logout" %}</h3>
+        <p>{% trans "The session has been closed succesfully" %}</p>
+        <p><a href="{% url 'login' %}">{% trans "Login again" %}</a></p>
     </div>
 {% endblock %}

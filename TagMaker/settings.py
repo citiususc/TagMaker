@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -25,8 +25,7 @@ SECRET_KEY = '=&z!ga9qsljyf8m#!f_$-=y5v1nl(1vub34$94idpww2ibe5$&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS =['192.168.1.105']
-
+ALLOWED_HOSTS = ['172.20.10.3', '127.0.0.1']
 
 # Application definition
 
@@ -50,8 +49,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'users.middleware.RestrictStaffToAdminMiddleware'
 ]
+
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
@@ -71,13 +72,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n'
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'TagMaker.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -88,7 +89,6 @@ DATABASES = {
         'NAME': 'TagMaker',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -108,11 +108,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Translation
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.1/topics/i18n/
+# LANGUAGE_CODE = 'es'
 
-LANGUAGE_CODE = 'es'
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'TagMaker/locale/'),
+)
+
+LANGUAGES = (
+    ('en', 'English'),
+    ('es', 'Español'),
+)
 
 TIME_ZONE = 'Europe/Madrid'
 
@@ -122,14 +129,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'

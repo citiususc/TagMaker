@@ -8,6 +8,7 @@ from users.forms import SignUpForm
 from users.forms import EditProfile
 from users.models import Team
 
+
 @login_required
 def home(request):
     return render(request, 'home.html')
@@ -40,6 +41,7 @@ def edit_profile(request):
         form = EditProfile(instance=request.user)
         return render(request, 'edit_profile.html', {'form': form})
 
+
 @login_required
 def profile(request):
     teams = []
@@ -47,6 +49,7 @@ def profile(request):
         if request.user in team.users.all():
             teams.append(team)
     return render(request, 'my_profile.html', {'teams': teams})
+
 
 @login_required
 def change_password(request):
@@ -61,6 +64,7 @@ def change_password(request):
     else:
         form = PasswordChangeForm(user=request.user)
         return render(request, 'change_password.html', {'form': form})
+
 
 @login_required
 def delete_profile(request):

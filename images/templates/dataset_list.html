@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
+{% load i18n %}
 
 {% block content %}
-        <a href="{% url 'home' %}">
-            <i class="fas fa-chevron-left"></i> ATRÁS
-        </a>
+    <a href="{% url 'home' %}">
+        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
+    </a>
     <div class="main">
 
         {% if messages %}
@@ -16,18 +17,28 @@
             {% endfor %}
         {% endif %}
 
-      <h3>Datasets</h3>
+        <h3>{% trans "Datasets" %}</h3>
         {% if datasets %}
-            <p>Estos son los datasets existentes</p>
-            <ul class="fa-ul">
-                {% for dataset in datasets %}
-                    <li><a  href="{% url 'dataset' id=dataset.id %}">{{ dataset.name }}</a></li>
-                {% endfor %}
-            </ul>
+            <p>{% trans "These are the existent datasets" %}</p>
+            <div class="container">
+                <div class="row">
+                    {% for dataset in datasets %}
+                        <div class="overlay-image col-xl-3 col-lg-4 col-md-6 col-sm-12 float-left">
+                            <a href="{% url 'dataset' id=dataset.id %}">
+                                {% with dataset.images.all|first as image %}
+                                    <img class="image" src="/{{ image.path }}/{{ image.name_unique }}" alt="Alt text"/>
+                                    <div class="text">{{ dataset.name }}
+                                    </div>
+                                {% endwith %}
+                            </a></div>
+                    {% endfor %}
+                </div>
+            </div>
         {% else %}
-            <p>No hay datasets definidos</p>
+            <p>{% trans "There isn't any defined dataset" %}</p>
         {% endif %}
     </div>
-    <a href="{% url 'create_dataset' %}"><i class="fas fa-plus"></i> Nuevo Dataset</a>
+    <a class="btn btn-primary" href="{% url 'create_dataset' %}"><i class="fas fa-plus"></i> {% trans "New dataset" %}
+    </a>
 
 {% endblock %}

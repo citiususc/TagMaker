@@ -1,111 +1,97 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
+
 {% block content %}
     <a href="{% url 'experiment_list' %}">
-        <i class="fas fa-chevron-left"></i> ATRÁS
+        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
     </a>
 
     <div class="main">
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-            </div>
-        {% endfor %}
-    {% endif %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
 
-    <h3>{{ exp.name }}</h3>
-    <p><small>Creado el {{ exp.date }}</small></p>
-    <p>{{ exp.description }}</p>
-    <p>Asociado a <b>{{ exp.team.name }}</b></p>
-    <p><a href="{% url 'dataset' id=exp.dataset.id %}">{{ exp.dataset.name }}</a></p>
-    <div>
+        <h3>{{ exp.name }}</h3>
+        <p>
+            <small>{% trans "Created on" %} {{ exp.date }}</small>
+        </p>
+        <p>{{ exp.description }}</p>
+        <p>{% trans "Associated to team" %} <b>{{ exp.team.name }}</b></p>
+        <p><a href="{% url 'dataset' id=exp.dataset.id %}">{{ exp.dataset.name }}</a></p>
+        <div>
 
-    {% if points or boxes %}
-        <table class="table tags">
-        <caption>Anotaciones definidas</caption>
-          <thead>
-            <tr>
-              <th scope="col">Nombre</th>
-              <th scope="col">Tipo</th>
-                <th scope="col">Color</th>
-              <th scope="col">Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for tag in points %}
-              <tr>
-                <td>{{ tag.name }}</td>
-                <td>Punto</td>
-                <td><i class="fas fa-paint-brush" style="color: {{ tag.color }}"></i></td>
-                <td>
-                    {% if tag.state %}
-                        Hechas
-                    {% else %}
-                        Sin hacer
-                    {% endif %}</td>
-              </tr>
-          {% endfor %}
-          {% for tag in boxes %}
-              <tr>
-                <td>{{ tag.name }}</td>
-                <td>Caja</td>
-                <td><i class="fas fa-paint-brush" style="color: {{ tag.color }}"></i></td>
-                <td>
-                    {% if tag.state %}
-                        Hechas
-                    {% else %}
-                        Sin hacer
-                    {% endif %}
-                </td>
-              </tr>
-          {% endfor %}
-          </tbody>
-        </table>
+            {% if annotation_types %}
+                <table class="table tags">
+                    <caption>{% trans "Defined annotations" %}</caption>
+                    <thead>
+                    <tr>
+                        <th scope="col">{% trans "Name" %}</th>
+                        <th scope="col">{% trans "Type" %}</th>
+                        <th scope="col">{% trans "Colour" %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for at in annotation_types %}
+                        <tr>
+                            <td>{{ at.name }}</td>
+                            <td>{% trans at.primitive %}</td>
+                            <td><i class="fas fa-paint-brush" style="color: {{ at.color }}"></i></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 
-        <a href="{% url 'images_experiment' id=exp.id %}">
-        <i class="fas fa-edit"></i><b>ANOTAR</b>
-        </a><br>
-        <a download href="{% url 'download' id_exp=exp.id %}"><i class="fas fa-download"></i> Descargar anotaciones</a>
-    {% else %}
-        <p>No hay anotaciones definidas para el experimento</p>
-    {% endif %}
+                <a href="{% url 'images_experiment' id=exp.id %}">
+                    <i class="fas fa-edit"></i><b> {% trans "ANNOTATE" %}</b>
+                </a><br>
+                <a download href="{% url 'download' id_exp=exp.id %}"><i
+                        class="fas fa-download"></i> {% trans "Download annotations" %}</a>
+            {% else %}
+                <p>{% trans "There is no defined annotation for this experiment" %}</p>
+            {% endif %}
 
-    </div>
+        </div>
     </div>
 
     {% if user.is_authenticated and user.is_staff %}
-        <a href="{% url 'modify_experiment' id=exp.id %}"><i class="fas fa-cog"></i> Modificar experimento</a><br>
-        <a href="#"  data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-trash-alt"></i> Borrar experimento</a>
+        <a href="{% url 'modify_experiment' id=exp.id %}"><i class="fas fa-cog"></i> {% trans "Modify experiment" %}</a>
+        <br>
+        <a href="#" data-toggle="modal" data-target="#exampleModalCenter"><i
+                class="fas fa-trash-alt"></i> {% trans "Delete experiment" %}</a>
     {% endif %}
 
     <!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Borrar experimento</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          ¿Seguro que quieres borrar este experimento? Perderás todo el trabajo realizado! Asegúrate de descargar las anotaciones
-          antes de aceptar si quieres conservarlas en tu equipo.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Cancelar
-        </button>
-          <a href="{% url 'delete_experiment' id=exp.id %}">
-        <button type="button" class="btn btn-danger">
-            Aceptar
-        </button>
-
-          </a>
-      </div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">{% trans "Delete experiment" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% trans "delete_experiment_confirmation" %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        {% trans "Cancel" %}
+                    </button>
+                    <a href="{% url 'delete_experiment' id=exp.id %}">
+                        <button type="button" class="btn btn-danger">
+                            {% trans "Accept" %}
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-{% endblock %}
+
+{% endblock content %}

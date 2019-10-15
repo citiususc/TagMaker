@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 {% block content %}
 
     <a href="{% url 'profile' %}">
-        <i class="fas fa-chevron-left"></i> ATRÁS
+        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
     </a>
 
     <div class="main">
-        <h3>Editar perfil</h3>
+        <h3>{% trans "Modify profile" %}</h3>
         <form method="post">
             {% csrf_token %}
             {{ form|crispy }}
             <br>
-            <button class="btn btn-primary" type="submit">Guardar cambios</button>
+            <button class="btn btn-primary" type="submit">{% trans "Save changes" %}</button>
         </form>
     </div>
 

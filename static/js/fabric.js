@@ -27829,7 +27829,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
    * the map change will affect all Instances unless you need for only some text Instances
    * in that case you have to clone this object and assign your Instance.
    * this.keysMap = fabric.util.object.clone(this.keysMap);
-   * The function must be in fabric.Itext.prototype.myFunction And will receive event as args[0]
+   * The function must be in fabric.Itext.prototype.handleUploadButton And will receive event as args[0]
    */
   keysMap: {
     9:  'exitEditing',

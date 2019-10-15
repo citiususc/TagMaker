@@ -1,67 +1,79 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% block content %}
     <a href="{% url 'home' %}">
-        <i class="fas fa-chevron-left"></i> ATRÁS
+        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
     </a>
 
     <div class="main">
 
-    <table class="table table-striped">
-  <tr>
-    <tr><td><h5>{{ user.username }}</h5></td></tr>
-    {% if user.is_staff %}
-         <tr><td>Usuario Experto</td></tr>
-    {% else %}
-         <tr><td>Usuario Básico</td></tr>
-    {% endif %}
-    <tr>
-      <td>{{ user.first_name }} {{ user.last_name }}</td>
-    </tr>
-            <tr><td>{{ user.email }}</td></tr>
-    <tr><td>
-        {% if teams %}
-            ·
-         {% for team in teams %}
-            {{ team.name }} ·
-        {% endfor  %}
-    {% else %}
-        No formas parte de ningún equipo
-    {% endif %}
+        <table class="table table-striped">
+            <tr>
+                <td><h5>{{ user.username }}</h5></td>
+            </tr>
+            <tr>
+                {% if user.is_staff %}
+                    <td>Usuario Experto</td>
+                {% else %}
+                    <td>Usuario Básico</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>{{ user.first_name }} {{ user.last_name }}</td>
+            </tr>
+            <tr>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td>
+                    {% if teams %}
+                        ·
+                        {% for team in teams %}
+                            {{ team.name }} ·
+                        {% endfor %}
+                    {% else %}
+                        {% trans "You do not belong to any team" %}
+                    {% endif %}
 
-    </td></tr>
-        <tr><td>Miembro desde el {{ user.date_joined }}</td></tr>
-</table>
-    <p><b>Por motivos de seguridad no mostramos tu contraseña</b><p>
+                </td>
+            </tr>
+            <tr>
+                <td>{% trans "Member since" %} {{ user.date_joined }}</td>
+            </tr>
+        </table>
+        <p><b>{% trans "Due to security reasons, the passwords is not shown" %}</b>
+        <p>
     </div>
 
 
-    <a href="{% url 'edit' %}"><i class="fas fa-user-edit"></i> Editar información</a><br>
-    <a href="#"  data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-trash-alt"></i> Borrar cuenta</a>
+    <a href="{% url 'edit' %}"><i class="fas fa-user-edit"></i> {% trans "Modify information" %}</a><br>
+    <a href="#" data-toggle="modal" data-target="#exampleModalCenter"><i
+            class="fas fa-trash-alt"></i> {% trans "Delete account" %}</a>
 
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Borrar cuenta</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-              ¿Seguro que quieres darte de baja en la aplicación?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                Cancelar
-            </button>
-              <a href="{% url 'delete_profile' %}">
-            <button type="button" class="btn btn-danger">
-                Aceptar
-            </button>
-              </a>
-          </div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">{% trans "Delete account" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% trans "Are you sure you want to delete your account?" %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        {% trans "Cancel" %}
+                    </button>
+                    <a href="{% url 'delete_profile' %}">
+                        <button type="button" class="btn btn-danger">
+                            {% trans "Accept" %}
+                        </button>
+                    </a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 {% endblock %}

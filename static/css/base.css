@@ -1,0 +1,167 @@
+html, body {
+    font-family: Lato;
+    background-color: floralwhite;
+    height: 100%;
+}
+
+.item {
+    color: #1a252f;
+}
+
+.main-section {
+    padding: 10rem 0;
+    min-height: calc(100% - 200px);
+}
+
+.main-section .main {
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+.img-wrap {
+    position: relative;
+}
+
+.img-wrap .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: red;
+    opacity: 1;
+}
+
+
+/* Main container */
+.overlay-image {
+    position: relative;
+    height: 100%;
+}
+
+/* Original image */
+.overlay-image .image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.overlay-image .image:hover {
+    background-color: black;
+    opacity: 0.5;
+}
+
+
+/* Original text overlay */
+.overlay-image .text {
+    color: #fff;
+    font-size: 30px;
+    line-height: 1.5em;
+    text-shadow: 2px 2px 2px #000;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+
+/* Handle the button to upload dataset images*/
+
+#uploadBtnWrapper {
+    background-color: #ff9b35;
+    cursor: pointer;
+}
+
+#uploadBtnWrapper:hover {
+    background-color: #ff740a;
+}
+
+.inputfile {
+    border-width: 2px;
+    position: absolute;
+    z-index: -1;
+}
+
+#uploadImagesInput + label {
+    color: white;
+    cursor: pointer;
+}
+
+#uploadImagesInput:focus + label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+#uploadImagesLabel {
+    margin: 0;
+    padding: 0
+}
+
+/* Buttons */
+#buttonModifyDataset {
+    background-color: #ff9b35;
+    color: white;
+    cursor: pointer;
+}
+
+#buttonModifyDataset:hover {
+    background-color: #ff740a;
+}
+
+
+img {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+img:hover {
+    box-shadow: 0 0 2px 1px #18BC9C;
+}
+
+.table {
+    width: 40%;
+    color: #1a252f;
+}
+
+.table caption {
+    caption-side: top;
+    color: #1a252f;
+    text-transform: uppercase;
+}
+
+.init-page {
+    font-size: 30px;
+}
+
+.footer-total {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+#mainNav .navbar-brand:hover {
+    color: #18BC9C;
+}
+
+.alert-annotate .alert {
+    display: none;
+}
+
+.table td, table th {
+    vertical-align: middle;
+}
+
+.table-images {
+    width: auto;
+}
+
+.table-images img {
+    width: 80px;
+}
+
+input[type=color] {
+    width: 40px;
+    padding: 0;
+}
