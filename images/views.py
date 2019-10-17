@@ -98,7 +98,7 @@ def new_dataset(request):
                 checksum = md5(image_path)
                 # En caso negativo almacenamos una instancia de Image en la BD y guardamos la imagen en la carpeta del dataset correspondiente.
                 if not Image.objects.filter(dataset=dataset, checksum=checksum):
-                    imagen = Image(name=file.name.replace(original_extension, new_extension),
+                    imagen = Image(name=file.name,
                                    checksum=checksum,
                                    path=path_name,
                                    name_unique="{name}.{ext}".format(name=random_name,

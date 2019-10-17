@@ -47,11 +47,7 @@
                     </tbody>
                 </table>
 
-                <a href="{% url 'images_experiment' id=exp.id %}">
-                    <i class="fas fa-edit"></i><b> {% trans "ANNOTATE" %}</b>
-                </a><br>
-                <a download href="{% url 'download' id_exp=exp.id %}"><i
-                        class="fas fa-download"></i> {% trans "Download annotations" %}</a>
+
             {% else %}
                 <p>{% trans "There is no defined annotation for this experiment" %}</p>
             {% endif %}
@@ -60,10 +56,37 @@
     </div>
 
     {% if user.is_authenticated and user.is_staff %}
-        <a href="{% url 'modify_experiment' id=exp.id %}"><i class="fas fa-cog"></i> {% trans "Modify experiment" %}</a>
-        <br>
-        <a href="#" data-toggle="modal" data-target="#exampleModalCenter"><i
+
+        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 p-1">
+                    <a class="button btn btn-primary w-100" href="{% url 'images_experiment' id=exp.id %}"><i class="fas fa-edit"></i>
+                    {% trans "ANNOTATE" %}</a>
+                </div>
+
+        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 p-1">
+                    <a id="buttonModifyDataset" class="button btn btn-orange w-100"
+                       href="{% url 'modify_experiment' id=exp.id %}"><i
+                            class="fas fa-cog"></i> {% trans "Modify experiment" %}
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 p-1">
+
+                    <a class="button btn w-100" href="#" data-toggle="modal" data-target="#exampleModalCenter"
+                       style="background-color: red; color: white"><i
                 class="fas fa-trash-alt"></i> {% trans "Delete experiment" %}</a>
+                </div>
+
+        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 p-1">
+                    <a class="button btn btn-secondary w-100" href="{% url 'download' id_exp=exp.id %}"><i class="fas fa-download"></i>
+                    {% trans "Download annotations" %}</a>
+                </div>
+
+
+
+
+
+
+
     {% endif %}
 
     <!-- Modal -->

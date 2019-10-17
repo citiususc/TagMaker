@@ -125,11 +125,11 @@
                         {% endif %}
 
 
-        <button class="btn btn-secondary" onclick="zoomIn();"><i class="fas fa-search-plus"></i></button>
-        <button class="btn btn-secondary" onclick="zoomOut();"><i class="fas fa-search-minus"></i></button>
-        <button class="btn btn-secondary" onclick="panning();"><i class="far fa-hand-paper"></i></button>
+        <button class="btn btn-secondary" onclick="zoom_in();"><i class="fas fa-search-plus"></i></button>
+        <button class="btn btn-secondary" onclick="zoom_out();"><i class="fas fa-search-minus"></i></button>
+        <button class="btn btn-secondary" onclick="do_panning();"><i class="far fa-hand-paper"></i></button>
         <button class="btn btn-primary" onclick="select_tag();"><i class="fas fa-mouse-pointer"></i></button>
-        <button id="button-delete" class="btn btn-danger" onclick="delete_tag();"><i class="fas fa-trash-alt"></i></button>
+        <button id="button-delete" class="btn btn-danger" disabled onclick="delete_tag();"><i class="fas fa-trash-alt"></i></button>
 
 
         <div id="container_canvas">
@@ -169,6 +169,8 @@
         var proporcion = 1;
         var imagen;
 
+
+
         fabric.Image.fromURL('/{{ image.path }}/{{ image.name_unique }}', function (img) {
             canvas.setBackgroundImage(img);
             proporcion = img.width/img.height;
@@ -190,6 +192,8 @@
                     obj.left = obj.left * factorScale;
                     obj.top = obj.top * factorScale;
                     obj.setCoords();
+
+                    canvas.renderAll();
                 });
 
                 canvas.setWidth(newWidth);
@@ -204,23 +208,61 @@
             //comprobación si está abierta o cerrada la barra lateral
             if(document.getElementById("sidebar").classList.contains('active')){
                 resizeCanvas(window.innerWidth-50);
+
             }
             else{
                 resizeCanvas(window.innerWidth-380);
             }
         });
 
-        function zoomIn(){
+
+
+
+
+        fabric.Circle.prototype.transform = function(ctx, fromLeft) {
+
+          if (this.group && !this.group._transformDone && this.group === this.canvas._activeGroup) {
+            this.group.transform(ctx);
+          }
+          // ADDED CODE FOR THE ANSWER
+          if (this.ignoreZoom && !this.group && this.canvas) {
+            var zoom = 1 / canvas.getZoom();
+            ctx.scale(zoom, zoom);
+          }
+          // END OF ADDED CODE FOR THE ANSWER
+          var center = fromLeft ? this._getLeftTopCoords() : this.getCenterPoint();
+          //ctx.translate(center.x, center.y);
+          this.angle && ctx.rotate(degreesToRadians(this.angle));
+          ctx.scale(
+            this.scaleX * (this.flipX ? -1 : 1),
+            this.scaleY * (this.flipY ? -1 : 1),
+          );
+          this.skewX && ctx.transform(1, 0, Math.tan(degreesToRadians(this.skewX)), 1, 0, 0);
+          this.skewY && ctx.transform(1, Math.tan(degreesToRadians(this.skewY)), 0, 1, 0, 0);
+        };
+
+
+
+        function zoom_in(){
             canvas.setZoom(canvas.getZoom()*1.1);
         }
 
-        function zoomOut(){
+        function zoom_out(){
             canvas.setZoom(canvas.getZoom()/1.1);
         }
 
-        function panning(){
+
+
+        canvas.on('object:selected', function(){
+            document.getElementById("button-delete").disabled = false;
+        });
+        canvas.on('before:selection:cleared', function(){
+            document.getElementById("button-delete").disabled = true;
+        });
+
+        var panning = false;
+        function do_panning(){
             removeEvents();
-            var panning = false;
 
             canvas.on('mouse:up', function (e) {
                 panning = false;
@@ -229,15 +271,36 @@
             canvas.on('mouse:down', function (e) {
                 panning = true;
             });
-            canvas.on('mouse:move', function (e) {
+
+            canvas.on('mouse:move', move_panning);
+        }
+
+
+
+
+
+        function move_panning(e){
                 if (panning && e && e.e) {
                     var delta = new fabric.Point(e.e.movementX, e.e.movementY);
                     canvas.relativePan(delta);
-                    canvas.selection = false;
-                }
-            });
-        }
+                    var canvasViewPort = canvas.viewportTransform;
 
+
+                    var bottomEndPoint = canvas.height * (canvasViewPort[0] - 1);
+                    if(canvasViewPort[5] >= 0 || -bottomEndPoint > canvasViewPort[5]) {
+                        canvasViewPort[5] = (canvasViewPort[5] >= 0) ? 0 : -bottomEndPoint;
+                    }
+
+                    var rightEndPoint = canvas.width * (canvasViewPort[0] - 1);
+                    if(canvasViewPort[4] >= 0 || -rightEndPoint > canvasViewPort[4]) {
+                        canvasViewPort[4] = (canvasViewPort[4] >= 0) ? 0 : -rightEndPoint;
+                    }
+
+
+
+
+                }
+        }
 
 
 
@@ -245,18 +308,17 @@
 
         //con esto desactivamos la rotación, la ampliación y la movilidad de un grupo seleccionado
         fabric.Group.prototype.hasControls = false;
-        fabric.Group.prototype.lockMovementX = true;
-        fabric.Group.prototype.lockMovementY = true;
+
         let annotation_type_name;
         let annotation_type_color;
 
 
         var polygonMode = false;
         var lineMode = false;
-        var activeLine = false;
-        var activeShape = false;
-        var point1 = undefined;
-        var circleCount = 1;
+        var polygonPoints =[];
+        var polylinePoints =[];
+        var indexPoint = 0;
+        var polyId = 0;
 
 
 
@@ -284,6 +346,7 @@
                             lockScalingX: true,
                             lockScalingY: true,
                             hasRotatingPoint: false,
+                            ignoreZoom: true,
 
                         });
                         canvas.add(point);
@@ -330,6 +393,7 @@
                                 lockScalingX: true,
                                 lockScalingY: true,
                                 hasRotatingPoint: false,
+                                ignoreZoom: true,
                                 originX:'center',
                                 originY: 'center',
                                 polyId: polyId,
@@ -403,6 +467,7 @@
         function removeEvents() {
             canvas.isDrawingMode = false;
             canvas.selection = false;
+            canvas.off('mouse:move', move_panning);
             //EVENTOS TÁCTILES
             container.removeEventListener('touchstart', touchStartPoint);
             container.removeEventListener('touchstart', touchStartBox);
@@ -433,11 +498,11 @@
                     selectable: false,
                     lockMovementX: false,
                     lockMovementY: false,
-                    lockScalingX: false,
-                    lockScalingY: false,
+                    lockScalingX: true,
+                    lockScalingY: true,
                     hasRotatingPoint: false,
                     originX: 'center',
-                    originY: 'center'
+                    originY: 'center',
                 });
                 canvas.add(point);
             }
@@ -524,10 +589,6 @@
             container.addEventListener('mouseup', touchEnd);
         }
 
-        var polygonPoints =[];
-        var polylinePoints =[];
-        var indexPoint = 0;
-        var polyId = 0;
         function polygon(name_polygon, color_polygon){
 
             if(polygonMode == true){
@@ -557,6 +618,7 @@
 
              });
               canvas.add(polygon);
+              canvas.renderAll();
 
         }
 
@@ -613,6 +675,8 @@
                 selectable: false,
                 hasBorders: false,
                 hasControls: false,
+                lockScalingX: true,
+                lockScalingY: true,
                 id: indexPoint,
                 polyId: polyId
               });
@@ -620,6 +684,7 @@
               canvas.add(circle);
               canvas.bringToFront(circle);
               indexPoint++;
+              console.log(polylinePoints);
 
                 /*
                 var pointer = canvas.getPointer(evt.e);
