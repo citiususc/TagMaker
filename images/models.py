@@ -69,4 +69,3 @@ class IndividualTagBox(IndividualTag):
 class IndividualTagCurve(IndividualTag):
     points = models.ArrayModelField(model_container=IndividualTagPoint)
     isClosed = models.BooleanField(default=False)
-

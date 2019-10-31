@@ -377,7 +377,7 @@ def save_tags(request, id_exp, id_image):
         if 'canvas_data' in request.POST:
             data = request.POST['canvas_data']
             decoded = json.loads(data)
-            #print(decoded)
+            image_width = decoded['backgroundImage']['width']
 
             # Si existe un ImageTag para esta imagen donde el usuario corresponde con el actual
             if ImageTag.objects.filter(image_id=id_image).filter(user_id=request.user.id).all():
@@ -408,22 +408,32 @@ def save_tags(request, id_exp, id_image):
                     if AnnotationType.objects.all().filter(experiment_id=id_exp, name=obj['name']):
                         annotation_type = AnnotationType.objects.get(name=obj["name"], experiment_id=id_exp)
                         if annotation_type.primitive == 'Point': #para que almacene solo las anotaciones de tipo punto y no los puntos de los polígonos
+
+                            x_absolute = (obj['left']*image_width)/obj['canvas_width']
+                            y_absolute = (obj['top'] * image_width) / obj['canvas_width']
+
                             point = IndividualTagPoint(image_tag=tag_image,
                                                            type=annotation_type,
-                                                           x=obj['left'],
-                                                           y=obj['top'])
+                                                           x=x_absolute,
+                                                           y=y_absolute)
                             point.save()
                             annotation_type.state = True
                             annotation_type.save()
 
                 elif obj['type'] == 'rect':
                     annotation_type = AnnotationType.objects.get(name=obj["name"], experiment_id=id_exp)
+
+                    x_absolute = (obj['left'] * image_width) / obj['canvas_width']
+                    y_absolute = (obj['top'] * image_width) / obj['canvas_width']
+                    w_absolute = (obj['width'] * image_width) / obj['canvas_width']
+                    h_absolute = (obj['height'] * image_width) / obj['canvas_width']
+
                     box = IndividualTagBox(image_tag=tag_image,
                                            type=annotation_type,
-                                           x_top_left=obj['left'],
-                                           y_top_left=obj['top'],
-                                           width=obj['width'],
-                                           height=obj['height'])
+                                           x_top_left=x_absolute,
+                                           y_top_left=y_absolute,
+                                           width=w_absolute,
+                                           height=h_absolute)
                     box.save()
                     annotation_type.state = True
                     annotation_type.save()
@@ -435,11 +445,15 @@ def save_tags(request, id_exp, id_image):
                                                  isClosed=True,
                                                  points=[])
                     for p in obj['points']: #para cada uno de los puntos del polígono
+
+                        x_absolute = (p['x'] * image_width) / obj['canvas_width']
+                        y_absolute = (p['y'] * image_width) / obj['canvas_width']
+
                         point = IndividualTagPoint(image_tag=tag_image,
                                                    type=annotation_type,
                                                    id=p['id'],
-                                                   x=p['x'],
-                                                   y=p['y'])
+                                                   x=x_absolute,
+                                                   y=y_absolute)
                         polygon.points.append(point)
                     polygon.save()
 
@@ -453,11 +467,15 @@ def save_tags(request, id_exp, id_image):
                                                  isClosed=False,
                                                  points=[])
                     for p in obj['points']:
+
+                        x_absolute = (p['x'] * image_width) / obj['canvas_width']
+                        y_absolute = (p['y'] * image_width) / obj['canvas_width']
+
                         point = IndividualTagPoint(image_tag=tag_image,
                                                    type=annotation_type,
                                                    id=p['id'],
-                                                   x=p['x'],
-                                                   y=p['y'])
+                                                   x=x_absolute,
+                                                   y=y_absolute)
                         polyline.points.append(point)
                     polyline.save()
                     annotation_type.state = True
