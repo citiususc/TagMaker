@@ -3,10 +3,8 @@
 {% load i18n %}
 
 {% block content %}
-    <a href="{% url 'home' %}">
-        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
-    </a>
     <div class="main">
+    <div class="container">
 
         {% if messages %}
             {% for message in messages %}
@@ -20,7 +18,6 @@
         <h3>{% trans "Datasets" %}</h3>
         {% if datasets %}
             <p>{% trans "These are the existent datasets" %}</p>
-            <div class="container">
                 <div class="row">
                     {% for dataset in datasets %}
                         <div class="overlay-image col-xl-3 col-lg-4 col-md-6 col-sm-12 float-left">
@@ -33,12 +30,12 @@
                             </a></div>
                     {% endfor %}
                 </div>
-            </div>
         {% else %}
             <p>{% trans "There isn't any defined dataset" %}</p>
         {% endif %}
+        <br>
+        <a class="btn btn-primary" href="{% url 'create_dataset' %}"> {% trans "New dataset" %}</a>
+        </div>
     </div>
-    <a class="btn btn-primary" href="{% url 'create_dataset' %}"><i class="fas fa-plus"></i> {% trans "New dataset" %}
-    </a>
 
 {% endblock %}

@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% block content %}
-    <a href="{% url 'home' %}">
-        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
-    </a>
 
     {% if messages %}
         {% for message in messages %}
@@ -29,8 +26,7 @@
     </div>
 
     {% if user.is_authenticated and user.is_staff %}
-        <a class="btn btn-primary" href="{% url 'create_experiment' %}"><i
-                class="fas fa-plus"></i> {% trans "New experiment" %}</a>
+        <a class="btn btn-primary" href="{% url 'create_experiment' %}">{% trans "New experiment" %}</a>
     {% endif %}
 
 

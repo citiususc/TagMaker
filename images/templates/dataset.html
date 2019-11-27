@@ -3,7 +3,7 @@
 {% block content %}
 
     <a href="{% url 'dataset_list' %}">
-        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
+        <i class="fas fa-arrow-left"></i> {% trans "BACK" %}
     </a>
     <div class="main">
 
@@ -17,35 +17,21 @@
         {% endif %}
 
 
-        <div class="container">
+
             <div class="row">
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                     <h3>{{ data.name }}</h3>
-                </div>
+                    {% if user.is_authenticated and user.is_staff %}
 
-                {% if user.is_authenticated and user.is_staff %}
-                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 p-1">
-                    <a id="buttonModifyDataset" class="button btn btn-orange w-100"
-                       href="{% url 'modify_dataset' id=data.id %}"><i
-                            class="fas fa-cog"></i> {% trans "Modify dataset" %}
-                    </a>
-                </div>
-
-                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 p-1">
-
-                    <a class="button btn w-100" href="#" data-toggle="modal" data-target="#exampleModalCenter"
-                       style="background-color: red; color: white"><i
-                            class="fas fa-trash-alt"></i> {% trans "Delete dataset" %}</a>
-                </div>
+                    <div style="padding-bottom: 10px;">
+                    <a id="buttonModifyDataset" class="button btn" href="{% url 'modify_dataset' id=data.id %}" ><i class="fas fa-cog"></i></a>
+                    <a class="button btn btn-danger" href="#" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-trash-alt"></i></a>
+                    <a class="button btn btn-secondary" href="{% url 'download_dataset' name=data.name %}"><i class="fas fa-download"></i></a>
+                    </div>
                 {% endif %}
-            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 p-1">
-                <a href="{% url 'download_dataset' name=data.name %}"><i class="fas fa-download"></i>
-                    Descargar imágenes</a>
-            </div>
+                </div>
 
             </div>
-        </div>
-    </div>
 
     <p>
         <small>{% trans "Created on" %} {{ data.date }}</small>
@@ -79,7 +65,7 @@
             </ul>
         {% endif %}
 
-        <div class="container">
+
             <div class="row">
                 {% for image in data_images %}
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 float-left h-100">
@@ -123,8 +109,6 @@
     {% endif %}
 
     </div>
-
-
 
 
     <!-- Modal -->

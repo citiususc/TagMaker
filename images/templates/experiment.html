@@ -3,8 +3,21 @@
 {% load i18n %}
 
 {% block content %}
+    <style>
+
+/* Buttons */
+#buttonModifyDataset {
+    background-color: #f3c93f;
+    color: white;
+}
+
+#buttonModifyDataset:hover {
+    background-color: #f0bb0f;
+}
+    </style>
+
     <a href="{% url 'experiment_list' %}">
-        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
+        <i class="fas fa-arrow-left"></i> {% trans "BACK" %}
     </a>
 
     <div class="main">
@@ -19,9 +32,10 @@
 
         <h3>{{ exp.name }}</h3>
         <div style="padding-bottom: 10px;">
-        <a id="buttonModifyDataset" class="button btn" href="{% url 'modify_experiment' id=exp.id %}" ><i class="fas fa-cog"></i></a>
-        <a class="button btn btn-danger" href="#" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-trash-alt"></i></a>
+        <a id="buttonModifyDataset" class="button btn" href="{% url 'modify_experiment' id=exp.id %}"><i class="fas fa-cog"></i></a>
+        <a class="button btn btn-danger text-white" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-trash-alt"></i></a>
         <a class="button btn btn-secondary" href="{% url 'download' id_exp=exp.id %}"><i class="fas fa-download"></i></a>
+        <a class="button btn btn-primary" href="{% url 'images_experiment' id=exp.id %}"><i class="fas fa-edit"></i></a>
         </div>
 
         <p>
@@ -63,10 +77,7 @@
 
     {% if user.is_authenticated and user.is_staff %}
 
-        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 p-1">
-                    <a class="button btn btn-primary w-100" href="{% url 'images_experiment' id=exp.id %}"><i class="fas fa-edit"></i>
-                    {% trans "ANNOTATE" %}</a>
-                </div>
+
 
 
 
@@ -76,7 +87,7 @@
 
     {% endif %}
 
-    <!-- Modal -->
+    <!-- Modals -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -103,5 +114,7 @@
             </div>
         </div>
     </div>
+
+
 
 {% endblock content %}

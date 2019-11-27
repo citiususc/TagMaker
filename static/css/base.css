@@ -1,6 +1,6 @@
 html, body {
     font-family: Lato;
-    background-color: floralwhite;
+    background-color: #ebebe0;
     height: 100%;
 }
 
@@ -10,7 +10,7 @@ html, body {
 
 .main-section {
     padding: 10rem 0;
-    min-height: calc(100% - 200px);
+    min-height: calc(100% - 156px);
 }
 
 .main-section .main {
@@ -26,7 +26,7 @@ html, body {
     position: absolute;
     top: 10px;
     right: 10px;
-    color: red;
+    color: #dc3545;
     opacity: 1;
 }
 
@@ -54,14 +54,15 @@ html, body {
 .overlay-image .text {
     color: #fff;
     font-size: 30px;
-    line-height: 1.5em;
-    text-shadow: 2px 2px 2px #000;
+    text-shadow: 2px 2px 2px #1a252f;
     text-align: center;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
+    font-weight: 700;
+    font-family: Montserrat;
 }
 
 /* Handle the button to upload dataset images*/
@@ -98,7 +99,7 @@ html, body {
 
 /* Buttons */
 #buttonModifyDataset {
-    background-color: #ff9b35;
+    background-color: rgba(244, 206, 80, 1);
     color: white;
     cursor: pointer;
 }
@@ -106,7 +107,6 @@ html, body {
 #buttonModifyDataset:hover {
     background-color: #ff740a;
 }
-
 
 img {
     border: 1px solid #ddd;

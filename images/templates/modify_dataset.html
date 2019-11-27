@@ -7,7 +7,7 @@
     <script src="{% static "js/createOrModifyDataset.js" %}"></script>
 
     <a href="{% url 'dataset' id=id_data %}">
-        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
+        <i class="fas fa-arrow-left"></i> {% trans "BACK" %}
     </a>
     <div class="main">
 
@@ -22,7 +22,22 @@
             {% csrf_token %}
             {{ dataForm|crispy }}
 
-            <div class="container">
+        <!---
+        <div id="uploadBtnWrapper" class="btn">
+                    <input name="files" type="file" id="uploadImagesInput" class="inputfile" hidden
+                           accept="image/*" multiple
+                           data-multiple-caption="{count} {% trans "images selected" %}">
+                    <label for="file" id="uploadImagesLabel">{% trans "Add new images" %}</label>
+        </div>
+        --->
+
+        <div id="uploadBtnWrapper" class="btn">
+            <input name="files" type="file" id="uploadImagesInput" class="inputfile" hidden accept="image/*" multiple data-multiple-caption="{count} {% trans "images selected" %}">
+            <label for="file" id="uploadImagesLabel">{% trans "Add new images" %}</label>
+        </div>
+        <br><br>
+
+
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 p-1">
                         {% if data_images.has_other_pages %}
@@ -51,21 +66,6 @@
                                 {% endif %}
                             </ul>
                         {% endif %}
-                    </div>
-
-                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 float-right p-1">
-                        <div id="uploadBtnWrapper" class="btn w-100">
-                            <input name="files" type="file" id="uploadImagesInput" class="inputfile" hidden
-                                   accept="image/*" multiple
-                                   data-multiple-caption="{count} {% trans "images selected" %}">
-                            <label for="file" id="uploadImagesLabel">{% trans "Add new images" %}</label>
-                        </div>
-
-
-                    </div>
-
-                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 float-right p-1">
-                        <button type="submit" class="btn btn-primary w-100"> {% trans "Save changes" %} </button>
                     </div>
 
                 </div>
@@ -116,8 +116,26 @@
                     {% endif %}
                 </div>
 
+        <!---
+
+        <div class="row">
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 float-right p-1">
+                <div id="uploadBtnWrapper" class="btn w-100">
+                    <input name="files" type="file" id="uploadImagesInput" class="inputfile" hidden
+                           accept="image/*" multiple
+                           data-multiple-caption="{count} {% trans "images selected" %}">
+                    <label for="file" id="uploadImagesLabel">{% trans "Add new images" %}</label>
+                </div>
             </div>
 
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 float-right p-1">
+                <button type="submit" class="btn btn-primary w-100"> {% trans "Save changes" %} </button>
+            </div>
+        </div>
+        --->
+
+        <br>
+        <button type="submit" class="btn btn-primary"> {% trans "Save changes" %} </button>
 
         </form>
     </div>

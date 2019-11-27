@@ -2,9 +2,8 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 {% block content %}
-
     <a href="{% url 'experiment_list' %}">
-        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
+        <i class="fas fa-arrow-left"></i> {% trans "BACK" %}
         </a>
 
 
@@ -100,7 +99,6 @@ $(document).on('click', '.remove-form-row', function(e){
     deleteForm('form', $(this));
     return false;
 });
-
 
     </script>
 {% endblock %}

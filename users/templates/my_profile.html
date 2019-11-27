@@ -2,7 +2,7 @@
 {% load i18n %}
 {% block content %}
     <a href="{% url 'home' %}">
-        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}
+        <i class="fas fa-arrow-left"></i> {% trans "BACK" %}
     </a>
 
     <div class="main">
@@ -49,6 +49,13 @@
     <a href="{% url 'edit' %}"><i class="fas fa-user-edit"></i> {% trans "Modify information" %}</a><br>
     <a href="#" data-toggle="modal" data-target="#exampleModalCenter"><i
             class="fas fa-trash-alt"></i> {% trans "Delete account" %}</a>
+
+    <div style="padding-bottom: 10px;">
+    <a id="buttonModifyDataset" class="button btn" href="{% url 'edit' %}" >{% trans "Modify information" %}</a>
+        <a class="button btn btn-danger text-white" href="#" data-toggle="modal" data-target="#exampleModalCenter"> {% trans "Delete account" %}</a>
+    </div>
+
+
 
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

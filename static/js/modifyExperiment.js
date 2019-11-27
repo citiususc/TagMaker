@@ -1,48 +1,50 @@
 function updateElementIndex(el, prefix, ndx) {
-    let id_regex = new RegExp('(' + prefix + '-\\d+)');
-    let replacement = prefix + '-' + ndx;
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
     if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
     if (el.id) el.id = el.id.replace(id_regex, replacement);
     if (el.name) el.name = el.name.replace(id_regex, replacement);
 }
-
 function cloneMore(selector, prefix) {
     let newElement = $(selector).clone(true);
-    let total = $('#id_' + prefix + '-TOTAL_FORMS').val();
-    newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function () {
+    let totalFormsElement = $('#id_' + prefix + '-TOTAL_FORMS');
+
+    let total = totalFormsElement.val();
+    newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
         let name = $(this).attr('name');
-        if (name) {
-            name = name.replace('-' + (total - 1) + '-', '-' + total + '-');
+        if(name) {
+            name = name.replace('-' + (total-1) + '-', '-' + total + '-');
             let id = 'id_' + name;
             $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
         }
     });
-    newElement.find('label').each(function () {
+    newElement.find('label').each(function() {
         let forValue = $(this).attr('for');
         if (forValue) {
-            forValue = forValue.replace('-' + (total - 1) + '-', '-' + total + '-');
-            $(this).attr({'for': forValue});
+          forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+          $(this).attr({'for': forValue});
         }
     });
     total++;
-    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+    totalFormsElement.val(total);
     $(selector).after(newElement);
     let conditionRow = $('.form-row:not(:last)');
     conditionRow.find('.btn.add-form-row')
-        .removeClass('btn-success').addClass('btn-danger')
-        .removeClass('add-form-row').addClass('remove-form-row')
-        .html('-');
+    .removeClass('btn-success').addClass('btn-danger')
+    .removeClass('add-form-row').addClass('remove-form-row')
+    .html('<i class="fas fa-minus"></i>');
     return false;
 }
-
 function deleteForm(prefix, btn) {
-    let total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-    if (total > 1) {
+    let totalFormsElement = $('#id_' + prefix + '-TOTAL_FORMS');
+
+    let total = parseInt(totalFormsElement.val());
+    if (total > 1){
         btn.closest('.form-row').remove();
-        let forms = $('.form-row');
+        var forms = $('.form-row');
         $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
-        for (let i = 0, formCount = forms.length; i < formCount; i++) {
-            $(forms.get(i)).find(':input').each(function () {
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
                 updateElementIndex(this, prefix, i);
             });
         }
@@ -50,18 +52,13 @@ function deleteForm(prefix, btn) {
     return false;
 }
 
-function addform(evt) {
-    evt.preventDefault();
-    cloneMore('.form-row:last', 'form');
-    return false;
-}
-
-$(document).on('click', '.add-form-row', function (e) {
+$(document).on('click', '.add-form-row', function(e){
     e.preventDefault();
     cloneMore('.form-row:last', 'form');
     return false;
 });
-$(document).on('click', '.remove-form-row', function (e) {
+
+$(document).on('click', '.remove-form-row', function(e){
     e.preventDefault();
     deleteForm('form', $(this));
     return false;

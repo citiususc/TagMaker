@@ -559,21 +559,49 @@ def download_tags(request, id_exp):
             for it in individual_tags.all():
                 if it.type.primitive == "Point":
                     tag_image["individual_annotations"].append({
-                        "type": it.type.name,
+                        "name": it.type.name,
+                        "type": it.type.primitive,
                         "color": it.type.color,
                         "coordinate_x": it.individualtagpoint.x,
                         "coordinate_y": it.individualtagpoint.y,
                     })
                 elif it.type.primitive == "Box":
                     tag_image["individual_annotations"].append({
-                        "type": it.type.name,
-                        "primitive": it.type.primitive,
+                        "name": it.type.name,
+                        "type": it.type.primitive,
                         "color": it.type.color,
                         "coordinate_x_top_left": it.individualtagbox.x_top_left,
                         "coordinate_y_top_left": it.individualtagbox.y_top_left,
                         "width": it.individualtagbox.width,
                         "height": it.individualtagbox.height,
                     })
+                elif it.type.primitive == "Polygon":
+                    polygon = {
+                        "name": it.type.name,
+                        "type": it.type.primitive,
+                        "color": it.type.color,
+                        "points": [],
+                    }
+                    for p in it.individualtagcurve.points:
+                        polygon["points"].append({
+                            "coordinate_x": p.x,
+                            "coordinate_y":p.y,
+                        })
+                    tag_image["individual_annotations"].append(polygon)
+                elif it.type.primitive == "Curve":
+                    curve = {
+                        "name": it.type.name,
+                        "type": it.type.primitive,
+                        "color": it.type.color,
+                        "points": [],
+                    }
+                    for p in it.individualtagcurve.points:
+                        curve["points"].append({
+                            "coordinate_x": p.x,
+                            "coordinate_y": p.y,
+                        })
+                    tag_image["individual_annotations"].append(curve)
+
 
             experiment_data["annotations"].append(tag_image)
 

@@ -58,6 +58,7 @@
 #sidebarCollapse{
     padding:0px;
     margin-left: 5px;
+    background-color: #bfbfbf;
 }
 
 @media (max-width: 768px) {
@@ -71,12 +72,10 @@
         display: none;
     }
 }
+
+
 </style>
-
-
-    <a id="back" href="{% url 'images_experiment' id=exp.id %}">
-        <i class="fas fa-chevron-left"></i> {% trans "BACK" %}</a>
-
+<a id="back" href="{% url 'images_experiment' id=exp.id %}"><i class="fas fa-arrow-left"></i> {% trans "BACK" %}</a>
     <div class="main">
         <div class="alert-annotate">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -114,29 +113,29 @@
                             {% endfor %}
                             </tbody>
                         </table><br>
-                        <button class="btn btn-primary" onclick="save();"> {% trans "Save" %}</button>
+                        <button class="btn btn-secondary w-50" onclick="save();"> {% trans "Save" %}</button>
                         {% if user.is_authenticated and user.is_staff and tag_image and not tag_image.user.is_staff %}
                             <button class="btn btn-primary" onclick="validate();">{% trans "Validate" %}</button>
                         {% endif %}
         </div>
 
-    <button type="button" id="sidebarCollapse" class="btn btn-secondary">
-        <i class="fas fa-chevron-left"></i>
+    <button type="button" id="sidebarCollapse" class="btn">
+        <i class="fas fa-angle-double-left"></i>
     </button>
 
         <div id="content">
                         {% if tag_image is not None %}
-                            <p><i class="fas fa-edit"></i> {% trans "Annotated by" %} {{ tag_image.user }}</p>
+                            <p><i class="fas fa-edit"></i> {% trans "Annotated by" %} <b>{{ tag_image.user }}</b></p>
                         {% else %}
                             <p>{% trans "There isn't any annotation yet" %}</p>
                         {% endif %}
 
 
-        <button class="btn btn-secondary" onclick="zoom_in();"><i class="fas fa-search-plus"></i></button>
-        <button class="btn btn-secondary" onclick="zoom_out();"><i class="fas fa-search-minus"></i></button>
-        <button class="btn btn-secondary" onclick="do_panning();"><i class="far fa-hand-paper"></i></button>
-        <button class="btn btn-primary" onclick="select_tag();"><i class="fas fa-mouse-pointer"></i></button>
-        <button id="button-delete" class="btn btn-danger" onclick="delete_tag();"><i class="fas fa-trash-alt"></i></button>
+        <button class="btn btn-secondary" title="{% trans 'zoom in' %}" onclick="zoom_in();"><i class="fas fa-search-plus"></i></button>
+        <button class="btn btn-secondary" title="{% trans 'zoom out' %}" onclick="zoom_out();"><i class="fas fa-search-minus"></i></button>
+        <button class="btn btn-secondary" title="{% trans 'panning' %}" onclick="do_panning();"><i class="far fa-hand-paper"></i></button>
+        <button class="btn btn-primary" title="{% trans 'select tags' %}" onclick="select_tag();" title="select annotation"><i class="fas fa-mouse-pointer"></i></button>
+        <button id="button-delete" title="{% trans 'delete tags selected' %}" class="btn btn-danger" onclick="delete_tag();" title="delete annotation"><i class="fas fa-trash-alt"></i></button>
 
 
         <div id="container_canvas">
@@ -163,31 +162,40 @@
 
         fabric.Group.prototype.hasControls = false;
         fabric.Object.NUM_FRACTION_DIGITS = 10;
+        fabric.Group.prototype.lockScalingX = true;
+        fabric.Group.prototype.lockScalingY = true;
+
 
         let pointerdown = false;
         let factorScale = 1.0;
         var scaleX = 1.0;
         var scaleY = 1.0;
         var canvas_width = window.innerWidth-380.0;
-        var stroke = 2;
+        var stroke = 1.5;
 
 
         function resizeCanvas(newWidth){
 
             if (canvas.getWidth() != newWidth){
-
                 factorScale = newWidth/canvas.getWidth();
                 canvas.setWidth(canvas.getWidth()*factorScale);
                 canvas_width = canvas.width;
                 canvas.setHeight(canvas.getHeight()*factorScale);
 
+                canvas.discardActiveObject();
+
+
                 canvas.getObjects().forEach((obj) => {
-                    obj.scaleX = obj.scaleX * factorScale;
-                    obj.scaleY = obj.scaleY * factorScale;
-                    obj.left = obj.left * factorScale;
-                    obj.top = obj.top * factorScale;
-                    obj.setCoords();
+                        obj.scaleX = obj.scaleX * factorScale;
+                        obj.scaleY = obj.scaleY * factorScale;
+                        scaleX = obj.scaleX;
+                        scaleY = obj.scaleY;
+                        obj.left = obj.left * factorScale;
+                        obj.top = obj.top * factorScale;
+                        obj.setCoords();
                 });
+
+
                 canvas.backgroundImage.scaleToWidth(canvas.getWidth(), canvas.renderAll.bind(canvas));
 
             }
@@ -213,12 +221,14 @@
                 canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
 
                 load();
+                 document.getElementById("button-delete").disabled = true;
+
         });
 
         $(document).ready(function () {
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
-                $('.fas').toggleClass('fa-chevron-right');
+                $('.fa-angle-double-left').toggleClass('fa-angle-double-right');
                 if (canvas.width == window.innerWidth-50.0){
                     resizeCanvas(window.innerWidth-380.0);
                 }
@@ -243,7 +253,7 @@
                     scaleY = obj.scaleY;
                 }
                 if(obj.type == 'rect' || obj.type == 'polyline' || obj.type == 'polygon'){
-                     obj.strokeWidth = 2*scale;
+                     obj.strokeWidth = 1.5*scale;
                      stroke = obj.strokeWidth;
 
                 }
@@ -266,7 +276,7 @@
                         scaleY = obj.scaleY;
                     }
                     if(obj.type == 'rect' || obj.type == 'polyline' || obj.type == 'polygon'){
-                        obj.strokeWidth = 2*scale;
+                        obj.strokeWidth = 1.5*scale;
                         stroke = obj.strokeWidth;
                     }
                 });
@@ -274,13 +284,7 @@
         }
 
 
-        canvas.on('object:selected', function(){
-            document.getElementById("button-delete").disabled = false;
-        });
 
-        canvas.on('before:selection:cleared', function(){
-            document.getElementById("button-delete").disabled = true;
-        });
 
         container.addEventListener('wheel', function(evt){
             const delta = Math.sign(evt.deltaY);
@@ -315,9 +319,11 @@
 
 
 
-        function move_panning(e){
-                if (panning && e && e.e) {
-                    var delta = new fabric.Point(e.e.movementX, e.e.movementY);
+
+
+        function move_panning(evt){
+                if (panning && evt && evt.e) {
+                    var delta = new fabric.Point(evt.e.movementX, evt.e.movementY);
                     canvas.relativePan(delta);
 
                     var canvasViewPort = canvas.viewportTransform;
@@ -354,7 +360,6 @@
 
             //si para esta imagen había anotaciones hechas por el usuario logueado las cargamos
             {% if tag_image is not None %}
-
                 {% for it in tag_image.individual_tags.all %}
                     var annotation_type_color = '{{ it.type.color }}';
                     var annotation_type_name = '{{ it.type.name }}';
@@ -366,7 +371,7 @@
                          y_relative = (y_absolute * canvas.width)/canvas.backgroundImage.width;
 
                             var point = new fabric.Circle({
-                                radius: 4,
+                                radius: 2,
                                 fill: annotation_type_color,
                                 left: x_relative,
                                 top: y_relative,
@@ -379,8 +384,10 @@
                                 hasRotatingPoint: false,
                                 canvas_width: canvas.width
                             });
-                            canvas.add(point);
 
+                            point.scaleX = scaleX;
+                            point.scaleY = scaleY;
+                            canvas.add(point);
                     {% elif it.type.primitive == "Box" %}
                         x_absolute = {{ it.individualtagbox.x_top_left }};
                         y_absolute = {{ it.individualtagbox.y_top_left }};
@@ -406,7 +413,7 @@
                             hasRotatingPoint: false,
                             fill: false,
                             stroke: annotation_type_color,
-                            strokeWidth: 2,
+                            strokeWidth: 1.5,
                             strokeUniform: true,
                             canvas_width: canvas.width
                         });
@@ -415,6 +422,7 @@
                         var polyId = {{ it.individualtagcurve.id }};
                         var polyPoints = [];
                         var index = 0;
+
                         {% for p in it.individualtagcurve.points %}
                             x_absolute = {{ p.x }};
                             y_absolute = {{ p.y }};
@@ -423,7 +431,7 @@
                             y_relative = (y_absolute * canvas.width)/canvas.backgroundImage.width;
 
                             var circle = new fabric.Circle({
-                                radius: 3,
+                                radius: 2,
                                 fill: annotation_type_color,
                                 left: x_relative,
                                 top: y_relative,
@@ -434,12 +442,14 @@
                                 lockScalingX: true,
                                 lockScalingY: true,
                                 hasRotatingPoint: false,
-                                ignoreZoom: true,
                                 originX:'center',
                                 originY: 'center',
                                 polyId: polyId,
-                                id: index
+                                id: index,
+                                padding:10
                             });
+                            circle.scaleX = scaleX;
+                            circle.scaleY = scaleY;
                             canvas.add(circle);
                             canvas.bringToFront(circle);
                             polyPoints.push({x:x_relative, y:y_relative, id: index, polyId: polyId});
@@ -449,11 +459,11 @@
                             name: annotation_type_name,
                             fill: annotation_type_color,
                             stroke: annotation_type_color,
-                            strokeWidth: 2,
-                            opacity: 0.3,
+                            strokeWidth: 1.5,
+                            opacity: 0.2,
                             hasControls: false,
                             hasBorders: false,
-                            selectable: true,
+                            selectable: false,
                             lockMovementX: true,
                             lockMovementY: true,
                             lockScalingX: true,
@@ -468,6 +478,7 @@
                         var polyId = {{ it.individualtagcurve.id }};
                         var polyPoints = [];
                         var index = 0;
+
                         {% for p in it.individualtagcurve.points %}
                             x_absolute = {{ p.x }};
                             y_absolute = {{ p.y }};
@@ -476,7 +487,7 @@
                             y_relative = (y_absolute * canvas.width)/canvas.backgroundImage.width;
 
                             var circle = new fabric.Circle({
-                                radius: 3,
+                                radius: 2,
                                 fill: annotation_type_color,
                                 top: y_relative,
                                 left: x_relative,
@@ -490,8 +501,12 @@
                                 polyId: polyId,
                                 id:index,
                                 originX:'center',
-                                originY:'center'
+                                originY:'center',
+                                padding:10
+
                             });
+                            circle.scaleX = scaleX;
+                            circle.scaleY = scaleY;
                             canvas.add(circle);
                             canvas.bringToFront(circle);
                             polyPoints.push({x:x_relative, y:y_relative, id: index, polyId: polyId});
@@ -500,7 +515,7 @@
                         var polyline = new fabric.Polyline(polyPoints,{
                             name: annotation_type_name,
                             stroke: annotation_type_color,
-                            strokeWidth: 2,
+                            strokeWidth: 1.5,
                             fill: false,
                             selectable: false,
                             objectCaching:false,
@@ -543,13 +558,13 @@
             container.removeEventListener('mousedown', touchStartCurve);
         }
         function touchStartPoint(evt) {
-            if (evt.type === 'mousedown' || window.TouchEvent && evt.touches[0].touchType === "stylus") {
+            if ((evt.type == 'touchstart' && evt.touches[0].touchType === "stylus") || evt.type == 'mousedown'){
                 pointerdown = true;
                 var pointer = canvas.getPointer(evt.e);
                 pos_x = pointer.x;
                 pos_y = pointer.y;
                 var point = new fabric.Circle({
-                    radius: 4,
+                    radius: 2,
                     fill: color_tag,
                     top: pos_y,
                     left: pos_x,
@@ -564,10 +579,14 @@
                     originY: 'center',
                     canvas_width: canvas.width
                 });
-                point.scaleX = scaleX * factorScale;
-                point.scaleY = scaleY * factorScale;
+
+                    point.scaleX = scaleX;
+                    point.scaleY = scaleY;
+                    console.log(point.left, " - ", point.top);
+
+
                 canvas.add(point);
-                canvas.renderAll();
+                //canvas.renderAll();
 
             }
         }
@@ -583,7 +602,7 @@
             container.addEventListener('mouseup', touchEnd);
         }
         function touchStartBox(evt) {
-            if (evt.type === 'mousedown' || window.TouchEvent && evt.touches[0].touchType === "stylus") {
+            if (evt.type === 'mousedown' || (window.TouchEvent && evt.touches[0].touchType === "stylus")) {
                 pointerdown = true;
                 var pointer = canvas.getPointer(evt.e);
                 pos_x = pointer.x; //posicion inicial
@@ -611,7 +630,7 @@
             }
         }
         function touchMoveBox(evt) {
-            if (evt.type === 'mousemove' || window.TouchEvent && evt.touches[0].touchType === "stylus") {
+            if (evt.type === 'mousemove' || (window.TouchEvent && evt.touches[0].touchType === "stylus")) {
                 if (!pointerdown) return;
                 var pointer = canvas.getPointer(evt.e);
                 if (pos_x > pointer.x) {
@@ -634,7 +653,7 @@
             }
         }
         function touchEnd(evt) {
-            if (evt.type === 'mouseup' || window.TouchEvent && evt.touches[0].touchType === "stylus") {
+            if (evt.type === 'mouseup' || (window.TouchEvent && evt.touches[0].touchType === "stylus")) {
                 pointerdown = false;
                 canvas.renderAll();
             }
@@ -716,17 +735,16 @@
 
         }
         function touchStartCurve(evt) {
-             if (evt.type === 'mousedown' || window.TouchEvent && evt.touches[0].touchType === "stylus") {
+             if (evt.type === 'mousedown' || (window.TouchEvent && evt.touches[0].touchType === "stylus")) {
                  if (lineMode) {
                     var pointer = canvas.getPointer(evt.e);
                     pos_x = pointer.x;
                     pos_y = pointer.y;
 
                     var circle = new fabric.Circle({
-                        radius: 3,
+                        radius: 2,
                         fill: color_tag,
                         name: name_tag,
-                        strokeWidth: 0.5,
                         left: pos_x,
                         top: pos_y,
                         selectable: false,
@@ -742,9 +760,10 @@
                         originY: 'center',
                         id: indexPoint,
                         polyId: polyId,
+                        padding:10
                     });
-                    circle.scaleX = scaleX * factorScale;
-                    circle.scaleY = scaleY * factorScale;
+                    circle.scaleX = scaleX;
+                    circle.scaleY = scaleY;
                     canvas.add(circle);
                     canvas.bringToFront(circle);
 
@@ -786,15 +805,17 @@
                  }
              }
         }
+
         function touchStartPolygon(evt) {
-            if (evt.type === 'mousedown' || window.TouchEvent && evt.touches[0].touchType === "stylus") {
+            if (evt.type === 'mousedown' || (window.TouchEvent && evt.touches[0].touchType === "stylus")) {
                 if (polygonMode) {
                     var pointer = canvas.getPointer(evt.e);
                     pos_x = pointer.x;
                     pos_y = pointer.y;
 
+
                     var circle = new fabric.Circle({
-                        radius: 3,
+                        radius: 2,
                         fill: color_tag,
                         left: pos_x,
                         top: pos_y,
@@ -805,11 +826,12 @@
                         hasBorders: false,
                         hasControls: false,
                         id: indexPoint,
-                        polyId: polyId
+                        polyId: polyId,
+                        padding:10
                     });
 
-                    circle.scaleX = scaleX * factorScale;
-                    circle.scaleY = scaleY * factorScale;
+                    circle.scaleX = scaleX;
+                    circle.scaleY = scaleY;
                     canvas.add(circle);
                     canvas.bringToFront(circle);
 
@@ -828,7 +850,7 @@
                              fill: color_tag,
                              stroke: color_tag,
                              strokeWidth: stroke,
-                             opacity:0.3,
+                             opacity:0.2,
                              hasBorders: false,
                              hasControls: false,
                              name: name_tag,
@@ -857,17 +879,150 @@
             }
         }
 
+
         canvas.on('object:moving', function(evt){
-            for (var i = 0; i < canvas.getObjects().length; i++) {
-                if (canvas.getObjects()[i].type == 'polygon' || canvas.getObjects()[i].type == 'polyline') {
-                    if (canvas.getObjects()[i].polyId == evt.target.polyId) {
-                        var points = canvas.getObjects()[i].points;
-                        points[evt.target.id] = {x: canvas.getPointer(evt.e).x, y: canvas.getPointer(evt.e).y};
-                        canvas.renderAll();
-                    }
-                }
+            if(evt.target.type == 'circle'){
+                canvas.getObjects().filter(function(obj){
+                   if((obj.type == 'polygon' || obj.type == 'polyline') && obj.polyId == evt.target.polyId){
+                        obj.points[evt.target.id] = {x: evt.target.left, y: evt.target.top, polyId:obj.polyId, id:evt.target.id};
+                   }
+                });
             }
             canvas.renderAll();
+        });
+
+
+
+        canvas.on('object:modified', function(evt) {
+            if(evt.target.type == 'activeSelection') {
+                evt.target.getObjects().filter(function(obj){
+                    if(obj.type == 'circle'){
+                        canvas.remove(obj);
+                    }
+                    if(obj.type == 'polygon' || obj.type == 'polyline') {
+
+                        var matrix = obj.calcTransformMatrix();
+
+                        var translatedPoints = obj.points.map(function (p) {
+                            return {
+                                x: p.x - obj.pathOffset.x + matrix[4],
+                                y: p.y - obj.pathOffset.y + matrix[5],
+                                id: p.id,
+                                polyId: p.polyId
+                            };
+                        });
+
+                        var id = obj.polyId;
+                        var color = obj.fill;
+                        var name = obj.name;
+
+
+                        if(obj.type == 'polygon'){
+                            var poly = new fabric.Polygon(translatedPoints, {
+                                selectable: false,
+                                objectCaching: false,
+                                fill: color,
+                                stroke: color,
+                                strokeWidth: stroke,
+                                opacity: 0.2,
+                                hasBorders: false,
+                                hasControls: false,
+                                name: name,
+                                polyId: id,
+                                lockMovementX: true,
+                                lockMovementY: true,
+                                lockScalingX: true,
+                                lockScalingY: true,
+                                strokeUniform: true,
+                                canvas_width: canvas.width
+                            });
+
+                        }else if(obj.type == 'polyline'){
+                            var poly = new fabric.Polyline(translatedPoints, {
+                                 name: name,
+                                stroke: color,
+                                strokeWidth: stroke,
+                                fill: false,
+                                selectable: false,
+                                objectCaching:false,
+                                strokeUniform: true,
+                                lockMovementX: true,
+                                lockMovementY: true,
+                                lockScalingX: true,
+                                lockScalingY: true,
+                                polyId: polyId,
+                                canvas_width: canvas.width
+                            });
+                        }
+                        canvas.remove(obj);
+                        canvas.add(poly);
+
+                        translatedPoints.map(function(p){
+                            var circle = new fabric.Circle({
+                                radius: 2,
+                                fill: color,
+                                left: p.x,
+                                top: p.y,
+                                name: name,
+                                selectable: true,
+                                lockMovementX: false,
+                                lockMovementY: false,
+                                lockScalingX: true,
+                                lockScalingY: true,
+                                hasRotatingPoint: false,
+                                originX:'center',
+                                originY: 'center',
+                                polyId: id,
+                                id: p.id,
+                                padding:10
+                            });
+                            circle.scaleX = scaleX;
+                            circle.scaleY = scaleY;
+                            canvas.add(circle);
+                            canvas.bringToFront(circle);
+
+                        });
+
+                        canvas.renderAll();
+                    }
+
+                });
+
+            }
+            canvas.renderAll();
+        });
+
+
+        canvas.on('before:selection:cleared', function(){
+            document.getElementById("button-delete").disabled = true;
+        });
+
+
+        canvas.on('object:selected', function(evt){
+
+            canvas.discardActiveObject();
+            document.getElementById("button-delete").disabled = false;
+
+            if(evt.target.type == 'polygon' || evt.target.type == 'polyline'){
+                console.log(evt.target.scaleX);
+
+                var sel = new fabric.ActiveSelection(canvas.getObjects().filter(function(obj){
+                    if(obj.type === 'circle' && obj.polyId == evt.target.polyId){
+                        return obj.set('active', true);
+                    }
+                    else if(obj == evt.target){
+                        return obj.set('active', true);
+                    }
+                }), {
+                    canvas:canvas,
+                    hasControls: false,
+                    selectable:false,
+                    strokeUniform: true
+
+                });
+                canvas.setActiveObject(sel);
+                canvas.renderAll();
+            }
         });
 
         function select_tag() {
@@ -888,9 +1043,10 @@
         }
         function save(){
             canvas.renderAll();
+            console.log(canvas);
+
             var URL = "{% url 'save_tags' id_exp=exp.id id_image=image.id %}";
             var data = JSON.stringify(canvas.toDatalessJSON(['name', 'top', 'left', 'fill', 'stroke', 'polyId', 'id', 'canvas_width']));
-
             $.post(URL, {'canvas_data': data});
             document.getElementById("text-alert").innerText = gettext("saved");
             $('.alert').show();
@@ -898,7 +1054,7 @@
         function validate() {
             {% if tag_image is not None %}
                 var URL = "{% url 'validate' id_exp=exp.id id_image=image.id id_user=tag_image.user.id %}";
-                var data = JSON.stringify(canvas.toDatalessJSON(['name', 'fill', 'stroke', 'closed']));
+                var data = JSON.stringify(canvas.toDatalessJSON(['name', 'top', 'left', 'fill', 'stroke', 'polyId', 'id', 'canvas_width']));
                 $.post(URL, {'canvas_data': data});
                 document.getElementById("text-alert").innerText = gettext("validated");
                 $('.alert').show();
