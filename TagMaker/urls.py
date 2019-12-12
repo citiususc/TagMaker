@@ -39,7 +39,9 @@ urlpatterns = [
                   path('annotate/<id_exp>/<id_image>/<id_user>/', images_views.annotate_image, name='annotate_image'),
                   path('annotate/<id_exp>/<id_image>/', images_views.save_tags, name='save_tags'),
                   path('annotate/validate/<id_exp>/<id_image>/<id_user>/', images_views.validate, name='validate'),
+                  path('annotate/invalidate/<id_exp>/<id_image>/<id_user>/', images_views.invalidate, name='invalidate'),
                   path('experiment/<id_exp>/download/', images_views.download_tags, name='download'),
+                  path('experiment/<id_exp>/download/images/', images_views.download_tagged_images, name='download_tagged_images'),
                   url(r'^i18n/', include('django.conf.urls.i18n')),
                   path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog')
 

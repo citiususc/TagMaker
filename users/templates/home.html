@@ -19,7 +19,7 @@
 <style>
     html, body {
         font-family: Lato;
-        background-color: #ebebe0;
+        background-color:floralwhite;
         height: 100%;
     }
 
@@ -35,6 +35,7 @@
     .main-section-home {
         padding: 5rem 0;
         min-height: calc(100% - 156px);
+        background-color: white;
     }
 
     .main-section .main {
@@ -70,9 +71,8 @@
     }
 
     .init-page {
-        font-size: 50px;
-        paddin 5rem;g:
-        background-color: white;
+        height: 100vh;
+
     }
 
     .footer-total {
@@ -108,20 +108,96 @@
         height: 400px;
 
     }
+    .info{
+        margin-top: 5rem;
+    }
+
+    .highlight-section-nopadding {
+        background-color: #F2F2F2;
+        padding: 2rem;
+    }
+
 
 </style>
 <body>
 {% include "header.html" %}
 
-<div class="main-section-home">
+<div class="main-section-home info">
 
-
-    <div class="init-page">
-
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <h1>Plataforma de etiquetado colaborativo de imágenes</h1>
+            <h5>Una solución completa para etiquetar tus imágenes de manera colaborativa a través de cualquier dispositivo</h5>
+        </div>
+        <div class="col-lg-6 mt-5 mt-lg-0">
+            <img src="http://innovohost.com/file/2014/09/cross-platform.png" style="border: none; width: 100%;">
+        </div>
     </div>
+</div>
+
+<section class="container mt-lg-5 py-5">
+    <div class="row align-items-center highlight-section-nopadding">
+        <div class="col-lg-6 order-lg-1 order-1">
+            <img class="img-fluid" alt="" src="https://www.isdecisions.com/blog/wp-content/uploads/2015/01/insider-threat-protection-people-process.png">
+        </div>
+        <div class="col-lg-6 text-right order-lg-2 order-2">
+            <h3 class="mt-3 mb-4 ">Colaboración entre miembros</h3>
+            <p class="text-muted">Gracias al carácter colaborativo de la aplicación, podrás trabajar conjuntamente con otros miembros de tu equipo y bajo la supervisión de expertos en la materia</p>
+        </div>
+    </div><br><br><hr>
+</section>
+
+<section class="container mt-lg-5 py-5">
+    <div class="row align-items-center highlight-section-nopadding">
+        <div class="col-lg-6 order-lg-1 order-1">
+            <img class="img-fluid" alt="" src="static/images/labelbox-illo-group-of-people-zoomed-in.svg">
+        </div>
+        <div class="col-lg-6 text-right order-lg-2 order-2">
+            <h3 class="mt-3 mb-4 ">Etiquetado de datos</h3>
+            <p class="text-muted">Podrás realizar anotaciones sobre tus imágenes </p>
+        </div>
+    </div><br><br><hr>
+</section>
+
+<section class="my-5 text-center py-lg-4 container">
+    <div class="row">
+        <div class="col-lg-4 pr-lg-5">
+            <i class="fas fa-images fa-7x"></i><br><br>
+            <h4>{% trans "Datasets" %}</h4>
+            <p>Agrupa tus imágenes en forma de datasets<br><br><br>
+                {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'dataset_list' %}">{% trans "See datasets" %}</a>
+                {% endif %}
+            </p><br>
+        </div>
+        <div class="col-lg-4 text-center pl-lg-4 ">
+            <i class="fas fa-edit fa-7x"></i><br><br>
+            <h4>{% trans "Experiments" %}</h4>
+            <p>Gestiona tus proyectos: Define las anotaciones a realizar sobre un dataset y asígnale el experimento al equipo de trabajo encargado<br><br>
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'experiment_list' %}">{% trans "See experiments" %}</a>
+            {% endif %}
+            </p>
+        </div>
+        <div class="col-lg-4 text-center pl-lg-4 ">
+            <i class="fas fa-users fa-7x"></i><br><br>
+            <h4>{% trans "Users" %}</h4>
+            <p>Dependiendo del rol que ejerzas podrás tener permisos de usuario básico o de usuario experto<br><br>
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'profile' %}">{% trans "See profile" %}</a>
+            {% else %}
+                <a class="btn btn-primary" href="{% url 'sign_up' %}">{% trans "Sign Up" %}</a>
+            {% endif %}
+            </p>
+        </div>
+    </div><br><br><hr>
+</section>
+
+
 
     <!--
-        {% if user.is_authenticated and user.is_staff %}
+        {% if user.is_staff %}
             <div class="text-center">
                 <a class="mx-auto" href="{% url 'dataset_list' %}">
                     <i class="fas fa-images"></i> {% trans "DATASETS" %}
@@ -132,7 +208,7 @@
             </div>
 
 
-        {% elif user.is_authenticated and not user.is_staff %}
+        {% elif not user.is_staff %}
             <div class="text-center">
                 <a class="mx-auto" href="{% url 'experiment_list' %}">
                     <i class="fas fa-tags"></i> {% trans "EXPERIMENTS" %}

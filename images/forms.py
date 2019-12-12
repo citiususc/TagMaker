@@ -23,7 +23,7 @@ class NewModelChoiceField(forms.ModelChoiceField):
 
 
 class FormTag(forms.Form):
-    name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': _("Annotation")}), label=False, required=True)
+    name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': _("Name")}), label=False, required=True)
     type = forms.ChoiceField(choices=PRIMITIVES_CHOICES, label=False, required=True)
     color = forms.CharField(widget=forms.TextInput(attrs={'type': 'color'}), required=True, label=False)
 

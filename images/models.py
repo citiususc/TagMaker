@@ -46,7 +46,7 @@ class ImageTag(models.Model):
     image = models.ForeignKey(Image, on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE)
-    check_by = models.ForeignKey(User, related_name='check_by', on_delete=models.CASCADE, blank=True)
+    check_by = models.ForeignKey(User, related_name='check_by', on_delete=models.CASCADE, blank=False)
 
 
 class IndividualTag(models.Model):

@@ -3,18 +3,7 @@
 {% load i18n %}
 
 {% block content %}
-    <style>
 
-/* Buttons */
-#buttonModifyDataset {
-    background-color: #f3c93f;
-    color: white;
-}
-
-#buttonModifyDataset:hover {
-    background-color: #f0bb0f;
-}
-    </style>
 
     <a href="{% url 'experiment_list' %}">
         <i class="fas fa-arrow-left"></i> {% trans "BACK" %}
@@ -32,10 +21,11 @@
 
         <h3>{{ exp.name }}</h3>
         <div style="padding-bottom: 10px;">
-        <a id="buttonModifyDataset" class="button btn" href="{% url 'modify_experiment' id=exp.id %}"><i class="fas fa-cog"></i></a>
-        <a class="button btn btn-danger text-white" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-trash-alt"></i></a>
-        <a class="button btn btn-secondary" href="{% url 'download' id_exp=exp.id %}"><i class="fas fa-download"></i></a>
-        <a class="button btn btn-primary" href="{% url 'images_experiment' id=exp.id %}"><i class="fas fa-edit"></i></a>
+        {% if user.is_authenticated and user.is_staff %}
+        <a id="buttonModifyDataset" title="{% trans 'Edit experiment' %}" class="button btn" href="{% url 'modify_experiment' id=exp.id %}"><i class="fas fa-cog"></i></a>
+        <a class="button btn btn-danger text-white" title="{% trans 'Delete experiment' %}" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-trash-alt"></i></a>
+        {% endif %}
+        <a class="button btn btn-secondary text-white" title="{% trans 'Download tagged images or tags' %}" data-toggle="modal" data-target="#ModalDownload"><i class="fas fa-download"></i></a>
         </div>
 
         <p>
@@ -43,7 +33,8 @@
         </p>
         <p>{{ exp.description }}</p>
         <p>{% trans "Associated to team" %} <b>{{ exp.team.name }}</b></p>
-        <p><a href="{% url 'dataset' id=exp.dataset.id %}">{{ exp.dataset.name }}</a></p>
+        <p><a href="{% url 'dataset' id=exp.dataset.id %}" title="{% trans 'Click to see the dataset' %}">{{ exp.dataset.name }}</a></p>
+        <a class="button btn btn-primary" title="{% trans 'Click to annotate the images' %}" href="{% url 'images_experiment' id=exp.id %}">{% trans 'Annotate' %}</a>
         <div>
 
             {% if annotation_types %}
@@ -77,14 +68,6 @@
 
     {% if user.is_authenticated and user.is_staff %}
 
-
-
-
-
-
-
-
-
     {% endif %}
 
     <!-- Modals -->
@@ -108,6 +91,35 @@
                     <a href="{% url 'delete_experiment' id=exp.id %}">
                         <button type="button" class="btn btn-danger">
                             {% trans "Accept" %}
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="modal fade" id="ModalDownload" tabindex="-1" role="dialog"
+         aria-labelledby="ModalDownloadCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalDownloadLongTitle">{% trans "Download" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% trans "download_experiment" %}
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'download' id_exp=exp.id %}">
+                        <button type="button" class="btn btn-secondary">
+                            {% trans "Download tags" %}
+                        </button>
+                    </a>
+                    <a href="{% url 'download_tagged_images' id_exp=exp.id %}">
+                        <button type="button" class="btn btn-secondary">
+                            {% trans "Download tagged images" %}
                         </button>
                     </a>
                 </div>

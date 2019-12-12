@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-27 10:05+0100\n"
+"POT-Creation-Date: 2019-12-12 14:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: images/forms.py:10 images/forms.py:35 images/templates/experiment.html:54
+#: images/forms.py:10 images/forms.py:26 images/forms.py:35
+#: images/templates/experiment.html:45
 #: images/templates/modify_experiment.html:28 users/forms.py:8
 msgid "Name"
 msgstr "Nombre"
@@ -30,10 +31,6 @@ msgstr "Máximo de 1024 caracteres"
 #: images/forms.py:13 images/forms.py:38
 msgid "Description"
 msgstr "Descripción"
-
-#: images/forms.py:26
-msgid "Annotation"
-msgstr "Anotación"
 
 #: images/forms.py:39
 msgid "Dataset"
@@ -53,15 +50,15 @@ msgstr "Punto"
 
 #: images/models.py:10
 msgid "Curve"
-msgstr ""
+msgstr "Curva"
 
 #: images/models.py:11
 msgid "Polygon"
-msgstr ""
+msgstr "Polígono"
 
-#: images/templates/annotate.html:78 images/templates/create_dataset.html:10
-#: images/templates/create_experiment.html:6 images/templates/dataset.html:6
-#: images/templates/experiment.html:20
+#: images/templates/annotate.html:79 images/templates/create_dataset.html:10
+#: images/templates/create_experiment.html:13 images/templates/dataset.html:6
+#: images/templates/experiment.html:9
 #: images/templates/images_experiment.html:5
 #: images/templates/modify_dataset.html:10
 #: images/templates/modify_experiment.html:14
@@ -70,51 +67,203 @@ msgstr ""
 msgid "BACK"
 msgstr "ATRÁS"
 
-#: images/templates/annotate.html:82
-#: images/templates/create_experiment.html:18
+#: images/templates/annotate.html:83
+#: images/templates/create_experiment.html:25
 msgid "Annotations"
 msgstr "Anotaciones"
 
-#: images/templates/annotate.html:92 images/templates/experiment.html:51
+#: images/templates/annotate.html:93 images/templates/annotate.html:177
+#: images/templates/experiment.html:42
 #: images/templates/modify_experiment.html:25
 msgid "Defined annotations"
 msgstr "Anotaciones definidas"
 
-#: images/templates/annotate.html:116
+#: images/templates/annotate.html:118
+#, fuzzy
+#| msgid "Save changes"
+msgid "Save tags"
+msgstr "Guardar cambios"
+
+#: images/templates/annotate.html:118 images/templates/annotate.html:190
 msgid "Save"
 msgstr "Guardar"
 
-#: images/templates/annotate.html:118
-msgid "Validate"
-msgstr "Validar"
+#: images/templates/annotate.html:121 images/templates/annotate.html:128
+msgid "Validate tags and save changes"
+msgstr "Validar anotaciones y guardar cambios"
 
-#: images/templates/annotate.html:128
+#: images/templates/annotate.html:121 images/templates/annotate.html:128
+#: images/templates/annotate.html:191
+msgid "Validate and Save"
+msgstr "Validar y guardar"
+
+#: images/templates/annotate.html:123 images/templates/annotate.html:130
+msgid "Invalidate tags and save changes"
+msgstr "Desvalidar anotaciones y guardar cambios"
+
+#: images/templates/annotate.html:123 images/templates/annotate.html:130
+#: images/templates/annotate.html:193
+msgid "Invalidate and Save"
+msgstr "Desvalidar y guardar"
+
+#: images/templates/annotate.html:142 images/templates/annotate.html:195
 msgid "Annotated by"
 msgstr "Anotado por"
 
-#: images/templates/annotate.html:130
+#: images/templates/annotate.html:144
 msgid "There isn't any annotation yet"
 msgstr "No hay anotaciones todavía"
 
-#: images/templates/annotate.html:134
+#: images/templates/annotate.html:148
 msgid "zoom in"
 msgstr "hacer zoom"
 
-#: images/templates/annotate.html:135
+#: images/templates/annotate.html:149
 msgid "zoom out"
 msgstr "deshacer zoom"
 
-#: images/templates/annotate.html:136
+#: images/templates/annotate.html:150
 msgid "panning"
 msgstr "mover imagen"
 
-#: images/templates/annotate.html:137
+#: images/templates/annotate.html:151
 msgid "select tags"
 msgstr "seleccionar anotaciones"
 
-#: images/templates/annotate.html:138
+#: images/templates/annotate.html:152
 msgid "delete tags selected"
 msgstr "eliminar anotaciones seleccionadas"
+
+#: images/templates/annotate.html:171
+msgid "Help"
+msgstr "Ayuda"
+
+#: images/templates/annotate.html:178
+msgid ""
+"They are the annotations that are defined for this experiment. They are "
+"shown by their name and an icon of the type of primitive to be made whose "
+"color corresponds to the one defined for the annotation. You can show or "
+"hide this panel by pressing the sidebar. To comment to write down click on "
+"the name of the annotation and then on the canvas taking into account the "
+"following"
+msgstr ""
+"Son las anotaciones que están definidas para este experimento. Se muestran "
+"mediante su nombre y un icono del tipo de primitiva a realizar cuyo color "
+"corresponde al definido para la anotación. Puedes mostrar u ocultar este "
+"panel pulsando la barra lateral. Para comentar a anotar pincha sobre el "
+"nombre de la anotación y a continuación sobre el canvas teniendo en cuenta "
+"lo siguiente"
+
+#: images/templates/annotate.html:179
+msgid ""
+"Point type annotation. Press the stylus or mouse on the place where you want "
+"to make a point and release"
+msgstr ""
+"Anotación de tipo punto. Pulsa con el lápiz táctil o ratón sobre el lugar en "
+"el que quieras realizar un punto y suelta"
+
+#: images/templates/annotate.html:180
+msgid ""
+"Box type annotation. Press the stylus or mouse on the place where you want "
+"to comment on a box, drag and drop."
+msgstr ""
+"Anotación de tipo caja. Pulsa con el lápiz táctil o ratón sobre el lugar "
+"donde quieres comentar una caja, arrastra y suelta"
+
+#: images/templates/annotate.html:181
+msgid ""
+"Polygon type annotation. Repeat the procedure of the point annotation for "
+"each vertex of the polygon and it will automatically be formed. To finish "
+"the polygon, click on the name of the entry again."
+msgstr ""
+"Anotación de tipo polígono. Repite el procedimiento de la anotación punto "
+"para cada vértice del polígono y automáticamente éste se irá formando. Para "
+"finalizar el polígono vuelve a pulsar sobre el nombre de la anotación"
+
+#: images/templates/annotate.html:182
+msgid ""
+"Curve type annotation. Repeat the point annotation procedure for each vertex "
+"of the curve and it will automatically form. To end the curve, click on the "
+"name of the entry again."
+msgstr ""
+"Anotación de tipo caja. Pulsa con el lápiz táctil o ratón sobre el lugar "
+"donde quieres comentar una caja, arrastra y suelta"
+
+#: images/templates/annotate.html:184
+msgid "Buttons"
+msgstr "Botones"
+
+#: images/templates/annotate.html:185
+msgid "Zoom on the center of the image"
+msgstr "Hacer zoom en el centro de la imagen"
+
+#: images/templates/annotate.html:186
+#, fuzzy
+#| msgid ""
+#| "Undo zoom on the center of the image if it has previously been performed "
+#| "zoom"
+msgid ""
+"Undo zoom on the center of the image if it has previously been performed"
+msgstr ""
+"Deshacer zoom sobre el centro de la imagen si previamente se ha hecho zoom"
+
+#: images/templates/annotate.html:187
+msgid "Panning over the image if you zoomed in on it"
+msgstr "Panning sobre la imagen si previamente se ha hecho zoom"
+
+#: images/templates/annotate.html:188
+#, fuzzy
+#| msgid "select tags"
+msgid "Select tag or tags"
+msgstr "seleccionar anotaciones"
+
+#: images/templates/annotate.html:189
+msgid "Delete selected tag. Only visible if there is any selected tag. "
+msgstr ""
+"Borrar anotaciones seleccionadas. Solo visible si hay alguna seleccioanda."
+
+#: images/templates/annotate.html:190
+#, fuzzy
+#| msgid "Save changes"
+msgid "Save the current tags"
+msgstr "Guardar cambios"
+
+#: images/templates/annotate.html:191
+msgid ""
+"Validate and save changes. Only visible if you are a expert user. With this "
+"buttom you can check the tags made by the rest of the basic users of your "
+"team and/or to do changes above their tags. "
+msgstr ""
+"Validar y guardar cambios. Solo será visible si eres un usuario experto. "
+"Mediante este botón puedes dar el visto bueno a las anotaciones que han "
+"realizado el resto de miembros básicos de tu equipo, y/o realizar cambios "
+"sobre sus anotaciones."
+
+#: images/templates/annotate.html:193
+msgid ""
+"Invalidate and save changes. Only visible if you are a expert user and other "
+"basic user has done tags. With this button you can invalidate something that "
+"previosly has been validate. Only if you are admin you can validate the work "
+"of a expert user."
+msgstr ""
+"Desvalidar y guardar cambios. Solo será visible si eres un usuario experto y "
+"un usuario básicoha realizado anotaciones. Mediante este botón puedes "
+"desvalidar algo que anteriormente ha sido validado. Solo si eres "
+"administrador podrás desvalidar el trabajo de un usuario experto."
+
+#: images/templates/annotate.html:195
+msgid "The name of the user who made the shown tags"
+msgstr "El nombre del usuario que hizo las anotaciones mostradas"
+
+#: images/templates/annotate.html:197
+msgid ""
+"The zoom wheel is avaliable for computer, so you can do zoom with the mouse "
+"wheel above the exact point that you want. For touch devices, you can only "
+"annotate with a touch pencil. The use of the fingers is only for do zoom "
+"above the canvas or panning. "
+msgstr "El zoom con el ratón está disponible para ordenador, así que puedes hacer zoom"
+"con la rueda del ratón sobre el punto que tú quieras. Para dispositivos táctiles "
+"solo puedes anotar con un lápiz táctil. El uso de los dedos está restringido para hacer zoom sobre el canvas o panning."
 
 #: images/templates/create_dataset.html:14
 #: images/templates/dataset_list.html:37
@@ -135,16 +284,16 @@ msgstr "imágenes seleccionadas"
 msgid "Add new images"
 msgstr "Añadir nuevas imágenes"
 
-#: images/templates/create_experiment.html:11
+#: images/templates/create_experiment.html:18
 #: images/templates/experiment_list.html:29
 msgid "New experiment"
 msgstr "Nuevo experimento"
 
-#: images/templates/create_experiment.html:30
+#: images/templates/create_experiment.html:38
 msgid "Create"
 msgstr "Crear"
 
-#: images/templates/dataset.html:37 images/templates/experiment.html:42
+#: images/templates/dataset.html:37 images/templates/experiment.html:32
 msgid "Created on"
 msgstr "Creado el"
 
@@ -160,17 +309,18 @@ msgstr "Eliminar dataset"
 msgid "Are you sure you want to delete this dataset?"
 msgstr "¿Estás seguro de borrar este dataset"
 
-#: images/templates/dataset.html:130 images/templates/experiment.html:106
-#: users/templates/my_profile.html:75
+#: images/templates/dataset.html:130 images/templates/experiment.html:89
+#: users/templates/my_profile.html:70
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: images/templates/dataset.html:134 images/templates/experiment.html:110
-#: users/templates/my_profile.html:79
+#: images/templates/dataset.html:134 images/templates/experiment.html:93
+#: users/templates/my_profile.html:74
 msgid "Accept"
 msgstr "Aceptar"
 
 #: images/templates/dataset_list.html:18 templates/header.html:19
+#: users/templates/home.html:167
 msgid "Datasets"
 msgstr "Datasets"
 
@@ -182,34 +332,78 @@ msgstr "Estos son los datasets existentes"
 msgid "There isn't any defined dataset"
 msgstr "No hay ningún dataset"
 
-#: images/templates/experiment.html:45
+#: images/templates/experiment.html:25
+#, fuzzy
+#| msgid "Modify experiment"
+msgid "Edit experiment"
+msgstr "Modificar experimento"
+
+#: images/templates/experiment.html:26 images/templates/experiment.html:79
+msgid "Delete experiment"
+msgstr "Eliminar experimento"
+
+#: images/templates/experiment.html:28
+msgid "Download tagged images or tags"
+msgstr "Descargar imágenes etiquetadas o anotaciones realizadas"
+
+#: images/templates/experiment.html:35
 msgid "Associated to team"
 msgstr "Asociado al equipo"
 
-#: images/templates/experiment.html:55
+#: images/templates/experiment.html:36
+#, fuzzy
+#| msgid "Delete dataset"
+msgid "Click to see the dataset"
+msgstr "Eliminar dataset"
+
+#: images/templates/experiment.html:37
+#, fuzzy
+#| msgid "Click on an image to annotate it"
+msgid "Click to annotate the images"
+msgstr "Pulsa en una imagen para anotarla"
+
+#: images/templates/experiment.html:37
+msgid "Annotate"
+msgstr "Anotar"
+
+#: images/templates/experiment.html:46
 #: images/templates/modify_experiment.html:29
 msgid "Type"
 msgstr "Tipo"
 
-#: images/templates/experiment.html:56
+#: images/templates/experiment.html:47
 msgid "Colour"
 msgstr "Color"
 
-#: images/templates/experiment.html:72
+#: images/templates/experiment.html:63
 #: images/templates/modify_experiment.html:50
 msgid "There is no defined annotation for this experiment"
 msgstr "No hay anotaciones definidas para este experimento"
 
-#: images/templates/experiment.html:96
-msgid "Delete experiment"
-msgstr "Eliminar experimento"
-
-#: images/templates/experiment.html:102
+#: images/templates/experiment.html:85
 msgid "delete_experiment_confirmation"
 msgstr ""
 "¿Seguro que quieres borrar este experimento? Perderás todo el trabajo "
 "realizado! Asegúrate de descargar las anotacionesantes de aceptar si quieres "
 "conservarlas en tu equipo."
+
+#: images/templates/experiment.html:106
+msgid "Download"
+msgstr "Descarga"
+
+#: images/templates/experiment.html:112
+msgid "download_experiment"
+msgstr ""
+"Descarga las imágenes que han sido anotadas en el experimento o un archivo "
+"de formato JSON con todas las anotaciones realizadas en el experimento"
+
+#: images/templates/experiment.html:117
+msgid "Download tags"
+msgstr "Descargar anotaciones"
+
+#: images/templates/experiment.html:122
+msgid "Download tagged images"
+msgstr "Descargar imágenes etiquetadas"
 
 #: images/templates/experiment_list.html:15
 msgid "My experiments"
@@ -249,7 +443,7 @@ msgstr "Modificar dataset"
 
 #: images/templates/modify_dataset.html:132
 #: images/templates/modify_dataset.html:138
-#: images/templates/modify_experiment.html:64
+#: images/templates/modify_experiment.html:65
 #: users/templates/change_password.html:14
 #: users/templates/edit_profile.html:16
 msgid "Save changes"
@@ -309,21 +503,29 @@ msgstr "Experimento eliminado"
 msgid "The experiment has been modified"
 msgstr "El experimento ha sido modificado"
 
-#: templates/header.html:23
+#: templates/header.html:23 users/templates/home.html:176
 msgid "Experiments"
 msgstr "Experimentos"
 
-#: templates/header.html:68
+#: templates/header.html:66
 msgid "Admin"
 msgstr "Administración"
 
-#: templates/header.html:71
+#: templates/header.html:69
 msgid "Profile"
 msgstr "Perfil"
 
-#: templates/header.html:73 templates/registration/logged_out.html:7
+#: templates/header.html:71 templates/registration/logged_out.html:7
 msgid "Logout"
 msgstr "Cerrar sesión"
+
+#: templates/header.html:79 users/templates/home.html:190
+msgid "Sign Up"
+msgstr "Registrarse"
+
+#: templates/header.html:83 templates/registration/login.html:31
+msgid "Log In"
+msgstr "Iniciar sesión"
 
 #: templates/registration/logged_out.html:8
 msgid "The session has been closed succesfully"
@@ -333,37 +535,33 @@ msgstr "Has cerrado sesión satisfactoriamente"
 msgid "Login again"
 msgstr "Iniciar sesión de nuevo"
 
-#: templates/registration/login.html:31
-msgid "COLLABORATIVE ANNOTATION OF IMAGES"
-msgstr "ETIQUETADO COLABORATIVO DE IMÁGENES"
-
 #: templates/registration/login.html:35
 msgid "Username and password do not match. Please, try again."
 msgstr ""
 "El nombre de usuario y la contraseña no coinciden. Por favor, inténtalo de "
 "nuevo"
 
-#: templates/registration/login.html:50
+#: templates/registration/login.html:49
 msgid "User"
 msgstr "Usuario"
 
-#: templates/registration/login.html:57
+#: templates/registration/login.html:56
 msgid "Password"
 msgstr "Contraseña"
 
-#: templates/registration/login.html:62
+#: templates/registration/login.html:61
 msgid "Log in"
-msgstr "Entrar"
+msgstr "Iniciar sesión"
 
-#: templates/registration/login.html:68
+#: templates/registration/login.html:67
 msgid "First time in TagMaker?"
 msgstr "¿Nuev@ en la aplicación?"
 
-#: templates/registration/login.html:69
+#: templates/registration/login.html:68
 msgid "Register here"
 msgstr "Regístrate aquí"
 
-#: templates/registration/login.html:72
+#: templates/registration/login.html:71
 msgid "I am administrator"
 msgstr "Soy administrador"
 
@@ -392,12 +590,12 @@ msgstr ""
 "libre y gratuito."
 
 #: users/templates/base.html:41 users/templates/base.html:56
-#: users/templates/home.html:144
+#: users/templates/home.html:226
 msgid "COLLABORATORS"
 msgstr "COLABORADORES"
 
 #: users/templates/base.html:47 users/templates/base.html:62
-#: users/templates/home.html:150
+#: users/templates/home.html:232
 msgid "Developed by Isabel Rodríguez Iglesias"
 msgstr "Desarrollada por Isabel Rodríguez Iglesias"
 
@@ -409,48 +607,71 @@ msgstr "Modificar contraseña"
 msgid "Modify profile"
 msgstr "Modificar perfil"
 
-#: users/templates/home.html:122
+#: users/templates/home.html:170
+#, fuzzy
+#| msgid "New dataset"
+msgid "See datasets"
+msgstr "Nuevo dataset"
+
+#: users/templates/home.html:179
+#, fuzzy
+#| msgid "My experiments"
+msgid "See experiments"
+msgstr "Mis experimentos"
+
+#: users/templates/home.html:185
+#, fuzzy
+#| msgid "User"
+msgid "Users"
+msgstr "Usuario"
+
+#: users/templates/home.html:188
+#, fuzzy
+#| msgid "Profile"
+msgid "See profile"
+msgstr "Perfil"
+
+#: users/templates/home.html:203
 msgid "DATASETS"
 msgstr "DATASETS"
 
-#: users/templates/home.html:125 users/templates/home.html:133
+#: users/templates/home.html:206 users/templates/home.html:214
 msgid "EXPERIMENTS"
 msgstr "EXPERIMENTOS"
 
-#: users/templates/my_profile.html:35
-msgid "You do not belong to any team"
-msgstr "No perteneces a ningún equipo"
-
-#: users/templates/my_profile.html:41
-msgid "Member since"
-msgstr "Miembro desde el"
-
-#: users/templates/my_profile.html:44
-msgid "Due to security reasons, the passwords is not shown"
-msgstr "Por motivos de seguridad, no se muestra la contraseña"
-
-#: users/templates/my_profile.html:49 users/templates/my_profile.html:54
+#: users/templates/my_profile.html:11
 msgid "Modify information"
 msgstr "Modificar información"
 
-#: users/templates/my_profile.html:51 users/templates/my_profile.html:55
-#: users/templates/my_profile.html:65
+#: users/templates/my_profile.html:12 users/templates/my_profile.html:60
 msgid "Delete account"
 msgstr "Eliminar cuenta"
 
-#: users/templates/my_profile.html:71
+#: users/templates/my_profile.html:40
+msgid "You do not belong to any team"
+msgstr "No perteneces a ningún equipo"
+
+#: users/templates/my_profile.html:46
+msgid "Member since"
+msgstr "Miembro desde el"
+
+#: users/templates/my_profile.html:49
+msgid "Due to security reasons, the passwords is not shown"
+msgstr "Por motivos de seguridad, no se muestra la contraseña"
+
+#: users/templates/my_profile.html:66
 msgid "Are you sure you want to delete your account?"
 msgstr "¿Estás seguro de eliminar tu cuenta?"
 
-#: users/templates/sign_up.html:7
+#: users/templates/sign_up.html:32
 msgid "EXIT"
 msgstr "SALIR"
 
-#: users/templates/sign_up.html:11
+#: users/templates/sign_up.html:36 users/templates/sign_up.html:50
 msgid "Registration form"
 msgstr "Formulario de registro"
 
-#: users/templates/sign_up.html:16
+#: users/templates/sign_up.html:41 users/templates/sign_up.html:57
 msgid "Register"
 msgstr "Registrarse"
 
@@ -1646,6 +1867,12 @@ msgstr ""
 msgid "ObjectId"
 msgstr ""
 
+#~ msgid "Annotation"
+#~ msgstr "Anotación"
+
+#~ msgid "COLLABORATIVE ANNOTATION OF IMAGES"
+#~ msgstr "ETIQUETADO COLABORATIVO DE IMÁGENES"
+
 #~ msgid "Select"
 #~ msgstr "Seleccionar"
 
@@ -1663,9 +1890,6 @@ msgstr ""
 
 #~ msgid "ANNOTATE"
 #~ msgstr "ANOTAR"
-
-#~ msgid "Download annotations"
-#~ msgstr "Descargar anotaciones"
 
 #~ msgid ""
 #~ "Are you sure you want to delete this experiment? You will loose all the "

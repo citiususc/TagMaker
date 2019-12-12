@@ -5,6 +5,7 @@ function updateElementIndex(el, prefix, ndx) {
     if (el.id) el.id = el.id.replace(id_regex, replacement);
     if (el.name) el.name = el.name.replace(id_regex, replacement);
 }
+
 function cloneMore(selector, prefix) {
     let newElement = $(selector).clone(true);
     let totalFormsElement = $('#id_' + prefix + '-TOTAL_FORMS');
@@ -35,6 +36,7 @@ function cloneMore(selector, prefix) {
     .html('<i class="fas fa-minus"></i>');
     return false;
 }
+
 function deleteForm(prefix, btn) {
     let totalFormsElement = $('#id_' + prefix + '-TOTAL_FORMS');
 

@@ -7,6 +7,11 @@
 
     <div class="main">
 
+    <div style="padding-bottom: 10px;">
+    <a id="buttonModifyDataset" class="button btn" href="{% url 'edit' %}" title=" {% trans "Modify information" %}" ><i class="fas fa-user-edit"></i> </a>
+    <a class="button btn btn-danger text-white" href="#" title="{% trans "Delete account" %}" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-trash-alt"></i></a>
+    </div>
+
         <table class="table table-striped">
             <tr>
                 <td><h5>{{ user.username }}</h5></td>
@@ -43,16 +48,6 @@
         </table>
         <p><b>{% trans "Due to security reasons, the passwords is not shown" %}</b>
         <p>
-    </div>
-
-
-    <a href="{% url 'edit' %}"><i class="fas fa-user-edit"></i> {% trans "Modify information" %}</a><br>
-    <a href="#" data-toggle="modal" data-target="#exampleModalCenter"><i
-            class="fas fa-trash-alt"></i> {% trans "Delete account" %}</a>
-
-    <div style="padding-bottom: 10px;">
-    <a id="buttonModifyDataset" class="button btn" href="{% url 'edit' %}" >{% trans "Modify information" %}</a>
-        <a class="button btn btn-danger text-white" href="#" data-toggle="modal" data-target="#exampleModalCenter"> {% trans "Delete account" %}</a>
     </div>
 
 

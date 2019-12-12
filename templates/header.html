@@ -10,10 +10,10 @@
         <i class="text-white fas fa-bars"></i>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarNav">
 
+            {% if user.is_authenticated %}
     <ul class="navbar-nav ml-auto">
-
       <li class="nav-item mx-0 mx-lg-1">
                         <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger"
                            href="{% url 'dataset_list' %}">{% trans "Datasets" %}</a>
@@ -54,8 +54,6 @@
 
 
                 </li>
-
-                {% if user.is_authenticated %}
                     <li class="nav-item dropdown mx-0 mx-lg-1">
                         <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#"
                            id="navbarDropdownMenuLink" data-toggle="dropdown"
@@ -73,9 +71,23 @@
                                 {% trans "Logout" %}</a>
                         </div>
                     </li>
-                {% endif %}
     </ul>
-        </div>
-        </div>
+            {% else %}
+                <ul class="navbar-nav ml-auto">
+                  <li class="nav-item mx-0 mx-lg-1">
+                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger"
+                           href="{% url 'sign_up' %}">{% trans "Sign Up" %}</a>
+                    </li>
+                    <li class="nav-item mx-0 mx-lg-1">
+                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger"
+                           href="{% url 'login' %}">{% trans "Log In" %}</a>
+                    </li>
+                </ul>
 
+                </div>
+            </div>
+
+
+        {% endif %}
+    </nav>
 </div>

@@ -31,13 +31,24 @@
                             {% if user.is_authenticated and user.is_staff %}
                                 {% for t in tag_images %}
                                     {% if t.image_id == image.id %}
-                                        {% if not t.check_by %}
+                                        {% if not t.check_by and not t.user.is_staff %}
                                             <td><a style="color:red"
-                                                   href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a>
+                                                   href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{% if t.user.is_staff %}
+                                                    <i class="fas fa-check-circle"></i>
+                                                    {% endif %}{{ t.user }}</a>
+                                            </td>
+                                        {% elif user.is_superuser and t.user.is_staff and not t.check_by and user != t.user%}
+                                            <td><a style="color:red"
+                                                   href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{% if t.user.is_staff %}
+                                                    <i class="fas fa-check-circle"></i>
+                                                    {% endif %}{{ t.user }}</a>
                                             </td>
                                         {% else %}
                                             <td><a style="color:green"
-                                                   href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">{{ t.user }}</a>
+                                                   href="{% url 'annotate_image' id_exp=exp.id id_image=image.id id_user=t.user.id %}">
+                                                {% if t.user.is_staff %}
+                                                    <i class="fas fa-check-circle"></i>
+                                                    {% endif %}{{ t.user }}</a>
                                             </td>
                                         {% endif %}
                                     {% endif %}

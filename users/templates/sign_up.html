@@ -1,19 +1,64 @@
-{% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 {% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>TagMaker</title>
+    <meta charset="utf-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet"
+          id="bootstrap-css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!--Fontawesome CDN-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/freelancer.min.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css">
+    <link href="{% static "css/login.css" %}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
 
 {% block content %}
-     <a href="{% url 'login' %}">
+
+    <link href="{% static "css/login.css" %}" rel="stylesheet" type="text/css">
+
+    <!---
+    <a href="{% url 'login' %}">
          <i class="fas fa-chevron-left"></i> {% trans "EXIT" %}
     </a>
 
     <div class="main">
         <h3>{% trans "Registration form" %}</h3>
-  <form method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-      <br>
-      <button class="btn btn-primary" type="submit">{% trans "Register" %}</button>
-  </form>
+          <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+              <br>
+              <button class="btn btn-primary" type="submit">{% trans "Register" %}</button>
+          </form>
     </div>
+--->
+
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card w-50">
+                <div class="text-white text-center card-header">
+                    <h5>{% trans "Registration form" %}</h5>
+                </div>
+                <div class="card-body text-white">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                          <br>
+                          <button class="btn btn-primary float-right" type="submit">{% trans "Register" %}</button>
+                      </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

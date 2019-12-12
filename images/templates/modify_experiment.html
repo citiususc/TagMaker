@@ -7,7 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
-    <script src="{% static "js/modifyExperiment.js" %}"></script>
+    <script src="{% static "js/createOrModifyExperiment.js" %}"></script>
 
 
     <a href="{% url 'experiment' id=id_exp %}">
@@ -56,11 +56,12 @@
                     <div class="input-group">
                         {{ form|crispy }}
                         <div>
-                            <button class="btn btn-success add-form-row"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-success add-form-row" style="border-width: 0px;"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
                 </div>
             {% endfor %}
+        <br>
             <button class="btn btn-primary" type="submit"> {% trans "Save changes" %} </button>
         </form>
     </div>

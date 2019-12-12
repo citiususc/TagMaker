@@ -25,10 +25,10 @@
 {% block content %}
 
     <div class="container">
-        <div class="d-flex  h-100">
+        <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="text-white text-center card-header">
-                    <h5>Iniciar sesión</h5>
+                    <h5>{% trans "Log In" %}</h5>
                 </div>
                 <div class="card-body">
                     {% if form.errors %}
@@ -39,7 +39,6 @@
                         <input type="hidden" name="next" value="{{ next }}"/>
 
                         {% for field in form %}
-
                             <div class="input-group form-group">
 
                                 {% if field.html_name == 'username' %}
@@ -76,8 +75,6 @@
             </div>
         </div>
     </div>
-
-
 
 {% endblock %}
 

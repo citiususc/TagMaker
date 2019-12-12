@@ -379,16 +379,21 @@ def save_tags(request, id_exp, id_image):
             decoded = json.loads(data)
             image_width = decoded['backgroundImage']['width']
 
-            # Si existe un ImageTag para esta imagen donde el usuario corresponde con el actual
+            # Si existe un ImageTag para esta imagen donde el usuario corresponde con el actual, es decir, si el usuario que está anotando ya realizó anotaciones previas
             if ImageTag.objects.filter(image_id=id_image).filter(user_id=request.user.id).all():
-                # Sobreescribimos las anotaciones
-
+                # Sobreescribimos las anotaciones (las borramos todas para volver a guardarlas de nuevo)
                 tag_image = ImageTag.objects.get(image_id=id_image, user_id=request.user.id)
                 tag_image.individual_tags.all().delete()
 
-                # si se borran todas las anotaciones tambien borramos el tagimage
+                #si el usuario que está anotando es básico y sus anotaciones fueron validadas, las desvalidamos (puesto que en este caso el usuario básico está volviendo a anotar y deben volver a ser validadas)
+                if not request.user.is_staff and tag_image.check_by:
+                    tag_image.check_by = None
+
+                #en caso de que el usuario haya borrado todas las anotaciones, se borra el tagimage (porque actualmente no hay anotaciones sobre la imagen, da igual que anteriormente se realizaran)
                 if decoded['objects'] == []:
                     tag_image.delete()
+
+                tag_image.save()
 
             else:  # de lo contrario creamos un tagImage nuevo para este usuario
 
@@ -481,45 +486,100 @@ def save_tags(request, id_exp, id_image):
                     annotation_type.state = True
                     annotation_type.save()
 
-
     return redirect('experiment_list')
 
 
 @login_required
 @csrf_exempt
 def validate(request, id_exp, id_image, id_user):
-    # igual que en la función save_tags repetimos el mismo proceso
     if request.method == 'POST':
+
         tag_image = ImageTag.objects.get(image_id=id_image, experiment_id=id_exp, user_id=id_user)
         tag_image.individual_tags.all().delete()
 
         if 'canvas_data' in request.POST:
             data = request.POST['canvas_data']
             decoded = json.loads(data)
+            image_width = decoded['backgroundImage']['width']
 
             # si se borran todas las anotaciones tambien borramos el tagimage
-            if not decoded['objects']:
+            if decoded['objects'] == []:
                 tag_image.delete()
             else:
                 for obj in decoded['objects']:
                     if obj['type'] == 'circle':
-                        annotation_type = AnnotationType.objects.get(name=obj["name"], experiment_id=id_exp)
-                        point = IndividualTagPoint(image_tag=tag_image,
-                                                   type=annotation_type,
-                                                   x=obj['left'],
-                                                   y=obj['top'])
-                        point.save()
-                        annotation_type.state = True
-                        annotation_type.save()
+                        if AnnotationType.objects.all().filter(experiment_id=id_exp, name=obj['name']):
+                            annotation_type = AnnotationType.objects.get(name=obj["name"], experiment_id=id_exp)
+                            if annotation_type.primitive == 'Point':  # para que almacene solo las anotaciones de tipo punto y no los puntos de los polígonos
+
+                                x_absolute = (obj['left'] * image_width) / obj['canvas_width']
+                                y_absolute = (obj['top'] * image_width) / obj['canvas_width']
+
+                                point = IndividualTagPoint(image_tag=tag_image,
+                                                           type=annotation_type,
+                                                           x=x_absolute,
+                                                           y=y_absolute)
+                                point.save()
+                                annotation_type.state = True
+                                annotation_type.save()
+
                     elif obj['type'] == 'rect':
                         annotation_type = AnnotationType.objects.get(name=obj["name"], experiment_id=id_exp)
+
+                        x_absolute = (obj['left'] * image_width) / obj['canvas_width']
+                        y_absolute = (obj['top'] * image_width) / obj['canvas_width']
+                        w_absolute = (obj['width'] * image_width) / obj['canvas_width']
+                        h_absolute = (obj['height'] * image_width) / obj['canvas_width']
+
                         box = IndividualTagBox(image_tag=tag_image,
                                                type=annotation_type,
-                                               x_top_left=obj['left'],
-                                               y_top_left=obj['top'],
-                                               width=obj['width'],
-                                               height=obj['height'])
+                                               x_top_left=x_absolute,
+                                               y_top_left=y_absolute,
+                                               width=w_absolute,
+                                               height=h_absolute)
                         box.save()
+                        annotation_type.state = True
+                        annotation_type.save()
+                    elif obj['type'] == 'polygon':
+                        annotation_type = AnnotationType.objects.get(name=obj["name"], experiment_id=id_exp)
+                        polygon = IndividualTagCurve(image_tag=tag_image,
+                                                     type=annotation_type,
+                                                     id=obj['polyId'],
+                                                     isClosed=True,
+                                                     points=[])
+                        for p in obj['points']:  # para cada uno de los puntos del polígono
+
+                            x_absolute = (p['x'] * image_width) / obj['canvas_width']
+                            y_absolute = (p['y'] * image_width) / obj['canvas_width']
+
+                            point = IndividualTagPoint(image_tag=tag_image,
+                                                       type=annotation_type,
+                                                       id=p['id'],
+                                                       x=x_absolute,
+                                                       y=y_absolute)
+                            polygon.points.append(point)
+                        polygon.save()
+
+                        annotation_type.state = True
+                        annotation_type.save()
+                    elif obj['type'] == 'polyline':
+                        annotation_type = AnnotationType.objects.get(name=obj["name"], experiment_id=id_exp)
+                        polyline = IndividualTagCurve(image_tag=tag_image,
+                                                      type=annotation_type,
+                                                      id=obj['polyId'],
+                                                      isClosed=False,
+                                                      points=[])
+                        for p in obj['points']:
+                            x_absolute = (p['x'] * image_width) / obj['canvas_width']
+                            y_absolute = (p['y'] * image_width) / obj['canvas_width']
+
+                            point = IndividualTagPoint(image_tag=tag_image,
+                                                       type=annotation_type,
+                                                       id=p['id'],
+                                                       x=x_absolute,
+                                                       y=y_absolute)
+                            polyline.points.append(point)
+                        polyline.save()
                         annotation_type.state = True
                         annotation_type.save()
 
@@ -530,6 +590,22 @@ def validate(request, id_exp, id_image, id_user):
             messages.success(request, 'Anotaciones validadas')
 
     return redirect('experiment_list')
+
+
+@login_required
+@csrf_exempt
+def invalidate(request, id_exp, id_image, id_user):
+    if request.method == 'POST':
+        tag_image = ImageTag.objects.get(image_id=id_image, experiment_id=id_exp, user_id=id_user)
+        if request.user.is_staff:
+            tag_image.check_by = None
+            tag_image.save()
+
+        elif request.user.is_superuser and tag_image.user.is_staff:
+            tag_image.check_by = None
+            tag_image.save()
+    return redirect('experiment_list')
+
 
 
 @login_required
@@ -609,3 +685,36 @@ def download_tags(request, id_exp):
     response = HttpResponse(data, content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename=' + experiment.name + '.json'
     return response
+
+@login_required
+def download_tagged_images(request, id_exp):
+    exp = Experiment.objects.get(id=id_exp)
+    dataset = exp.dataset.name
+
+    if ImageTag.objects.filter(experiment_id=id_exp).exists():
+        tag_images = ImageTag.objects.all().filter(experiment_id=id_exp)
+        names_images=[]
+        for t in tag_images:
+            if not t.image.name in names_images:
+                names_images.append(t.image.name)
+        print(names_images)
+
+
+        path = settings.MEDIA_URL + dataset + "/originals/"
+
+        response = HttpResponse(content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename=' + exp.name + "-tagged-images.zip"
+
+        zip = zipfile.ZipFile(response, 'w')
+
+        for single_file in os.listdir(path):
+            if single_file in names_images:
+                with open(path + single_file, 'rb') as f:
+                    zip.writestr(single_file, f.read())
+
+        zip.close()
+
+
+        return response
+
+

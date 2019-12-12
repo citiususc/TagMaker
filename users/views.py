@@ -9,7 +9,6 @@ from users.forms import EditProfile
 from users.models import Team
 
 
-@login_required
 def home(request):
     return render(request, 'home.html')
 
